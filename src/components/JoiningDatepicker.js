@@ -1,0 +1,8 @@
+import { DatePicker, Space } from 'antd';
+const { RangePicker } = DatePicker;
+const JoiningDatepicker = () => (
+  <Space direction="vertical" size={12}>
+    <RangePicker picker="year" style={{width:'250px',marginLeft:'20px'}}/>
+  </Space>
+);
+export default JoiningDatepicker;
