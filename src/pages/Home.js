@@ -1,7 +1,10 @@
-import { Layout, Space } from 'antd';
+import { Card, Divider, Layout, Space } from 'antd';
+import HomeHeader from '../components/Header';
+import KRAdetails from '../components/KRAdetails';
 import PerformanceApraisalForm from '../components/PerformanceApraisalForm';
 import ScoringPopover from '../components/ScoringPopover';
-const { Header, Footer, Sider, Content } = Layout;
+import ScoringTable from '../components/ScoringTable';
+const { Header, Footer, Content } = Layout;
 const layoutStyle={
     height:'100vh'
 }
@@ -11,14 +14,18 @@ const headerStyle = {
   height: 64,
   paddingInline: 50,
   lineHeight: '64px',
-  backgroundColor: '#e6fffb',
+  backgroundColor: '#531dab',
+  position:'fixed',
+  top:'0px',
+  width:'100vw',
+  zIndex: 1,
   
 };
 const contentStyle = {
   textAlign: 'center',
-  lineHeight: '120px',
-  color: '#fff',
-  
+  marginTop:'50px',
+  backgroundColor:'#f5f5f5',
+  minHeight: '1000%',
 };
 
 const footerStyle = {
@@ -26,6 +33,9 @@ const footerStyle = {
   color: 'black',
   height:'40px',
   backgroundColor:'#e6f4ff',
+  position:'fixed',
+  bottom:'0px',
+  width:'100vw'
 };
 const Home = () => (
   <Space
@@ -36,12 +46,25 @@ const Home = () => (
     size={[0, 48]}
   >
     <Layout style={layoutStyle}>
-      <Header style={headerStyle}><h2 style={{margin:'auto'}}>Skein Technology</h2></Header>
-      <Content style={contentStyle}>
-      <ScoringPopover />
-        <PerformanceApraisalForm />
+      <Header style={headerStyle}>
+       <HomeHeader />
+      </Header>
+      <Content style={contentStyle} className='homeContent'>
+        <Card style={{height:'auto' , width:'1100px',margin:'auto'}}>
+          <PerformanceApraisalForm />
+          <ScoringTable />
+
+          <Divider style={{marginTop:'40px' , backgroundColor:'green' , height:'5px'}}/>
+
+          <KRAdetails />
+        </Card>
+        
       </Content>
-      <Footer style={footerStyle}><h6 style={{margin:'auto' , float:'right'}}>@Terms and Conditions</h6></Footer>
+      {/* <Footer style={footerStyle}>
+        <h6 style={{margin:'auto' , float:'right'}}>
+          @Terms and Conditions
+        </h6>
+      </Footer> */}
     </Layout>  
   </Space>
 );

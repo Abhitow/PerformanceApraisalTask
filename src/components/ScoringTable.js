@@ -1,44 +1,102 @@
-import {  Table} from 'antd';
+// import { Card } from 'antd';
+// const gridStyle = {
+//   width: '45%',
+//   height:'20px',
+//   textAlign: 'center',
+//   padding:'20px'
+  
+// };
+// const ScoringTable = () => (
+//   <Card title="Scoring System" style={{marginTop:'50px'}}>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Attribute
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Score
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Oustanding
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       5
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Exceeds Requirements
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       4
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Meets Requirements
+//     </Card.Grid><Card.Grid hoverable={false} style={gridStyle}>
+//       3
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Need Improvement
+//     </Card.Grid><Card.Grid hoverable={false} style={gridStyle}>
+//       2
+//     </Card.Grid>
+//     <Card.Grid hoverable={false} style={gridStyle}>
+//       Unsatisfactory
+//     </Card.Grid><Card.Grid hoverable={false} style={gridStyle}>
+//       1
+//     </Card.Grid>
+//   </Card>
+// );
+// export default ScoringTable;
+
+
+
+import { Table } from 'antd';
 const columns = [
   {
     title: 'Attribute',
     dataIndex: 'attribute',
-    key: 'attribute',
+    align:'center',
     render: (text) => <>{text}</>,
   },
   {
     title: 'Score',
     dataIndex: 'score',
-    key: 'score',
-  }, 
+    align: 'center',
+  },
 ];
 const data = [
   {
     key: '1',
     attribute: 'Outstanding',
-    score: 5,
+    score: '5',
   },
   {
     key: '2',
-    attribute: 'Exceeds Requirements',
-    score: 4,
+    attribute: 'Exceed Requirements',
+    score: '4',
   },
   {
     key: '3',
     attribute: 'Meets Requirements',
-    score: 3,
+    score: '3',
   },
   {
     key: '4',
     attribute: 'Need Improvement',
-    score: 2,
+    score: '2',
   },
   {
     key: '5',
     attribute: 'Unsatisfactory',
-    score: 1,
+    score: '1',
   },
   
 ];
-const ScoringTable = () => <Table columns={columns} dataSource={data} pagination={false}/>;
+const ScoringTable = () => (
+  <Table size='small' style={{marginTop:'50px' , borderColor:'black',fontSize:'20px'}}
+    columns={columns}
+    dataSource={data}
+    bordered
+    title={() => 'Scoring System'}
+    pagination={false}
+    
+  />
+);
 export default ScoringTable;

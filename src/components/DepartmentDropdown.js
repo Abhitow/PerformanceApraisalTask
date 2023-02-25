@@ -1,6 +1,6 @@
 import { Select, Space } from 'antd';
 import { useState } from 'react';
-const designationData = ['Select Department','Desgin', 'Development' ,'Marketing', 'Testing' ];
+const designationData = ['Select Department', 'Development' ,'Marketing', 'Testing','UI/UX Desgin' ];
 
 const DepartmentDropdown = () => {
     const [designation , setDesignation] = useState();

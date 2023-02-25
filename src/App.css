@@ -63,3 +63,12 @@
 .selectDropdown{
   margin-left: 20px;
 }
+
+.header-profile{
+  font-size: 20px;
+  margin-left: -10%;
+  color:'white'
+}
+.required{
+  color:'red' !important;
+}
