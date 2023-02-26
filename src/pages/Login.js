@@ -18,7 +18,6 @@ function Login() {
   const [messageApi ,contextHolder] = message.useMessage();
 
 const handleClick =() => {
-  
   fetch("http://demo.emeetify.com:8080/daytodaytask/admin/adminlogin", {
     method: 'POST',
     body: JSON.stringify({
@@ -54,11 +53,6 @@ const handleClick =() => {
 }
 return (
     <div className='container'>
-
-
-
-
-
       <Card className='card'>
         <Form layout='vertical'  onFinishFailed={onFinishFailed} >
         <img src={download} className="skein-logo" alt="skeinlogo" />
