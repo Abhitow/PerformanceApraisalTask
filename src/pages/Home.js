@@ -2,8 +2,8 @@ import { Card, Divider, Layout, Space } from 'antd';
 import HomeHeader from '../components/Header';
 import KRAdetails from '../components/KRAdetails';
 import PerformanceApraisalForm from '../components/PerformanceApraisalForm';
-import ScoringPopover from '../components/ScoringPopover';
 import ScoringTable from '../components/ScoringTable';
+import KRAsoftskills from '../components/KRAsoftskills'
 const { Header, Footer, Content } = Layout;
 const layoutStyle={
     height:'100vh'
@@ -14,7 +14,7 @@ const headerStyle = {
   height: 64,
   paddingInline: 50,
   lineHeight: '64px',
-  backgroundColor: '#531dab',
+  backgroundColor: 'white',
   position:'fixed',
   top:'0px',
   width:'100vw',
@@ -57,8 +57,12 @@ const Home = () => (
           <Divider style={{marginTop:'40px' , backgroundColor:'green' , height:'5px'}}/>
 
           <KRAdetails />
+
+          <Divider />
+
+          <KRAsoftskills />
         </Card>
-        
+
       </Content>
       {/* <Footer style={footerStyle}>
         <h6 style={{margin:'auto' , float:'right'}}>

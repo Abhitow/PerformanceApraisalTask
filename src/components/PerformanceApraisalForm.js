@@ -10,7 +10,7 @@ const { Title } = Typography;
 function PerformanceApraisalForm() {
   return (
     <div>
-        <Card className='form-card' title={<Title style={{fontSize:'18px'}}>Performance Appraisal Form</Title>}>
+        <Card className='form-card' title={<Title style={{fontSize:'20px'}}>Performance Appraisal Form</Title>}>
             
         <Form labelCol={{span:8}} wrapperCol={{span:14}} colon={false}>
         <Row className='performance-form-row-one'>

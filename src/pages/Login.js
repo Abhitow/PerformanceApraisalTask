@@ -1,7 +1,11 @@
+import download from '../download.png'
 import React from 'react'
-import {Card , Form ,Input ,Button ,message} from 'antd'
+import {Card , Form ,Input ,Button ,message, Typography} from 'antd'
 import { useState  } from 'react';
 import {useNavigate} from 'react-router-dom'
+import {GoogleCircleFilled} from '@ant-design/icons'
+import GoogleLogin from '../components/GoogleLogin';
+import GoogleLoginn from '../components/GoogleLogin';
 // import Axios from 'axios'
 
 function Login() {
@@ -50,12 +54,19 @@ const handleClick =() => {
 }
 return (
     <div className='container'>
+
+
+
+
+
       <Card className='card'>
         <Form layout='vertical'  onFinishFailed={onFinishFailed} >
-          <h1 className='form-login-h1'>Login</h1>
+        <img src={download} className="skein-logo" alt="skeinlogo" />
+
+          {/* <h1 className='form-login-h1'>Login</h1> */}
             <Form.Item 
             className='form-form-item'
-            label='Email or Phone'
+            label='Email'
             name={"email"}
             rules={[
               {
@@ -83,6 +94,8 @@ return (
               {contextHolder}
             <Button type='primary' htmlType='submit' onClick={handleClick}  className='form-button' ><b>LOGIN</b></Button>
             </Form.Item>
+            <Typography style={{color:'grey',textAlign:'center'}}>Or sign in with</Typography>
+            <GoogleLoginn />
         </Form>
       </Card>
      
