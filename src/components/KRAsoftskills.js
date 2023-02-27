@@ -1,17 +1,26 @@
-import { Divider } from 'antd'
+import { Divider, Typography } from 'antd'
 import React from 'react'
 
 import KRAfirstquestion from './KRAfirstquestion'
+import KRAfivequestionSoftSkill from './KRAfivequestionSoftSkill'
+import KRAfourquestionSoftSkill from './KRAfourquestionSoftSkill'
+import KRAonequestionSoftSkill from './KRAonequestionSoftSkill'
 import KRAsecquestion from './KRAsecquestion'
-import KRAthirdquestion from './KRAthirdquestion'
+import KRAsixquestionSoftSkill from './KRAsixquestionSoftSkill'
+import KRAthreequestionSoftSkill from './KRAthreequestionSoftSkill'
+import KRAtwoquestionSoftSkill from './KRAtwoquestionSoftSkill'
 function KRAdetails() {
   return (
     <div>
-        <h1 >KRA-Technical Aspects</h1>
+        <h1>KRA - Softskills</h1>
         <Divider />
-       <KRAfirstquestion />
-       <KRAsecquestion style={{marginTop:'20px'}}/>
-       <KRAthirdquestion /> 
+       <KRAonequestionSoftSkill/>
+       <KRAtwoquestionSoftSkill style={{marginTop:'20px'}}/>
+       <KRAthreequestionSoftSkill />
+       <KRAfourquestionSoftSkill />
+       <KRAfivequestionSoftSkill />
+       <KRAsixquestionSoftSkill />
+      
 
         
        

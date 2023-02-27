@@ -66,31 +66,36 @@ const data = [
     key: '1',
     attribute: 'Outstanding',
     score: '5',
+    className:'scoring-table-data',
   },
   {
     key: '2',
     attribute: 'Exceed Requirements',
     score: '4',
+    className:'scoring-table-data',
   },
   {
     key: '3',
     attribute: 'Meets Requirements',
     score: '3',
+    className:'scoring-table-data',
   },
   {
     key: '4',
     attribute: 'Need Improvement',
     score: '2',
+    className:'scoring-table-data',
   },
   {
     key: '5',
     attribute: 'Unsatisfactory',
     score: '1',
+    className:'scoring-table-data',
   },
   
 ];
 const ScoringTable = () => (
-  <Table size='small' style={{marginTop:'50px' , borderColor:'black',fontSize:'20px'}}
+  <Table size='small' style={{marginTop:'50px',className:'scoring-table'}}
     columns={columns}
     dataSource={data}
     bordered

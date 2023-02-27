@@ -2,6 +2,8 @@ import { Divider } from 'antd'
 import React from 'react'
 
 import KRAfirstquestion from './KRAfirstquestion'
+import KRAfivequestion from './KRAfivequestion'
+import KRAfourquestion from './KRAfourquestion'
 import KRAsecquestion from './KRAsecquestion'
 import KRAthirdquestion from './KRAthirdquestion'
 function KRAdetails() {
@@ -11,7 +13,9 @@ function KRAdetails() {
         <Divider />
        <KRAfirstquestion />
        <KRAsecquestion style={{marginTop:'20px'}}/>
-       <KRAthirdquestion /> 
+       <KRAthirdquestion />
+       <KRAfourquestion />
+       <KRAfivequestion />
 
         
        

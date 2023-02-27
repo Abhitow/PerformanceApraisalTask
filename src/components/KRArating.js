@@ -25,11 +25,20 @@
 //   );
 // };
 // export default KRArating;
-import { Rate } from 'antd';
+import { Form, Rate } from 'antd';
 
-const KRArating = () => (
-  <>
+const KRArating = () => {
+  const [form] = Form.useForm();
+  return(
+    <>
+    <Form form={form}>
+    <Form.Item>
     <Rate  defaultValue={1} character={({ index }) => index + 1} style={{fontSize:'30px' , float:'left',marginLeft:'30px'}}/>
-  </>
-);
+    </Form.Item>
+    </Form>
+    
+    </>
+  )
+ 
+} 
 export default KRArating;

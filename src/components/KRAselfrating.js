@@ -5,7 +5,6 @@ import React from 'react'
 function KRAselfrating() {
   return (
     <div style={{float:'right',marginRight:'100px'}}>
-       
         <TextArea rows={4} style={{width:'400px',marginTop:''}}/>
     </div>
   )

@@ -1,9 +1,10 @@
-import { Card, Divider, Layout, Space } from 'antd';
+import { Button, Card, Divider, Form, Layout, Space } from 'antd';
 import HomeHeader from '../components/Header';
 import KRAdetails from '../components/KRAdetails';
 import PerformanceApraisalForm from '../components/PerformanceApraisalForm';
 import ScoringTable from '../components/ScoringTable';
 import KRAsoftskills from '../components/KRAsoftskills'
+import Feedback from './Feedback';
 const { Header, Footer, Content } = Layout;
 const layoutStyle={
     height:'100vh'
@@ -25,7 +26,7 @@ const contentStyle = {
   textAlign: 'center',
   marginTop:'50px',
   backgroundColor:'#f5f5f5',
-  minHeight: '1000%',
+  minHeight: '1170%',
 };
 
 const footerStyle = {
@@ -37,6 +38,9 @@ const footerStyle = {
   bottom:'0px',
   width:'100vw'
 };
+const handleSubmit=()=>{
+  console.log("button working");
+}
 const Home = () => (
   <Space
     direction="vertical"
@@ -56,11 +60,25 @@ const Home = () => (
 
           <Divider style={{marginTop:'40px' , backgroundColor:'green' , height:'5px'}}/>
 
+          <Form>
           <KRAdetails />
 
-          <Divider />
+          <Divider style={{marginTop:'40px' , backgroundColor:'blue' , height:'5px'}}/>
 
           <KRAsoftskills />
+
+          <Divider style={{marginTop:'40px' , backgroundColor:'blue' , height:'5px'}}/>
+
+          <Feedback />
+
+          <Divider style={{marginTop:'40px' , backgroundColor:'lightBlue' , height:'3px'}}/>
+
+          <Button htmlType="submit" type="primary" 
+          style={{backgroundColor:'green',height:'40px',width:'100px'}}
+          onClick={handleSubmit}
+          >Submit</Button>
+          </Form>
+          
         </Card>
 
       </Content>
