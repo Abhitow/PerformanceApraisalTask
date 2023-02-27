@@ -1,11 +1,20 @@
 import download from '../download.png'
 import React from 'react'
 import {Card , Form ,Input ,Button ,message, Typography} from 'antd'
-import { useState  } from 'react';
+import { useState ,useEffect } from 'react';
 import {useNavigate} from 'react-router-dom'
 import {GoogleCircleFilled} from '@ant-design/icons'
 import GoogleLogin from '../components/GoogleLogin';
-import GoogleLoginn from '../components/GoogleLogin';
+import Home from './Home'
+
+
+
+// import GoogleLoginn from '../components/GoogleLogin';
+import {auth ,provider} from '../components/GoogleLogin'
+import {signInWithPopup} from 'firebase/auth'
+
+
+
 // import Axios from 'axios'
 
 function Login() {
@@ -16,6 +25,12 @@ function Login() {
   const [password ,setPassword] =useState("");
   const [responseData ,setResponseData] = useState("");
   const [messageApi ,contextHolder] = message.useMessage();
+
+
+  
+  const [google , setGoogle] = useState('');
+  var isLoggedIn = localStorage.getItem("token");
+  
 
 const handleClick =() => {
   fetch("http://demo.emeetify.com:8080/daytodaytask/admin/adminlogin", {
@@ -51,6 +66,18 @@ const handleClick =() => {
       console.log("unsuccess")
     }    
 }
+const handleGoogle=()=>{
+  signInWithPopup(auth,provider).then((data)=>{
+    console.log("++++",data.user.email)
+      setGoogle(data.user.email);
+        localStorage.setItem("email",data.user.email);
+        navigate("/home");
+  })
+}
+useEffect(() => {
+ setGoogle(localStorage.getItem('email'));
+},[])
+
 return (
     <div className='container'>
       <Card className='card'>
@@ -89,7 +116,11 @@ return (
             <Button type='primary' htmlType='submit' onClick={handleClick}  className='form-button' ><b>LOGIN</b></Button>
             </Form.Item>
             <Typography style={{color:'grey',textAlign:'center'}}>Or sign in with</Typography>
-            <GoogleLoginn />
+            {/* <GoogleLoginn /> */}
+            {google? <Home />:
+            <Button onClick={handleGoogle}>SignIn with Google</Button>
+          
+          }
         </Form>
       </Card>
      
