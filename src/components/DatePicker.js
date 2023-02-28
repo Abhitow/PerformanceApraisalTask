@@ -8,7 +8,7 @@ const dateFormatList = ['YYYY'];
 
 DatePicker = () => (
   <Space direction="vertical" size={12}>
-    <DatePicker defaultValue={dayjs('2022', dateFormatList[0])} format={dateFormatList} />
+    <DatePicker defaultValue={dayjs('2022', dateFormatList[0])} format={dateFormatList} className="datepicker-1" />
    
   </Space>
 );

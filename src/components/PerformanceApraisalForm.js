@@ -8,11 +8,14 @@ const { Title } = Typography;
 
 
 const handleSubmit = (e) =>{
-    e.preventDefault();
+    // e.preventDefault();
 }
 const onFinishFailed=(errorInfo)=>{
     console.log('Failed',errorInfo);
 }
+const onFinish = (values) => {
+    console.log(values);
+  };
 function PerformanceApraisalForm() {
     const [form] = Form.useForm();
     const [name , setName] = useState();
@@ -25,50 +28,57 @@ function PerformanceApraisalForm() {
         <Card className='form-card' title={<Title style={{fontSize:'20px'}}>Performance Appraisal Form</Title>}>
         
             
-        <Form form={form}  onFinishFailed={onFinishFailed} labelCol={{span:8}} wrapperCol={{span:14}} colon={false}>
+        <Form form={form}  onFinishFailed={onFinishFailed}   labelCol={{span:8}} wrapperCol={{span:14}} colon={false}>
         <Row className='performance-form-row-one'>
             <Col span={12} >
 
-                <Form.Item label='Name of Employee' name={"name"}
-                 rules={[{required:true,message:'please enter Your name'}]}>
+                <Form.Item label='Name of Employee' name={"name"} className="label1"
+                 rules={[{required:true,message:'please enter Your name'}]} hasFeedback>
                     <Input className='performance-input' value={name} onChange={(e) =>{setName(e.target.value)}}/>
                 </Form.Item>
 
             </Col>
             <Col span={12} >
-            <Form.Item label='Manager Name' name={"manager"} rules={[{required:true,message:'please enter Your name'},]}>
+            <Form.Item className="label2" label='Manager Name' name={"manager"} rules={[{required:true,message:'please select the manager'},]}>
                     <ManagerDropdown className='performance-input' value={manager} onChange={(e)=>{setManager(e.target.value)}}/>
                 </Form.Item>
             </Col>
         </Row>
         <Row className='performance-form-row-two'>
             <Col span={12} >
-                <Form.Item label='Designation' name={"designation"} rules={[{required:true,message:'please enter Your name'}]}>
+                <Form.Item className="label3"  label='Designation' name={"designation"} rules={[{required:true,message:'please enter Your designation'}]} >
                     <SelectDropdown className='selectDropdown' value={designation} onChange={(e)=>{setDesignation(e.target.value)}}/>
                 </Form.Item>
             </Col>
             <Col span={12} >
-            <Form.Item label='Department' name={"department"} rules={[{required:true,message:'please enter Your name'}]}>
+            <Form.Item className='label4' label='Department' name={"department"} rules={[{required:true,message:'please enter your department'}]} >
                     <DepartmentDropdown className='performance-input' value={department} onChange={(e)=>{setDepartment(e.target.value)}}/>
                 </Form.Item>
             </Col>
         </Row>
         <Row className='performance-form-row-three'>
             <Col span={12} >
-                <Form.Item label='Joining Date' name={"date"} rules={[{required:true,message:'please enter Your name'}]}>
-                   <DatePicker className='performance-input' value={date} onChange={(e)=>{setDate(e.target.value)}}/>
+                <Form.Item className='joiningdate-label' label='Joining Date' name={"date"} rules={[{required:true,message:'please enter your joining date'}]} hasFeedback>
+                   <DatePicker className='performance-joiningdate' value={date} onChange={(e)=>{setDate(e.target.value)}}/>
                 </Form.Item>
             </Col>
             <Col span={12} >
-                <Form.Item label='Review Period'>
-                    <JoiningDatepicker className='performance-input'/>
+                <Form.Item label='Review Period' className='review-period'>
+                    <JoiningDatepicker className='performance-date'/>
                 </Form.Item>
             </Col>
         </Row>
       
-            <Button htmlType='submit' type='primary' className='performance-btn' onClick={handleSubmit}
+           
+            {/* <Form.Item>
+             <Button htmlType="submit" type='primary' className='performance-btn' onClick={handleSubmit}
             >Submit</Button>
-            <Button htmlType='cancel'  style={{float:'right',marginTop:'30px'}}>Cancel</Button> 
+            </Form.Item> */}
+
+            <Button type="primary" htmlType="submit" className='performance-btn' onClick={handleSubmit}>
+                     Submit
+             </Button>
+            
        </Form>
        
         </Card>

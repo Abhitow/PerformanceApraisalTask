@@ -12,7 +12,7 @@ const DepartmentDropdown = () => {
       <Select
         defaultValue={designationData[0]}
         style={{
-          width: 250,marginLeft:'20px'
+          width: 250,marginLeft:'43px'
         }}
         onChange={handleProvinceChange}
         options={designationData.map((province) => ({

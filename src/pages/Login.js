@@ -12,6 +12,7 @@ import Home from './Home'
 // import GoogleLoginn from '../components/GoogleLogin';
 import {auth ,provider} from '../components/GoogleLogin'
 import {signInWithPopup} from 'firebase/auth'
+import GoogleButton from 'react-google-button';
 
 
 
@@ -26,13 +27,32 @@ function Login() {
   const [responseData ,setResponseData] = useState("");
   const [messageApi ,contextHolder] = message.useMessage();
 
-
+// const [datas , setDatas] = useState([]);
   
   const [google , setGoogle] = useState('');
   var isLoggedIn = localStorage.getItem("token");
-  
+
+  const handleGoogle=()=>{
+    signInWithPopup(auth,provider).then((data)=>{
+      // console.log(provider, "++++++++++++++");
+      console.log("++++",data)
+        setGoogle(data.user.email);
+          localStorage.setItem("displayName" , data.user.displayName);
+          localStorage.setItem("email",data.user.email);
+          navigate("/home");
+          // setDatas(data.user.email);
+          // console.log(datas,">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+          console.log("++++",google);
+    })
+  }
+ 
+  useEffect(() => {
+   setGoogle(localStorage.getItem('email'));
+  },[]);
+
 
 const handleClick =() => {
+  handleGoogle();
   fetch("http://demo.emeetify.com:8080/daytodaytask/admin/adminlogin", {
     method: 'POST',
     body: JSON.stringify({
@@ -53,7 +73,7 @@ const handleClick =() => {
       console.log("catch")
         console.log(err.message);
      });
-     if(responseData.status === true)
+     if(responseData.status === true )
      {
        console.log("login success")
        navigate("/home")
@@ -66,17 +86,7 @@ const handleClick =() => {
       console.log("unsuccess")
     }    
 }
-const handleGoogle=()=>{
-  signInWithPopup(auth,provider).then((data)=>{
-    console.log("++++",data.user.email)
-      setGoogle(data.user.email);
-        localStorage.setItem("email",data.user.email);
-        navigate("/home");
-  })
-}
-useEffect(() => {
- setGoogle(localStorage.getItem('email'));
-},[])
+
 
 return (
     <div className='container'>
@@ -118,7 +128,7 @@ return (
             <Typography style={{color:'grey',textAlign:'center'}}>Or sign in with</Typography>
             {/* <GoogleLoginn /> */}
             {google? <Home />:
-            <Button onClick={handleGoogle}>SignIn with Google</Button>
+            <GoogleButton onClick={handleGoogle} style={{marginLeft:'30px',width:'300px',marginTop:'30px',height:'50px'}}>SignIn with Google</GoogleButton>
           
           }
         </Form>

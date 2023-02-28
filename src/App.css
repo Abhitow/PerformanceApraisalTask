@@ -73,6 +73,14 @@
   width:250px;
   margin-left: 20px;
 }
+.performance-joiningdate{
+  width:250px;
+  margin-left: 60px;
+}
+.performance-date{
+  width:250px;
+  margin-left: 30px;
+}
 .performance-form-row-one{
   margin-top:30px;
 }
@@ -93,7 +101,7 @@
 
 }
 .selectDropdown{
-  margin-left: 20px;
+  margin-left: 50px !important;
 }
 
 .header-profile{
@@ -110,4 +118,22 @@
 .scoring-table-data{
   text-align: left !important;
   padding-left: 10px !important;
+}
+.label1{
+  margin-left: 20px;
+}
+.label2{
+  margin-left: 20px;
+}
+.label3{
+  margin-left: -48px;
+}
+.label4{
+  margin-left: -13px;
+}
+.joiningdate-label{
+  margin-left: -40px;
+}
+.review-period{
+  margin-left: 10px;
 }

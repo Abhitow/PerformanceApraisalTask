@@ -11,7 +11,6 @@ function App() {
           <Route index path='/' element={<Login />}></Route>
           <Route path='/home' element={<Home />} />
           <Route path='*' element={<Home />}/>
-          
         </Routes>
       </BrowserRouter>
     </div>
