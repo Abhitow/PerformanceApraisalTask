@@ -1,4 +1,8 @@
 import download from '../download.png'
+import undraw_metrics from '../undraw_metrics.png'
+import undraw_Meeting from '../undraw_Meeting.png'
+import undraw_Personal from '../undraw_Personal.png'
+
 import React from 'react'
 import {Card , Form ,Input ,Button ,message, Typography} from 'antd'
 import { useState ,useEffect } from 'react';
@@ -51,7 +55,11 @@ function Login({isLoggedIn}) {
    setGoogle(localStorage.getItem('email'));
   },[]);
 
-
+useEffect(()=>{
+  if(localStorage.getItem('email')){
+    navigate('/home');
+  }
+},[]);
 const handleClick =() => {
   handleGoogle();
   fetch("http://demo.emeetify.com:8080/daytodaytask/admin/adminlogin", {
@@ -74,7 +82,7 @@ const handleClick =() => {
       console.log("catch")
         console.log(err.message);
      });
-     if(responseData.status === true )
+     if(responseData.status === true )   
      {
        console.log("login success")
        navigate("/home")
@@ -90,6 +98,8 @@ const handleClick =() => {
 
 
 return (
+  <div style={{display:'flex',flexDirection:'row'}}>
+  
     <div className='container'>
       <Card className='card'>
         <Form layout='vertical'  onFinishFailed={onFinishFailed} >
@@ -129,12 +139,26 @@ return (
             <Typography style={{color:'grey',textAlign:'center'}}>Or sign in with</Typography>
             {/* <GoogleLoginn /> */}
             {google? <Home />:
-            <GoogleButton onClick={handleGoogle} style={{marginLeft:'30px',width:'300px',marginTop:'30px',height:'50px'}}>SignIn with Google</GoogleButton>
+            <GoogleButton onClick={handleGoogle} className="google-button-login"  >SignIn with Google</GoogleButton>
           
           }
         </Form>
       </Card>
      
+    </div>
+    <div style={{display:'flex' ,flexDirection:'row'}}>
+      <div style={{marginTop:'400px'}}>
+            <img src={undraw_metrics}  alt="skeinlogo" style={{height:'150px',width:'200px',marginLeft:'550px'}}/>
+      </div>
+      <div style={{marginTop:'200px'}}>
+            <img src={undraw_Personal}  alt="skeinlogo" style={{height:'250px',width:'250px',marginLeft:'50px'}}/>
+      </div>
+      <div style={{marginTop:'20px'}}>
+            <img src={undraw_Meeting}  alt="skeinlogo" style={{height:'300px',width:'300px',marginLeft:'50px'}}/>
+      </div>
+
+
+    </div>
     </div>
   );
 }

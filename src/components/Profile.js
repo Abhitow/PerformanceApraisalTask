@@ -44,7 +44,7 @@ const Profile = () => {
     return(
         <div>
             <Dropdown menu={{items}}>
-                <Space className='header-profile' style={{color:'blue'}} >{displayName}<UserOutlined /></Space>
+                <Space className='header-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
             </Dropdown>
         </div>
     )

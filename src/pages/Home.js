@@ -5,6 +5,9 @@ import PerformanceApraisalForm from '../components/PerformanceApraisalForm';
 import ScoringTable from '../components/ScoringTable';
 import KRAsoftskills from '../components/KRAsoftskills'
 import Feedback from './Feedback';
+import { useEffect,useState } from 'react';
+import axios from 'axios';
+import { Navigate, useNavigate } from 'react-router-dom';
 const { Header, Footer, Content } = Layout;
 const layoutStyle={
     height:'100vh'
@@ -41,8 +44,22 @@ const footerStyle = {
 const handleSubmit=()=>{
   console.log("button working");
 }
-const Home = () => (
-  <Space
+const Home = () => {
+const navigate = useNavigate();
+  const [data , setData] =useState("");
+
+  useEffect(()=>{
+    axios.get("https://demo.emeetify.com:81/appraisel/users/getDetails").
+    then(response =>console.log(response));
+  });
+useEffect(()=>{
+  if(!localStorage.getItem('email')){
+    navigate('/');
+  }
+},[]);
+
+  return(
+    <Space
     direction="vertical"
     style={{
       width: '100%',
@@ -77,7 +94,7 @@ const Home = () => (
           style={{backgroundColor:'green',height:'40px',width:'100px'}}
           onClick={handleSubmit}
           >Submit</Button>
-          </Form>
+          </Form> 
           
         </Card>
 
@@ -86,8 +103,10 @@ const Home = () => (
         <h6 style={{margin:'auto' , float:'right'}}>
           @Terms and Conditions
         </h6>
-      </Footer> */}
+        </Footer>*/}
     </Layout>  
   </Space>
-);
+  )
+    }
+
 export default Home;
