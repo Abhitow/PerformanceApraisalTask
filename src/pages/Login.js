@@ -18,7 +18,7 @@ import GoogleButton from 'react-google-button';
 
 // import Axios from 'axios'
 
-function Login() {
+function Login({isLoggedIn}) {
   const navigate =useNavigate()
   const onFinishFailed = (errorInfo) => {
   console.log("unsuccess" , errorInfo);}
@@ -32,6 +32,7 @@ function Login() {
   const [google , setGoogle] = useState('');
   var isLoggedIn = localStorage.getItem("token");
 
+ 
   const handleGoogle=()=>{
     signInWithPopup(auth,provider).then((data)=>{
       // console.log(provider, "++++++++++++++");
