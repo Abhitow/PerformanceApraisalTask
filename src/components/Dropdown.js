@@ -1,4 +1,5 @@
 import { Select, Space } from 'antd';
+import { Option } from 'antd/es/mentions';
 import { useState } from 'react';
 const designationData = ['Select Designation','Associate Trainee', 'Software Engineer' , 'Software Test Engineer'];
 const SelectDropdown = () => {
@@ -8,7 +9,7 @@ const SelectDropdown = () => {
  }
   return (
     <Space wrap>
-      <Select
+      {/* <Select
         defaultValue={designationData[0]}
         style={{
           width: 250,marginLeft:'65px'
@@ -18,7 +19,18 @@ const SelectDropdown = () => {
           label: province,
           value: province,
         }))}
-      />
+      /> */}
+
+<Select style={{ 
+          width: 250,marginLeft:'65px'
+        }} 
+        value={designation}
+        onChange={(e)=>{setDesignation(e.target.value)}} defaultValue="select Designation">
+  <Option value="associateTraineee">Associate Trainee</Option>
+  <Option value="software Engineer">Software Engineer</Option>
+  <Option value="test engineeer">Software Test Engineer</Option>
+  <Option value="ui/ux designer">UI /UX Designer</Option>
+</Select>
       
     </Space>
   );

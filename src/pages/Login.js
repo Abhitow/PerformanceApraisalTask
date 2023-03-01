@@ -2,6 +2,8 @@ import download from '../download.png'
 import undraw_metrics from '../undraw_metrics.png'
 import undraw_Meeting from '../undraw_Meeting.png'
 import undraw_Personal from '../undraw_Personal.png'
+import undraw_Engineering from '../undraw_Engineering.png'
+import undraw_Team from '../undraw_Team.png'
 
 import React from 'react'
 import {Card , Form ,Input ,Button ,message, Typography} from 'antd'
@@ -44,6 +46,7 @@ function Login({isLoggedIn}) {
         setGoogle(data.user.email);
           localStorage.setItem("displayName" , data.user.displayName);
           localStorage.setItem("email",data.user.email);
+          
           navigate("/home");
           // setDatas(data.user.email);
           // console.log(datas,">>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -56,12 +59,12 @@ function Login({isLoggedIn}) {
   },[]);
 
 useEffect(()=>{
-  if(localStorage.getItem('email')){
+  if(localStorage.getItem('email') || responseData.status === true){
     navigate('/home');
   }
 },[]);
+
 const handleClick =() => {
-  handleGoogle();
   fetch("http://demo.emeetify.com:8080/daytodaytask/admin/adminlogin", {
     method: 'POST',
     body: JSON.stringify({
@@ -74,9 +77,12 @@ const handleClick =() => {
   })
      .then((response) => response.json())
      .then((data) => {
-        console.log(data);
+        console.log(data.data.full_name,"-------------------->");
         setResponseData(data)
         // Handle data
+        localStorage.setItem("full_name" , data.data.full_name);
+        localStorage.setItem("email",data.data.email);
+        // console.log(full_name,"<<<>>>>");
      })
      .catch((err) => {
       console.log("catch")
@@ -96,9 +102,11 @@ const handleClick =() => {
     }    
 }
 
-
+useEffect(() => {
+  setEmail(localStorage.getItem('email'));
+ },[]);
 return (
-  <div style={{display:'flex',flexDirection:'row'}}>
+  <div >
   
     <div className='container'>
       <Card className='card'>
@@ -147,15 +155,15 @@ return (
      
     </div>
     <div style={{display:'flex' ,flexDirection:'row'}}>
-      <div style={{marginTop:'400px'}}>
-            <img src={undraw_metrics}  alt="skeinlogo" style={{height:'150px',width:'200px',marginLeft:'550px'}}/>
+      <div style={{marginLeft:'100px'}}>
+            <img src={undraw_Team}  alt="skeinlogo" style={{height:'650px',width:'600px'}}/>
       </div>
-      <div style={{marginTop:'200px'}}>
+      {/* <div style={{marginTop:'200px'}}>
             <img src={undraw_Personal}  alt="skeinlogo" style={{height:'250px',width:'250px',marginLeft:'50px'}}/>
       </div>
       <div style={{marginTop:'20px'}}>
             <img src={undraw_Meeting}  alt="skeinlogo" style={{height:'300px',width:'300px',marginLeft:'50px'}}/>
-      </div>
+      </div> */}
 
 
     </div>

@@ -1,4 +1,5 @@
 import { Button, Card, Col, DatePicker, Form, Input, Row, Typography } from 'antd'
+import axios from 'axios'
 import React,{useState} from 'react'
 import DepartmentDropdown from './DepartmentDropdown'
 import SelectDropdown from './Dropdown'
@@ -7,15 +8,9 @@ import ManagerDropdown from './ManagerDropdown'
 const { Title } = Typography;
 
 
-const handleSubmit = (e) =>{
-    // e.preventDefault();
-}
-const onFinishFailed=(errorInfo)=>{
-    console.log('Failed',errorInfo);
-}
-const onFinish = (values) => {
-    console.log(values);
-  };
+
+
+
 function PerformanceApraisalForm() {
     const [form] = Form.useForm();
     const [name , setName] = useState();
@@ -23,12 +18,60 @@ function PerformanceApraisalForm() {
     const[designation , setDesignation] = useState();
     const[department , setDepartment] = useState();
     const[date , setDate] = useState();
+    const[review_date , setReviewDate] = useState();
+    const[postData , setPostData] =useState();
+
+
+
+
+    const handleSubmit = (e) =>{
+        // e.preventDefault();
+    
+        // fetch("https://demo.emeetify.com:81/appraisel/users/FormDetails?email=sameenabegum.s@skeintech.com",{
+        //     method:'PUT',
+        //     body:JSON.stringify({
+        //         "username": name ,
+        //         "Manager_name":manager,
+        //         "Designation":designation,
+        //         "Department":department,
+        //         "Joining_date":date,
+        //         "Review_period":review_date
+        //     }),
+        //     headers: {
+        //         'Content-type': 'application/json; charset=UTF-8',
+        //       },
+        // })
+        // .then((response)=> response.json())
+        // .then((data) =>{ setPostData(data)})
+        // .catch((err) =>{console.log(err.message)});
+    }
+    const payload ={
+        "username": name ,
+        "Manager_name":manager,
+        "Designation":designation,
+        "Department":department,
+        "Joining_date":date,
+        "Review_period":review_date
+    };
+
+    const onFinish = (values) => {
+        console.log(values);
+        axios.post("https://demo.emeetify.com:81/appraisel/users/FormDetails?email=sameenabegum.s@skeintech.com" ,payload)
+        .then((response)=>{console.log(response)})
+        .catch(e =>{console.log("e" ,e)})
+      };
+
+      console.log(payload);
+      const onFinishFailed=(errorInfo)=>{
+        console.log('Failed',errorInfo);
+    }
+
   return (
     <div>
         <Card className='form-card' title={<Title style={{fontSize:'20px'}}>Performance Appraisal Form</Title>}>
         
             
-        <Form form={form}  onFinishFailed={onFinishFailed}   labelCol={{span:8}} wrapperCol={{span:14}} colon={false}>
+        <Form form={form}  onFinishFailed={onFinishFailed} onFinish={onFinish}   labelCol={{span:8}} wrapperCol={{span:14}} colon={false}>
         <Row className='performance-form-row-one'>
             <Col span={12} >
 
@@ -47,7 +90,7 @@ function PerformanceApraisalForm() {
         <Row className='performance-form-row-two'>
             <Col span={12} >
                 <Form.Item className="label3"  label='Designation' name={"designation"} rules={[{required:true,message:'please enter Your designation'}]} >
-                    <SelectDropdown className='selectDropdown' value={designation} onChange={(e)=>{setDesignation(e.target.value)}}/>
+                    <SelectDropdown className='selectDropdown' value={designation} />
                 </Form.Item>
             </Col>
             <Col span={12} >
@@ -64,7 +107,7 @@ function PerformanceApraisalForm() {
             </Col>
             <Col span={12} >
                 <Form.Item label='Review Period' className='review-period'>
-                    <JoiningDatepicker className='performance-date'/>
+                    <JoiningDatepicker className='performance-date' onChange={(e) =>{setReviewDate(e.target.value)}}/>
                 </Form.Item>
             </Col>
         </Row>
