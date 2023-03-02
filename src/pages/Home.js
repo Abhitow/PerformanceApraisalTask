@@ -87,7 +87,7 @@ const Home = () => {
       });
   }, []);
 
-  console.log(skill ,">>>>>>>>>>>>>>>>>>>");
+  console.log(skill[0].t_id ,">>>>>>>>>>>>>>>>>>>");
 
 
   const localEmail = localStorage.getItem("email");
@@ -96,7 +96,7 @@ const Home = () => {
     axios
       .post(
         "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
-          localEmail,
+          localEmail
       )
       .then((response) => {
         console.log(response.data);

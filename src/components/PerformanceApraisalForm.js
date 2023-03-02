@@ -27,7 +27,6 @@ const [responseData , setResponseData] = useState("");
   const[messageApi , contextHolder] = message.useMessage();
 
   const localEmail = localStorage.getItem('email');
-  console.log(localEmail,"4444444444444444444444");
 
   const managerData = [
     "Select Manager",
@@ -79,7 +78,6 @@ const [responseData , setResponseData] = useState("");
   };
 
   const onFinish = (values) => {
-    console.log(values);
     axios
       .put(
         "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+localEmail,
