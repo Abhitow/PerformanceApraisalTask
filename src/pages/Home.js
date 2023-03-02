@@ -1,250 +1,475 @@
-import { Button, Card, Col, Divider, Form, Layout, Row, Space } from 'antd';
-import HomeHeader from '../components/Header';
-import PerformanceApraisalForm from '../components/PerformanceApraisalForm';
-import ScoringTable from '../components/ScoringTable';
-import Feedback from './Feedback';
-import { useEffect,useState } from 'react';
-import axios from 'axios';
-import { Navigate, useNavigate } from 'react-router-dom';
-import Typography from 'antd/es/typography/Typography';
-import KRArating from '../components/KRArating';
-import KRAselfrating from '../components/KRAselfrating';
-import KRAmanagerRating from '../components/KRAmanagerRating';
-import KRAmanagerComment from '../components/KRAmanagerComment';
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  Layout,
+  Rate,
+  Row,
+  Space,
+} from "antd";
+import HomeHeader from "../components/Header";
+import PerformanceApraisalForm from "../components/PerformanceApraisalForm";
+import ScoringTable from "../components/ScoringTable";
+import Feedback from "./Feedback";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Typography from "antd/es/typography/Typography";
+import KRArating from "../components/KRArating";
+import KRAselfrating from "../components/KRAselfrating";
+import KRAmanagerRating from "../components/KRAmanagerRating";
+import KRAmanagerComment from "../components/KRAmanagerComment";
 const { Header, Footer, Content } = Layout;
-const layoutStyle={
-    height:'100vh'
-}
+const layoutStyle = {
+  height: "100vh",
+};
 const headerStyle = {
-  textAlign: 'left',
-  color: 'black',
+  textAlign: "left",
+  color: "black",
   height: 64,
   paddingInline: 50,
-  lineHeight: '64px',
-  backgroundColor: 'white',
-  position:'fixed',
-  top:'0px',
-  width:'100vw',
+  lineHeight: "64px",
+  backgroundColor: "white",
+  position: "fixed",
+  top: "0px",
+  width: "100vw",
   zIndex: 1,
-  
 };
 const contentStyle = {
-  textAlign: 'center',
-  marginTop:'50px',
-  backgroundColor:'#f5f5f5',
-  minHeight: '1000%',
+  textAlign: "center",
+  marginTop: "50px",
+  backgroundColor: "#f5f5f5",
+  minHeight: "1000%",
 };
 
 const footerStyle = {
-  textAlign: 'center',
-  color: 'black',
-  height:'40px',
-  backgroundColor:'#e6f4ff',
-  position:'fixed',
-  bottom:'0px',
-  width:'100vw'
+  textAlign: "center",
+  color: "black",
+  height: "40px",
+  backgroundColor: "#e6f4ff",
+  position: "fixed",
+  bottom: "0px",
+  width: "100vw",
 };
-const handleSubmit=()=>{
+const handleSubmit = () => {
   console.log("button working");
-}
+};
 const Home = () => {
-const navigate = useNavigate();
-  const [detail , setDetail] =useState();
-  const [skill , setSkill] = useState();
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [detail, setDetail] = useState();
+  const [skill, setSkill] = useState();
+  const [value, setValue] = useState("");
 
-useEffect( ()=>{
-  console.log("12345");
-  axios.get("https://demo.emeetify.com:81/appraisel/users/getDetails")
-    .then(response => setDetail(response.data.data))
-    .catch(e =>{console.log("e" ,e)}) 
- },[])
- useEffect( ()=>{
-  axios.get("https://demo.emeetify.com:81/appraisel/users/getSoft")
-    .then(response => setSkill(response.data.data))
-    .catch(e =>{console.log("e" ,e)}) 
- },[])
-//  useEffect(()=>{
-//   if(!localStorage.getItem('email') ){
-//     navigate('/');
-//   }
-// },[]);
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
 
-// console.log(detail);
-  return(
+  useEffect(() => {
+    console.log("12345");
+    axios
+      .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
+      .then((response) => setDetail(response.data.data))
+      .catch((e) => {
+        console.log("e", e);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get("https://demo.emeetify.com:81/appraisel/users/getSoft")
+      .then((response) => setSkill(response.data.data))
+      .catch((e) => {
+        console.log("e", e);
+      });
+  }, []);
+
+  console.log(skill ,">>>>>>>>>>>>>>>>>>>");
+
+
+  const localEmail = localStorage.getItem("email");
+  const onFinish = (values) => {
+    // console.log(values);
+    axios
+      .post(
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
+          localEmail,
+      )
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+  };
+
+  useEffect(() => {}, [value]);
+  // console.log(detail);
+  return (
     <Space
-    direction="vertical"
-    style={{
-      width: '100%',
-    }}
-    size={[0, 48]}
-  >
-    <Layout style={layoutStyle}>
-      <Header style={headerStyle}>
-       <HomeHeader />
-      </Header>
-      <Content style={contentStyle} className='homeContent'>
-        <Card style={{height:'auto' , width:'1100px',margin:'auto'}}>
-          <PerformanceApraisalForm />
-          <ScoringTable />
+      direction="vertical"
+      style={{
+        width: "100%",
+      }}
+      size={[0, 48]}
+    >
+      <Layout style={layoutStyle}>
+        <Header style={headerStyle}>
+          <HomeHeader />
+        </Header>
+        <Content style={contentStyle} className="homeContent">
+          <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
+            <PerformanceApraisalForm />
+            <ScoringTable />
 
-          <Divider style={{marginTop:'60px' , backgroundColor:'green' , height:'5px'}}/>
+            <Divider
+              style={{
+                marginTop: "60px",
+                backgroundColor: "green",
+                height: "5px",
+              }}
+            />
 
-<Form>
-<Typography style={{marginTop:'80px',fontSize:'24px',fontWeight:'bold',textDecorationLine:'underline'}}>KRA-Technical Aspects</Typography>
-        <div>
-            {detail!==undefined && detail.map( (d)=>{
-        return(
-          <>
-        <div style={{display:'flex' ,flexDirection:'row',marginLeft:'10px',marginTop:'30px'}}>
-          <Row>
-            <Col style={{float:'left',fontSize:'16px'}}><h1 key={d.id}>{d.Kra_id} : </h1></Col>
-          </Row>
-          <Row>
-            <Col style={{float:'left',fontSize:'14px' , marginTop:'6px' ,marginLeft:'4px',fontWeight:'none'}}>
-            <h1 key={d.id}> {d.Kra}</h1>
-            </Col>
-          </Row>
-        </div>
-        <div>
-          <Card style={{height:'75px',borderColor:'blue' , textAlign:'left',marginTop:'0px',marginLeft:'10px',marginRight:'20px'}}>
-          <p style={{fontSize:'17px',marginTop:'-10px'}} key={d.id}>{d.Measures}</p>
-          </Card>
-        </div>
-        <div>
-        <Row >
-                <Col span={12} >
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}} >
-                        Select Rating<span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-                <Col span={12}>
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}}>
-                        Justify Your Rating
-                        <span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={12}><KRArating /></Col>
-                <Col span={12}><KRAselfrating /></Col>
-            </Row>
-            <Row>
-                <Col span={12} >
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}}>
-                        Manager Rating
-                        <span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-                <Col span={12}>
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}}>
-                        Manager Comments
-                        <span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={12}><KRAmanagerRating /></Col>
-                <Col span={12}><KRAmanagerComment /></Col>
-            </Row>
-        </div>
-          </>
-         
-        )
-      })}
-  </div>
+            <Form form={form} onFinish={onFinish}>
+              <Typography
+                style={{
+                  marginTop: "80px",
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  textDecorationLine: "underline",
+                }}
+              >
+                KRA-Technical Aspects
+              </Typography>
+              <div>
+                {detail !== undefined &&
+                  detail.map((d) => {
+                    return (
+                      <>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            marginLeft: "10px",
+                            marginTop: "30px",
+                          }}
+                        >
+                          <Row>
+                            <Col style={{ float: "left", fontSize: "16px" }}>
+                              <h1 key={d.t_id}>{d.kra_id} : </h1>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col
+                              style={{
+                                float: "left",
+                                fontSize: "14px",
+                                marginTop: "6px",
+                                marginLeft: "4px",
+                                fontWeight: "none",
+                              }}
+                            >
+                              <h1 key={d.t_id}> {d.kra}</h1>
+                            </Col>
+                          </Row>
+                        </div>
+                        <div>
+                          <Card
+                            style={{
+                              height: "75px",
+                              borderColor: "blue",
+                              textAlign: "left",
+                              marginTop: "0px",
+                              marginLeft: "10px",
+                              marginRight: "20px",
+                            }}
+                          >
+                            <p
+                              style={{ fontSize: "17px", marginTop: "-10px" }}
+                              key={d.t_id}
+                            >
+                              {d.measures}
+                            </p>
+                          </Card>
+                        </div>
+                        <div>
+                          <Row>
+                            <Col span={12}>
+                            <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Self Rating
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                            <Col span={12}>
+                              <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Justify Your Rating
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col span={12}>
+                              <Rate
+                                onChange={(e) => {
+                                  setValue(e);
+                                }}
+                                value={value}
+                                defaultValue={1}
+                                character={({ index }) => index + 1}
+                                style={{
+                                  fontSize: "30px",
+                                  float: "left",
+                                  marginLeft: "30px",
+                                }}
+                              />
+                            </Col>
+                            <Col span={12}>
+                              <KRAselfrating />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col span={12}>
+                              <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Manager Rating
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                            <Col span={12}>
+                              <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Manager Comments
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col span={12}>
+                              <KRAmanagerRating />
+                            </Col>
+                            <Col span={12}>
+                              <KRAmanagerComment />
+                            </Col>
+                          </Row>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
 
-  <Divider style={{marginTop:'60px' , backgroundColor:'violet' , height:'5px'}}/>
+              <Divider
+                style={{
+                  marginTop: "60px",
+                  backgroundColor: "violet",
+                  height: "5px",
+                }}
+              />
 
-  <Typography style={{marginTop:'80px',fontSize:'24px',fontWeight:'bold',textDecorationLine:'underline'}}>KRA-Softskills</Typography>
+              <Typography
+                style={{
+                  marginTop: "80px",
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  textDecorationLine: "underline",
+                }}
+              >
+                KRA-Softskills
+              </Typography>
 
+              <div>
+                {skill !== undefined &&
+                  skill.map((d) => {
+                    return (
+                      <>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            marginLeft: "10px",
+                            marginTop: "30px",
+                          }}
+                        >
+                          <Row>
+                            <Col style={{ float: "left", fontSize: "16px" }}>
+                              <h1 key={d.t_id}>{d.kra_id} : </h1>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col
+                              style={{
+                                float: "left",
+                                fontSize: "14px",
+                                marginTop: "6px",
+                                marginLeft: "4px",
+                                fontWeight: "none",
+                              }}
+                            >
+                              <h1 key={d.t_id}> {d.kra}</h1>
+                            </Col>
+                          </Row>
+                        </div>
+                        <div>
+                          <Card
+                            style={{
+                              height: "75px",
+                              borderColor: "blue",
+                              textAlign: "left",
+                              marginTop: "0px",
+                              marginLeft: "10px",
+                              marginRight: "20px",
+                            }}
+                          >
+                            <p
+                              style={{ fontSize: "17px", marginTop: "-10px" }}
+                              key={d.t_id}
+                            >
+                              {d.measures}
+                            </p>
+                          </Card>
+                        </div>
+                        <div>
+                          <Row>
+                            <Col span={12}>
+                              <Form.Item>
+                                <p
+                                  style={{
+                                    float: "left",
+                                    marginLeft: "30px",
+                                    fontSize: "18px",
+                                  }}
+                                >
+                                  Select Rating
+                                  <span style={{ color: "red" }}>*</span>
+                                </p>
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Justify Your Rating
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                          </Row>
+                          <Row style={{ marginTop: "-30px" }}>
+                            <Col span={12}>
+                              <Form.Item>
+                                <KRArating />
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item>
+                                <KRAselfrating />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col span={12}>
+                              <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Manager Rating
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                            <Col span={12}>
+                              <p
+                                style={{
+                                  float: "left",
+                                  marginLeft: "30px",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                Manager Comments
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
+                            </Col>
+                          </Row>
+                          <Row style={{ marginTop: "-5px" }}>
+                            <Col span={12}>
+                              <Form.Item>
+                                <KRAmanagerRating />
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item>
+                                <KRAmanagerComment />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+              <Divider
+                style={{
+                  marginTop: "40px",
+                  backgroundColor: "blue",
+                  height: "5px",
+                }}
+              />
 
-  <div>
-            {skill!==undefined && skill.map( (d)=>{
-        return(
-          <>
-        <div style={{display:'flex' ,flexDirection:'row',marginLeft:'10px',marginTop:'30px'}}>
-          <Row>
-            <Col style={{float:'left',fontSize:'16px'}}><h1 key={d.id}>{d.Kra_id} : </h1></Col>
-          </Row>
-          <Row>
-            <Col style={{float:'left',fontSize:'14px' , marginTop:'6px' ,marginLeft:'4px',fontWeight:'none'}}>
-            <h1 key={d.id}> {d.Kra}</h1>
-            </Col>
-          </Row>
-        </div>
-        <div>
-          <Card style={{height:'75px',borderColor:'blue' , textAlign:'left',marginTop:'0px',marginLeft:'10px',marginRight:'20px'}}>
-          <p style={{fontSize:'17px',marginTop:'-10px'}} key={d.id}>{d.Measures}</p>
-          </Card>
-        </div>
-        <div>
-        <Row >
-                <Col span={12} >
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}} >
-                        Select Rating<span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-                <Col span={12}>
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}}>
-                        Justify Your Rating
-                        <span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={12}><KRArating /></Col>
-                <Col span={12}><KRAselfrating /></Col>
-            </Row>
-            <Row>
-                <Col span={12} >
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}}>
-                        Manager Rating
-                        <span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-                <Col span={12}>
-                    <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}}>
-                        Manager Comments
-                        <span style={{color:'red'}}>*</span>
-                    </p>
-                </Col>
-            </Row>
-            <Row>
-                <Col span={12}><KRAmanagerRating /></Col>
-                <Col span={12}><KRAmanagerComment /></Col>
-            </Row>
-        </div>
-          </>
-         
-        )
-      })}
-  </div>
-         <Divider style={{marginTop:'40px' , backgroundColor:'blue' , height:'5px'}}/>
+              <Feedback />
 
-         <Feedback />
+              <Divider
+                style={{
+                  marginTop: "40px",
+                  backgroundColor: "lightBlue",
+                  height: "3px",
+                }}
+              />
 
-        <Divider style={{marginTop:'40px' , backgroundColor:'lightBlue' , height:'3px'}}/>
+              <Button
+                htmlType="submit"
+                type="primary"
+                style={{
+                  backgroundColor: "green",
+                  height: "40px",
+                  width: "100px",
+                }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Form>
 
-        <Button htmlType="submit" type="primary" 
-          style={{backgroundColor:'green',height:'40px',width:'100px'}}
-          onClick={handleSubmit}
-            >Submit</Button>
-
-
-</Form>
-       
-
-
-
-
-
-
-
-
-
-
-          {/* <Form> */}
-          {/* <KRAdetails />
+            {/* <Form> */}
+            {/* <KRAdetails />
 
   //         <Divider style={{marginTop:'40px' , backgroundColor:'blue' , height:'5px'}}/>
 
@@ -260,19 +485,17 @@ useEffect( ()=>{
   //         style={{backgroundColor:'green',height:'40px',width:'100px'}}
   //         onClick={handleSubmit}
   //         >Submit</Button> */}
-           {/* </Form>  */}
-          
-        </Card>
-
-      </Content>
-     {/* <Footer style={footerStyle}>
+            {/* </Form>  */}
+          </Card>
+        </Content>
+        {/* <Footer style={footerStyle}>
   //       <h6 style={{margin:'auto' , float:'right'}}>
   //         @Terms and Conditions
   //       </h6>
   //       </Footer>*/}
-     </Layout>  
-   </Space>
-  )
-    }
+      </Layout>
+    </Space>
+  );
+};
 
 export default Home;

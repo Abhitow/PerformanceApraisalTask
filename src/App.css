@@ -144,3 +144,8 @@
   overflow: hidden !important;
   margin-top: 30px;
 }
+.ant-rate .ant-rate-star-second {
+  color: lightgrey;
+  transition: all 0.2s;
+  user-select: none;
+}
