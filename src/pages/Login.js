@@ -13,7 +13,6 @@ import { signInWithPopup } from "firebase/auth";
 import GoogleButton from "react-google-button";
 import axios from "axios";
 
-import {useMediaQuery} from 'react-responsive'
 
 // import Axios from 'axios'
 

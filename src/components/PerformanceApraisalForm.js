@@ -22,7 +22,7 @@ function PerformanceApraisalForm() {
   const [department, setDepartment] = useState();
   const [date, setDate] = useState();
   const [review_date, setReviewDate] = useState();
-const [responseData , setResponseData] = useState("");
+  const [responseData , setResponseData] = useState("");
 
   const[messageApi , contextHolder] = message.useMessage();
 
@@ -48,26 +48,7 @@ const [responseData , setResponseData] = useState("");
     "UI/UX Desgin",
   ];
 
-  const handleSubmit = (e) => {
-    // e.preventDefault();
-    // fetch("https://demo.emeetify.com:81/appraisel/users/FormDetails?email=sameenabegum.s@skeintech.com",{
-    //     method:'PUT',
-    //     body:JSON.stringify({
-    //         "username": name ,
-    //         "Manager_name":manager,
-    //         "Designation":designation,
-    //         "Department":department,
-    //         "Joining_date":date,
-    //         "Review_period":review_date
-    //     }),
-    //     headers: {
-    //         'Content-type': 'application/json; charset=UTF-8',
-    //       },
-    // })
-    // .then((response)=> response.json())
-    // .then((data) =>{ setPostData(data)})
-    // .catch((err) =>{console.log(err.message)});
-  };
+
   const payload = {
     username: name,
     Manager_name: manager,
@@ -90,7 +71,7 @@ const [responseData , setResponseData] = useState("");
         console.log("e", e);
       });  
   };
-  console.log(responseData.status,"+++++++++++++++++++++++++++++++++++++++");
+  // console.log(responseData.status,"+++++++++++++++++++++++++++++++++++++++");
 
 //   console.log(payload);
   const onFinishFailed = (errorInfo) => {

@@ -61,7 +61,10 @@ const Home = () => {
   const [form] = Form.useForm();
   const [detail, setDetail] = useState();
   const [skill, setSkill] = useState();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState();
+
+ const [fecthData, setFetchData] = useState();
+ 
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -70,7 +73,6 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    console.log("12345");
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
       .then((response) => setDetail(response.data.data))
@@ -80,6 +82,17 @@ const Home = () => {
   }, []);
   useEffect(() => {
     axios
+      .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
+      .then((response) => setFetchData(response))
+      .catch((e) => {
+        console.log("e", e);
+      });
+  }, []);
+  // console.log(fecthData.data.data[0].t_id)
+ 
+
+  useEffect(() => {
+    axios
       .get("https://demo.emeetify.com:81/appraisel/users/getSoft")
       .then((response) => setSkill(response.data.data))
       .catch((e) => {
@@ -87,15 +100,13 @@ const Home = () => {
       });
   }, []);
 
-  console.log(skill[0].t_id ,">>>>>>>>>>>>>>>>>>>");
 
 
   const localEmail = localStorage.getItem("email");
   const onFinish = (values) => {
-    // console.log(values);
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
           localEmail
       )
       .then((response) => {
@@ -106,8 +117,7 @@ const Home = () => {
       });
   };
 
-  useEffect(() => {}, [value]);
-  // console.log(detail);
+ 
   return (
     <Space
       direction="vertical"
@@ -147,9 +157,10 @@ const Home = () => {
               <div>
                 {detail !== undefined &&
                   detail.map((d) => {
+                    // {/* 
                     return (
                       <>
-                        <div
+                        <div 
                           style={{
                             display: "flex",
                             flexDirection: "row",
@@ -159,7 +170,7 @@ const Home = () => {
                         >
                           <Row>
                             <Col style={{ float: "left", fontSize: "16px" }}>
-                              <h1 key={d.t_id}>{d.kra_id} : </h1>
+                              <h1 key={d.t_id} >{d.kra_id} : </h1>
                             </Col>
                           </Row>
                           <Row>
@@ -224,19 +235,7 @@ const Home = () => {
                           </Row>
                           <Row>
                             <Col span={12}>
-                              <Rate
-                                onChange={(e) => {
-                                  setValue(e);
-                                }}
-                                value={value}
-                                defaultValue={1}
-                                character={({ index }) => index + 1}
-                                style={{
-                                  fontSize: "30px",
-                                  float: "left",
-                                  marginLeft: "30px",
-                                }}
-                              />
+                             <KRArating  />
                             </Col>
                             <Col span={12}>
                               <KRAselfrating />
@@ -383,9 +382,12 @@ const Home = () => {
                           </Row>
                           <Row style={{ marginTop: "-30px" }}>
                             <Col span={12}>
+
+
                               <Form.Item>
                                 <KRArating />
                               </Form.Item>
+
                             </Col>
                             <Col span={12}>
                               <Form.Item>

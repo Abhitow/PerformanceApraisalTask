@@ -2,8 +2,6 @@ import { Dropdown, Space } from 'antd'
 import React,{useState} from 'react'
 import { UserOutlined } from '@ant-design/icons'
 import Logout from './Logout'
-import { signInWithPopup } from 'firebase/auth'
-import { auth, provider } from './GoogleLogin'
 
 
 const Profile = () => {
@@ -12,7 +10,6 @@ const Profile = () => {
     const [ email , setEmail ] = useState(localStorage.getItem("email"));
 
     const[displayName , setDisplayName] = useState(localStorage.getItem("displayName"));
-    const [google , setGoogle] = useState('');
   
     //   console.log(user);
     //   console.log(full_name,">>>>>>>>>>>>>>>>>>>>>>>>>>");
