@@ -5,6 +5,7 @@ import {
   Divider,
   Form,
   Layout,
+  message,
   Rate,
   Row,
   Space,
@@ -58,6 +59,8 @@ const Home = (props) => {
   const [form] = Form.useForm();
   const [detail, setDetail] = useState();
   const [skill, setSkill] = useState();
+  const [messageApi , contextHolder] = message.useMessage();
+  const[fieldDecorator , setFieldDecorator] = useState();
 
   const localEmail = localStorage.getItem("email");
 
@@ -159,9 +162,18 @@ const Home = (props) => {
     console.log("button working");
     
   };
+  const success = () =>{
+    messageApi.open({
+      type:'success',
+      content:'Details Submitted Successfully'
+    });
+  }
 
   // console.log(detail);
   return (
+    <>
+    
+    {contextHolder}
     <Space
       direction="vertical"
       style={{
@@ -197,6 +209,9 @@ const Home = (props) => {
               >
                 KRA-Technical Aspects
               </Typography>
+
+              {/* technical aspects starts here  */}
+             
               <div>
                 {detail !== undefined &&
                   detail.map((d,index) => {
@@ -249,54 +264,31 @@ const Home = (props) => {
                           </Card>
                         </div>
                         <div>
-                          <Row>
+                          <Row style={{marginTop:'20px'}}>
                             <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Self Rating
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                            </Col>
-                            <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Justify Your Rating
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col span={12}>
-                              <Rate
+                              <Form.Item  rules={[{required:true}]} hasFeedback>
+                                <label className="self-rating">Self Rating</label>
+                                <div className="self-rating-input">
+                                <Rate 
                                 onChange={(e) =>{
                                   initialData[index].self_rating = e
-                                  
                                 }
                                 }
                                 defaultValue={1}
                                 character={({ index }) => index + 1}
                                 style={{
-                                  fontSize: "30px",
-                                  float: "left",
-                                  marginLeft: "30px",
+                                  fontSize: "25px",
+                                 
                                 }}
-                              />
+                              /> 
+                                </div>
+                                
+                              </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <div
-                                key={d.t_id}
-                                style={{ float: "right", marginRight: "100px" }}
-                              >
+                              <Form.Item rules={[{required:true , message:'please input '}]} hasFeedback>
+                                <label className="self-comment">Justify Your Comment</label>
+                                <div className="self-comment-input"  key={d.t_id}>
                                 <TextArea
                                   onChange={(e) =>{
                                     initialData[index].t_id = d.t_id
@@ -305,49 +297,37 @@ const Home = (props) => {
                                   rows={4}
                                   style={{ width: "400px", marginTop: "" }}
                                 />
-                              </div>
+                                </div>
+                              </Form.Item>
                             </Col>
                           </Row>
+
+
                           <Row>
                             <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Manager Rating
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
+                              <Form.Item>
+                                <label className="manager-rating">Manager Rating</label>
+                                <div>
+                                <Rate 
+                               className="manager-rating-input"
+                                defaultValue={1}
+                                character={({ index }) => index + 1}
+                              /> 
+                                </div>
+                              </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Manager Comments
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col span={12}>
-                              <KRAmanagerRating />
-                            </Col>
-                            <Col span={12}>
-                              <div
+                              <Form.Item>
+                                <label className="manager-comment">Manager Comments</label>
+                                <div className="manager-comment-input"
                                 key={d.t_id}
-                                style={{ float: "right", marginRight: "100px" }}
                               >
                                 <TextArea
                                   rows={4}
                                   style={{ width: "400px", marginTop: "" }}
                                 />
                               </div>
+                              </Form.Item>
                             </Col>
                           </Row>
                         </div>
@@ -356,6 +336,7 @@ const Home = (props) => {
                   })}
               </div>
 
+            {/* technical aspects ends here */}
               <Divider
                 style={{
                   marginTop: "60px",
@@ -363,7 +344,9 @@ const Home = (props) => {
                   height: "5px",
                 }}
               />
+            
 
+            {/*soft skill starts here */}
               <Typography
                 style={{
                   marginTop: "80px",
@@ -374,11 +357,9 @@ const Home = (props) => {
               >
                 KRA-Softskills
               </Typography>
-
               <div>
                 {skill !== undefined &&
                   skill.map((d,index) => {
-                    
                     return (
                       <>
                         <div
@@ -428,67 +409,36 @@ const Home = (props) => {
                           </Card>
                         </div>
                         <div>
-                          <Row>
+                          <Row style={{marginTop:'20px'}}>
                             <Col span={12}>
-                              <Form.Item>
-                                <p
-                                  style={{
-                                    float: "left",
-                                    marginLeft: "30px",
-                                    fontSize: "18px",
-                                  }}
-                                >
-                                  Select Rating
-                                  <span style={{ color: "red" }}>*</span>
-                                </p>
-                              </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Justify Your Rating
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                            </Col>
-                          </Row>
-                          <Row style={{ marginTop: "-30px" }}>
-                            <Col span={12}>
-                              <Form.Item rules={[{required:true}]}>
-                              <Rate
-                                onChange={(e) =>
+                              <Form.Item  rules={[{required:true}]} hasFeedback>
+                                <label className="self-rating">Self Rating</label>
+                                <div className="self-rating-input">
+                                <Rate 
+                                onChange={(e) =>{
                                   initialData[index].self_rating = e
+                                }
                                 }
                                 defaultValue={1}
                                 character={({ index }) => index + 1}
                                 style={{
-                                  fontSize: "30px",
-                                  float: "left",
-                                  marginLeft: "30px",
+                                  fontSize: "25px",
+                                 
                                 }}
-                              />
+                              /> 
+                                </div>
+                                
                               </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <Form.Item>
-                                <div
-                                  key={d.t_id}
-                                  style={{
-                                    float: "right",
-                                    marginRight: "100px",
-                                  }}
-                                >
-                                   <TextArea
+                              <Form.Item rules={[{required:true , message:'please input '}]} hasFeedback>
+                                <label className="self-comment">Justify Your Comment</label>
+                                <div className="self-comment-input"  key={d.t_id}>
+                                <TextArea
                                   onChange={(e) =>{
-                                  initialData[index].t_id = d.t_id
-                                  initialData[index].self_comment = e.target.value
-                                  
-                                  }
-                                  }
+                                    initialData[index].t_id = d.t_id
+                                    initialData[index].self_comment = e.target.value
+                                  }}
                                   rows={4}
                                   style={{ width: "400px", marginTop: "" }}
                                 />
@@ -496,52 +446,32 @@ const Home = (props) => {
                               </Form.Item>
                             </Col>
                           </Row>
+
+
                           <Row>
                             <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Manager Rating
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                            </Col>
-                            <Col span={12}>
-                              <p
-                                style={{
-                                  float: "left",
-                                  marginLeft: "30px",
-                                  fontSize: "18px",
-                                }}
-                              >
-                                Manager Comments
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                            </Col>
-                          </Row>
-                          <Row style={{ marginTop: "-5px" }}>
-                            <Col span={12}>
                               <Form.Item>
-                                <KRAmanagerRating />
+                                <label className="manager-rating">Manager Rating</label>
+                                <div>
+                                <Rate 
+                               className="manager-rating-input"
+                                defaultValue={1}
+                                character={({ index }) => index + 1}
+                              /> 
+                                </div>
                               </Form.Item>
                             </Col>
                             <Col span={12}>
                               <Form.Item>
-                                <div
-                                  key={d.t_id}
-                                  style={{
-                                    float: "right",
-                                    marginRight: "100px",
-                                  }}
-                                >
-                                  <TextArea
+                                <label className="manager-comment">Manager Comments</label>
+                                <div className="manager-comment-input"
+                                key={d.t_id}
+                              >
+                                <TextArea
                                   rows={4}
                                   style={{ width: "400px", marginTop: "" }}
                                 />
-                                </div>
+                              </div>
                               </Form.Item>
                             </Col>
                           </Row>
@@ -550,6 +480,9 @@ const Home = (props) => {
                     );
                   })}
               </div>
+
+
+
               <Divider
                 style={{
                   marginTop: "40px",
@@ -576,30 +509,11 @@ const Home = (props) => {
                   height: "40px",
                   width: "100px",
                 }}
-                onClick={handleSubmit}
+                onClick={success}
               >
                 Submit
               </Button>
             </Form>
-
-            {/* <Form> */}
-            {/* <KRAdetails />
-
-  //         <Divider style={{marginTop:'40px' , backgroundColor:'blue' , height:'5px'}}/>
-
-  //         <KRAsoftskills />
-
-  //         <Divider style={{marginTop:'40px' , backgroundColor:'blue' , height:'5px'}}/>
-
-  //         <Feedback />
-
-  //         <Divider style={{marginTop:'40px' , backgroundColor:'lightBlue' , height:'3px'}}/>
-
-  //         <Button htmlType="submit" type="primary" 
-  //         style={{backgroundColor:'green',height:'40px',width:'100px'}}
-  //         onClick={handleSubmit}
-  //         >Submit</Button> */}
-            {/* </Form>  */}
           </Card>
         </Content>
         {/* <Footer style={footerStyle}>
@@ -609,6 +523,7 @@ const Home = (props) => {
   //       </Footer>*/}
       </Layout>
     </Space>
+    </>
   );
 };
 

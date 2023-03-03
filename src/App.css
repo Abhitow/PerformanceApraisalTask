@@ -7,7 +7,7 @@
   width: 100%;
 }
 .skein-logo{
-  margin-top: 8px !important;
+  margin-top: 8px !important; 
   margin:auto;
   margin-left: 100px;
   margin-bottom: 20px;
@@ -152,6 +152,45 @@
 .ant-form-item-with-help .ant-form-item-explain {
     height: auto;
     opacity: 1;
-    
     margin-left: 50px;
+}
+.self-rating{
+ margin-right: 300px;
+  font-size: 18px !important;
+  margin-top: 10px;
+}
+.self-rating-input{
+  font-Size: 25px !important;
+  margin-right: 280px;
+  margin-top: 10px;
+}
+.self-comment{
+  margin-right: 300px;
+   font-size: 18px !important;
+   margin-top: 10px;
+ }
+ .self-comment-input{
+  margin-right: 70px;
+  margin-top: 10px;
+}
+
+.manager-rating{
+  margin-right: 265px;
+   font-size: 18px !important;
+   margin-top: 10px;
+ }
+ .manager-rating-input{
+  font-Size: 25px;
+  margin-right: 280px;
+  margin-top: 10px;
+}
+
+.manager-comment{
+  margin-right: 300px;
+   font-size: 18px !important;
+   margin-top: 10px;
+ }
+ .manager-comment-input{
+  margin-right: 65px;
+  margin-top: 10px;
 }
