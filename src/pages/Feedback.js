@@ -6,7 +6,7 @@ function Feedback() {
   return (
     <>
     <div >
-    <Row>
+    {/* <Row>
         <Col span={12} >
             <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}} >
                 Self Aspirations<span style={{color:'red'}}>*</span>
@@ -17,15 +17,15 @@ function Feedback() {
                 Teamlead Feedback<span style={{color:'red'}}>*</span>
             </p>
         </Col>
-    </Row>
-    <Row>
+    </Row> */}
+    {/* <Row>
         <Col span={12}>
             <TextArea rows={4} style={{width:'400px',marginRight:'55px'}}/>
         </Col>
         <Col span={12}>
             <TextArea rows={4} style={{width:'400px',marginRight:'55px'}}/>
         </Col>
-    </Row>
+    </Row> */}
     <Row style={{marginTop:'30px'}}>
         <Col span={12} >
             <p style={{float:'left',marginLeft:'30px',fontSize:'18px'}} >

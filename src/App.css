@@ -149,3 +149,9 @@
   transition: all 0.2s;
   user-select: none;
 }
+.ant-form-item-with-help .ant-form-item-explain {
+    height: auto;
+    opacity: 1;
+    
+    margin-left: 50px;
+}

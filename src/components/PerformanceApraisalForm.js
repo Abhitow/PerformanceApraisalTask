@@ -90,7 +90,7 @@ const [responseData , setResponseData] = useState("");
         console.log("e", e);
       });  
   };
-  console.log(responseData.status,"+++++++++++++++++++++++++++++++++++++++");
+  // console.log(responseData.status,"+++++++++++++++++++++++++++++++++++++++");
 
 //   console.log(payload);
   const onFinishFailed = (errorInfo) => {
@@ -147,7 +147,7 @@ const success =() =>{
                 label="Name of Employee"
                 name={"name"}
                 className="label1"
-                rules={[{ required: true, message: "please enter Your name" }]}
+                rules={[{ required: true, message: "please enter name of employee" }]}
                 hasFeedback
               >
                 <Input

@@ -2,7 +2,7 @@ import { Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useState } from "react";
 
-function KRAmanagerComment() {
+function KRAmanagerComment(props) {
   const [input , setInput]= useState("");
   // console.log(input);
   return (

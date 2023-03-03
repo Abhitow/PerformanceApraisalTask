@@ -54,8 +54,10 @@ function Login({ isLoggedIn }) {
   useEffect(() => {
     // setGoogle(localStorage.getItem("email"));
     // setEmail(localStorage.getItem("email"));
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("token") && localStorage.getItem('email')) {
       navigate("/home");
+    }else{
+      navigate("/");
     }
   }, []);
 

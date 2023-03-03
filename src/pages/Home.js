@@ -17,10 +17,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
-import KRArating from "../components/KRArating";
-import KRAselfrating from "../components/KRAselfrating";
 import KRAmanagerRating from "../components/KRAmanagerRating";
-import KRAmanagerComment from "../components/KRAmanagerComment";
+import TextArea from "antd/es/input/TextArea";
+
 const { Header, Footer, Content } = Layout;
 const layoutStyle = {
   height: "100vh",
@@ -41,7 +40,7 @@ const contentStyle = {
   textAlign: "center",
   marginTop: "50px",
   backgroundColor: "#f5f5f5",
-  minHeight: "1000%",
+  minHeight: "990%",
 };
 
 const footerStyle = {
@@ -53,15 +52,70 @@ const footerStyle = {
   bottom: "0px",
   width: "100vw",
 };
-const handleSubmit = () => {
-  console.log("button working");
-};
-const Home = () => {
+
+const Home = (props) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [detail, setDetail] = useState();
   const [skill, setSkill] = useState();
-  const [value, setValue] = useState("");
+
+  const localEmail = localStorage.getItem("email");
+
+  const initialData = [{
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         },
+                         {
+                          "t_id": "",
+                          "email": localEmail,
+                          "self_rating": "",
+                          "self_comment": "",
+                         }
+                        ];
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -70,7 +124,6 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    console.log("12345");
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
       .then((response) => setDetail(response.data.data))
@@ -87,16 +140,12 @@ const Home = () => {
       });
   }, []);
 
-  console.log(skill[0].t_id ,">>>>>>>>>>>>>>>>>>>");
-
-
-  const localEmail = localStorage.getItem("email");
-  const onFinish = (values) => {
-    // console.log(values);
+  const onFinish = () => {
+    console.log(">>>>>>>>>>",initialData)
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
-          localEmail
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
+          localEmail, initialData
       )
       .then((response) => {
         console.log(response.data);
@@ -106,7 +155,11 @@ const Home = () => {
       });
   };
 
-  useEffect(() => {}, [value]);
+  const handleSubmit = () => {
+    console.log("button working");
+    
+  };
+
   // console.log(detail);
   return (
     <Space
@@ -146,7 +199,7 @@ const Home = () => {
               </Typography>
               <div>
                 {detail !== undefined &&
-                  detail.map((d) => {
+                  detail.map((d,index) => {
                     return (
                       <>
                         <div
@@ -198,7 +251,7 @@ const Home = () => {
                         <div>
                           <Row>
                             <Col span={12}>
-                            <p
+                              <p
                                 style={{
                                   float: "left",
                                   marginLeft: "30px",
@@ -225,10 +278,11 @@ const Home = () => {
                           <Row>
                             <Col span={12}>
                               <Rate
-                                onChange={(e) => {
-                                  setValue(e);
-                                }}
-                                value={value}
+                                onChange={(e) =>{
+                                  initialData[index].self_rating = e
+                                  
+                                }
+                                }
                                 defaultValue={1}
                                 character={({ index }) => index + 1}
                                 style={{
@@ -239,7 +293,19 @@ const Home = () => {
                               />
                             </Col>
                             <Col span={12}>
-                              <KRAselfrating />
+                              <div
+                                key={d.t_id}
+                                style={{ float: "right", marginRight: "100px" }}
+                              >
+                                <TextArea
+                                  onChange={(e) =>{
+                                    initialData[index].t_id = d.t_id
+                                    initialData[index].self_comment = e.target.value
+                                  }}
+                                  rows={4}
+                                  style={{ width: "400px", marginTop: "" }}
+                                />
+                              </div>
                             </Col>
                           </Row>
                           <Row>
@@ -273,7 +339,15 @@ const Home = () => {
                               <KRAmanagerRating />
                             </Col>
                             <Col span={12}>
-                              <KRAmanagerComment />
+                              <div
+                                key={d.t_id}
+                                style={{ float: "right", marginRight: "100px" }}
+                              >
+                                <TextArea
+                                  rows={4}
+                                  style={{ width: "400px", marginTop: "" }}
+                                />
+                              </div>
                             </Col>
                           </Row>
                         </div>
@@ -303,7 +377,8 @@ const Home = () => {
 
               <div>
                 {skill !== undefined &&
-                  skill.map((d) => {
+                  skill.map((d,index) => {
+                    
                     return (
                       <>
                         <div
@@ -383,13 +458,41 @@ const Home = () => {
                           </Row>
                           <Row style={{ marginTop: "-30px" }}>
                             <Col span={12}>
-                              <Form.Item>
-                                <KRArating />
+                              <Form.Item rules={[{required:true}]}>
+                              <Rate
+                                onChange={(e) =>
+                                  initialData[index].self_rating = e
+                                }
+                                defaultValue={1}
+                                character={({ index }) => index + 1}
+                                style={{
+                                  fontSize: "30px",
+                                  float: "left",
+                                  marginLeft: "30px",
+                                }}
+                              />
                               </Form.Item>
                             </Col>
                             <Col span={12}>
                               <Form.Item>
-                                <KRAselfrating />
+                                <div
+                                  key={d.t_id}
+                                  style={{
+                                    float: "right",
+                                    marginRight: "100px",
+                                  }}
+                                >
+                                   <TextArea
+                                  onChange={(e) =>{
+                                  initialData[index].t_id = d.t_id
+                                  initialData[index].self_comment = e.target.value
+                                  
+                                  }
+                                  }
+                                  rows={4}
+                                  style={{ width: "400px", marginTop: "" }}
+                                />
+                                </div>
                               </Form.Item>
                             </Col>
                           </Row>
@@ -427,7 +530,18 @@ const Home = () => {
                             </Col>
                             <Col span={12}>
                               <Form.Item>
-                                <KRAmanagerComment />
+                                <div
+                                  key={d.t_id}
+                                  style={{
+                                    float: "right",
+                                    marginRight: "100px",
+                                  }}
+                                >
+                                  <TextArea
+                                  rows={4}
+                                  style={{ width: "400px", marginTop: "" }}
+                                />
+                                </div>
                               </Form.Item>
                             </Col>
                           </Row>
