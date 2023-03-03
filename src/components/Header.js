@@ -8,9 +8,7 @@ const HomeHeader =() =>{
     return(
         <div>
             <Row>
-                {/* <h1 style={{margin:'auto',marginLeft:'0px',color:'white'}}>Skein Technologies Private Limited</h1> */}
                 <img src={download} className="skein-logo" alt="skeinlogo" />
-
                 <Col>< Profile /></Col>
             </Row>
         </div>
