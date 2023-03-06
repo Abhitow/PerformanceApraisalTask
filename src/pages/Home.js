@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
-import KRAmanagerRating from "../components/KRAmanagerRating";
 import TextArea from "antd/es/input/TextArea";
 
 const { Header, Footer, Content } = Layout;
@@ -60,7 +59,6 @@ const Home = (props) => {
   const [detail, setDetail] = useState();
   const [skill, setSkill] = useState();
   const [messageApi , contextHolder] = message.useMessage();
-  const[fieldDecorator , setFieldDecorator] = useState();
 
   const localEmail = localStorage.getItem("email");
 
@@ -144,7 +142,6 @@ const Home = (props) => {
   }, []);
 
   const onFinish = () => {
-    console.log(">>>>>>>>>>",initialData)
     axios
       .post(
         "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
@@ -162,14 +159,18 @@ const Home = (props) => {
     console.log("button working");
     
   };
+
+ 
   const success = () =>{
     messageApi.open({
       type:'success',
       content:'Details Submitted Successfully'
     });
   }
+  const onFinishFailed=(errorInfo) =>{
 
-  // console.log(detail);
+  }
+
   return (
     <>
     
@@ -198,7 +199,7 @@ const Home = (props) => {
               }}
             />
 
-            <Form form={form} onFinish={onFinish}>
+            <Form form={form} onFinishFailed={onFinishFailed} onFinish={onFinish} scrollToFirstError={true} autoComplete="off">
               <Typography
                 style={{
                   marginTop: "80px",
@@ -266,7 +267,7 @@ const Home = (props) => {
                         <div>
                           <Row style={{marginTop:'20px'}}>
                             <Col span={12}>
-                              <Form.Item  rules={[{required:true}]} hasFeedback>
+                              <Form.Item name='selfRating'  rules={[{required:true , message:'please give rating'}]} hasFeedback required>
                                 <label className="self-rating">Self Rating</label>
                                 <div className="self-rating-input">
                                 <Rate 
@@ -286,7 +287,7 @@ const Home = (props) => {
                               </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <Form.Item rules={[{required:true , message:'please input '}]} hasFeedback>
+                              <Form.Item name="selfComment" rules={[{required:true , message:'please give comments'}]} hasFeedback required>
                                 <label className="self-comment">Justify Your Comment</label>
                                 <div className="self-comment-input"  key={d.t_id}>
                                 <TextArea
@@ -411,7 +412,7 @@ const Home = (props) => {
                         <div>
                           <Row style={{marginTop:'20px'}}>
                             <Col span={12}>
-                              <Form.Item  rules={[{required:true}]} hasFeedback>
+                              <Form.Item name="selfRating"  rules={[{required:true , message:'please give rating'}]} hasFeedback>
                                 <label className="self-rating">Self Rating</label>
                                 <div className="self-rating-input">
                                 <Rate 
@@ -431,7 +432,7 @@ const Home = (props) => {
                               </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <Form.Item rules={[{required:true , message:'please input '}]} hasFeedback>
+                              <Form.Item name="selfComment" rules={[{required:true , message:'please input your comments'}]} hasFeedback>
                                 <label className="self-comment">Justify Your Comment</label>
                                 <div className="self-comment-input"  key={d.t_id}>
                                 <TextArea

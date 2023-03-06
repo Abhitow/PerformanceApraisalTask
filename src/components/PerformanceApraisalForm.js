@@ -49,32 +49,15 @@ const [responseData , setResponseData] = useState("");
   ];
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
-    // fetch("https://demo.emeetify.com:81/appraisel/users/FormDetails?email=sameenabegum.s@skeintech.com",{
-    //     method:'PUT',
-    //     body:JSON.stringify({
-    //         "username": name ,
-    //         "Manager_name":manager,
-    //         "Designation":designation,
-    //         "Department":department,
-    //         "Joining_date":date,
-    //         "Review_period":review_date
-    //     }),
-    //     headers: {
-    //         'Content-type': 'application/json; charset=UTF-8',
-    //       },
-    // })
-    // .then((response)=> response.json())
-    // .then((data) =>{ setPostData(data)})
-    // .catch((err) =>{console.log(err.message)});
+  
   };
   const payload = {
     username: name,
-    Manager_name: manager,
-    Designation: designation,
-    Department: department,
-    Joining_date: date,
-    Review_period: review_date,
+    manager_name: manager,
+    designation: designation,
+    department: department,
+    joining_date: date,
+    review_period: review_date,
   };
 
   const onFinish = (values) => {
@@ -140,6 +123,7 @@ const success =() =>{
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 14 }}
           colon={false}
+          autoComplete="off"
         >
           <Row className="performance-form-row-one">
             <Col span={12}>
