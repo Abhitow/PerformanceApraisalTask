@@ -30,9 +30,11 @@ const [responseData , setResponseData] = useState("");
 
   const managerData = [
     "Select Manager",
-    "Arun Karthikeyan",
-    "Arun P",
-    "Raj Manikam",
+    "Arun Karthkeyan N",
+    "Arun Kumar P",
+    "Rajamanickam R",
+    "Ramesh Babu E" ,
+    "Santhana Gopal S",
   ];
   const designationData = [
     "Select Designation",
@@ -72,6 +74,7 @@ const [responseData , setResponseData] = useState("");
       .catch((e) => {
         console.log("e", e);
       });  
+      console.log("form submitted succesfully");
   };
   // console.log(responseData.status,"+++++++++++++++++++++++++++++++++++++++");
 
@@ -98,7 +101,7 @@ const success =() =>{
         messageApi.open({
             type:'success',
             content:'Form Submitted Successfully'
-        }) 
+        } , console.log("success ++++++")) 
         }else{
             messageApi.open({
                 type:'error',
@@ -112,9 +115,10 @@ const success =() =>{
       <Card
         className="form-card"
         title={
-          <Title style={{ fontSize: "20px" }}>Performance Appraisal Form</Title>
+          <Title style={{ fontSize: "20px" }}>Employee Details</Title>
         }
-      >
+      > 
+      
         {contextHolder}
         <Form
           form={form}
@@ -245,7 +249,7 @@ const success =() =>{
                     setReviewDate(e.target.value);
                   }}
                 /> */}
-                <Input defaultValue={"2022-2023"} onChange={(e,defaultValue)=>{setReviewDate(defaultValue("2022-2023"))}} className="performance-date"/>
+                <Input defaultValue={"2022-2023"} readOnly onChange={(e,defaultValue)=>{setReviewDate(defaultValue("2022-2023"))}} className="performance-date"/>
               </Form.Item>
             </Col>
           </Row>

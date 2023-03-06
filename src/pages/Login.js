@@ -7,14 +7,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Home from "./Home";
 
-// import GoogleLoginn from '../components/GoogleLogin';
 import { auth, provider } from "../components/GoogleLogin";
 import { signInWithPopup } from "firebase/auth";
 import GoogleButton from "react-google-button";
 import axios from "axios";
 
-
-// import Axios from 'axios'
 
 function Login({ isLoggedIn }) {
   const navigate = useNavigate();
@@ -51,28 +48,12 @@ function Login({ isLoggedIn }) {
     });
   };
   useEffect(() => {
-    // setGoogle(localStorage.getItem("email"));
-    // setEmail(localStorage.getItem("email"));
     if (localStorage.getItem("token") && localStorage.getItem('email')) {
       navigate("/home");
     }else{
       navigate("/");
     }
   }, []);
-
-  // useEffect(() => {
-  //  axios.post("https://demo.emeetify.com:81/appraisel/users/register",{
-  //   email: localStorage.getItem('email')
-  //  }).
-  //  then(response => console.log(response,"-------------->")).
-  //  catch(e => console.log(e , "error message"));
-  // },[google]);
-
-  // useEffect(()=>{
-  //   if(localStorage.getItem('email') || responseData.status === true){
-  //     navigate('/home');
-  //   }
-  // },[]);
 
   const handleClick = () => {
     fetch("https://demo.emeetify.com:81/daytodaytask/admin/adminlogin", {
@@ -186,11 +167,12 @@ function Login({ isLoggedIn }) {
         </Card>
       </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ marginLeft: "100px" }}>
+        <div style={{ marginLeft: "100px",marginTop:'20px' }}>
+        <Typography style={{textAlign:'center',marginBottom:'-10px',letterSpacing:'1px',wordSpacing:'4px'}}><h1>Apraisal 2022-2023</h1></Typography>
           <img
             src={undraw_Team}
             alt="skeinlogo"
-            style={{ height: "600px", width: "600px" }}
+            style={{ height: "500px", width: "600px" }}
           />
         </div>
         {/* <div style={{marginTop:'200px'}}>

@@ -149,35 +149,55 @@
   transition: all 0.2s;
   user-select: none;
 }
-.ant-form-item-with-help .ant-form-item-explain {
-    height: auto;
-    opacity: 1;
-    margin-left: 50px;
-}
+
 .self-rating{
- margin-right: 300px;
+  display: inline-block;
   font-size: 18px !important;
-  margin-top: 10px;
+  
 }
 .self-rating-input{
   font-Size: 25px !important;
-  margin-right: 280px;
-  margin-top: 10px;
+  display: inline-block;
+  margin-top: 40px;
+  margin-left: -300px;
 }
 .self-comment{
-  margin-right: 300px;
-   font-size: 18px !important;
-   margin-top: 10px;
+  display: inline-block;
+  font-size: 18px !important;
+  
  }
  .self-comment-input{
-  margin-right: 70px;
-  margin-top: 10px;
+  display: inline-block;
+  margin-top: 50px;
+  margin-left: -250px;
 }
 
 .manager-rating{
+  display: inline-block;
+  font-size: 18px !important;
+  margin-left: 15px;
+}
+.manager-rating-input{
+  font-Size: 25px !important;
+  display: inline-block;
+  margin-top: 40px;
+  margin-left: -350px;
+}
+.manager-comment{
+  margin-left: 15px;
+  display: inline-block;
+  font-size: 18px !important;
+ }
+ .manager-comment-input{
+  display: inline-block;
+  margin-top: 50px;
+  margin-left: -240px;
+}
+/* .manager-rating{
   margin-right: 265px;
    font-size: 18px !important;
    margin-top: 10px;
+  
  }
  .manager-rating-input{
   font-Size: 25px;
@@ -193,4 +213,68 @@
  .manager-comment-input{
   margin-right: 65px;
   margin-top: 10px;
+} */
+
+/*validation message style*/
+
+/* :where(.css-dev-only-do-not-override-1km3mtt).ant-form-item .ant-form-item-explain-error {
+  color: #ff4d4f;
+  padding-left: 30px;
+  width:200px;
+  text-align: center;
 }
+
+.ant-form-item-explain-error{
+  margin-left: 20px;
+} */
+#name_help{
+  margin-left: 40px;
+  margin-right: -30px;
+}
+#manager_help{
+  margin-left: 60px;
+  margin-right: -30px;
+}
+#designation_help{
+  margin-left: 90px;
+  margin-right: -40px;
+}
+#department_help{
+  margin-left: 80px;
+  margin-right: -40px;
+}
+#date_help{
+  margin-left: 90px;
+  margin-right: -40px;
+}
+#selfRating_help{
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-right: -60px;
+}
+#selfComment_help{
+  margin-left: -20px;
+  margin-top: 5px;
+  margin-right: -60px;
+}
+
+
+:where(.css-dev-only-do-not-override-1km3mtt).ant-form-item .ant-form-item-explain-error {
+  color: #ff4d4f;
+  text-align: left;
+}
+
+.self-aspiration{
+  margin-left: 15px;
+  display: inline-block;
+  font-size: 18px !important;
+ }
+ .self-aspiration-input{
+  display: inline-block;
+  
+ }
+ .teamlead-feedback{
+  margin-left: 20px;
+  display: inline-block;
+  font-size: 18px !important;
+ }
