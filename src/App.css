@@ -9,7 +9,7 @@
 .skein-logo{
   margin-top: 8px !important; 
   margin:auto;
-  margin-left: 100px;
+  margin-left: 30px;
   margin-bottom: 20px;
   z-index: -1;
   height: 55px;
@@ -71,11 +71,20 @@
 }
 .performance-input{
   width:250px;
-  margin-left: 20px;
+  margin-left: -30px;
+}
+.performance-input-manager{
+  width:250px;
+  margin-left: -30px;
+}
+
+.performance-input-designation{
+  width:250px;
+  margin-left: 15px !important;
 }
 .performance-joiningdate{
   width:250px;
-  margin-left: 60px;
+  margin-left: 15px;
 }
 .performance-date{
   width:250px;
@@ -123,19 +132,19 @@
   margin-left: 20px;
 }
 .label2{
-  margin-left: 20px;
+  margin-left: 50px;
 }
 .label3{
-  margin-left: -48px;
+  margin-left: 20px;
 }
 .label4{
-  margin-left: -13px;
+  margin-left: 50px;
 }
 .joiningdate-label{
-  margin-left: -40px;
+  margin-left: 20px;
 }
 .review-period{
-  margin-left: 10px;
+  margin-left: 60px;
 }
 .google-button-login{
   height: 50px !important;
@@ -153,12 +162,13 @@
 .self-rating{
   display: inline-block;
   font-size: 18px !important;
+  
 }
 .self-rating-input{
   font-Size: 25px !important;
   display: inline-block;
   margin-top: 40px;
-  margin-left: -300px;
+  margin-left: -370px !important;
 }
 .self-comment{
   display: inline-block;
@@ -167,8 +177,8 @@
  }
  .self-comment-input{
   display: inline-block;
-  margin-top: 50px;
-  margin-left: -250px;
+  margin-top: 40px;
+  margin-left: -300px;
 }
 
 .manager-rating{
@@ -178,18 +188,18 @@
 .manager-rating-input{
   font-Size: 25px !important;
   display: inline-block;
-  margin-top: 40px;
-  margin-left: -300px;
+  margin-top: 35px;
+  margin-left: -425px;
 }
 .manager-comment{
   display: inline-block;
   font-size: 18px !important;
-  
+  margin-left: 10px;
  }
  .manager-comment-input{
   display: inline-block;
-  margin-top: 50px;
-  margin-left: -250px;
+  margin-top: 40px;
+  margin-left: -275px;
 }
 
 /* .manager-rating{
@@ -268,12 +278,12 @@
   margin-right: -40px;
 }
 #selfRating_help{
-  margin-left: 10px;
+  margin-left: -80px;
   margin-top: 10px;
   margin-right: -60px;
 }
 #selfComment_help{
-  margin-left: -20px;
+  margin-left: -50px;
   margin-top: 5px;
   margin-right: -60px;
 }

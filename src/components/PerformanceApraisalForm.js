@@ -30,8 +30,6 @@ const [responseData , setResponseData] = useState("");
 
   const managerData = [
     "Select Manager",
-    "Arun Karthkeyan N",
-    "Arun Kumar P",
     "Rajamanickam R",
     "Ramesh Babu E" ,
     "Santhana Gopal S",
@@ -109,6 +107,8 @@ const success =() =>{
             })
       }
 }
+const userName = localStorage.getItem('displayName');
+console.log(userName,".........");
 
   return (
     <div>
@@ -120,15 +120,7 @@ const success =() =>{
       > 
       
         {contextHolder}
-        <Form
-          form={form}
-          onFinishFailed={onFinishFailed}
-          onFinish={onFinish}
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 14 }}
-          colon={false}
-          autoComplete="off"
-        >
+       
           <Row className="performance-form-row-one">
             <Col span={12}>
               <Form.Item
@@ -137,8 +129,8 @@ const success =() =>{
                 className="label1"
                 rules={[{ required: true, message: "please enter name of employee" }]}
                 hasFeedback
-              >
-                <Input
+              > 
+                <Input defaultValue={userName}
                   className="performance-input"
                   value={name}
                   onChange={(e) => {
@@ -249,25 +241,11 @@ const success =() =>{
                     setReviewDate(e.target.value);
                   }}
                 /> */}
-                <Input defaultValue={"2022-2023"} readOnly onChange={(e,defaultValue)=>{setReviewDate(defaultValue("2022-2023"))}} className="performance-date"/>
+                <Input defaultValue={"2022-23"} readOnly onChange={(e,defaultValue)=>{setReviewDate(defaultValue("2022-23"))}} className="performance-date"/>
               </Form.Item>
             </Col>
           </Row>
 
-          {/* <Form.Item>
-             <Button htmlType="submit" type='primary' className='performance-btn' onClick={handleSubmit}
-            >Submit</Button>
-            </Form.Item> */}
-
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="performance-btn"
-            onClick={success}
-          >
-            Submit
-          </Button>
-        </Form>
       </Card>
     </div>
   );

@@ -39,16 +39,14 @@ function Login({ isLoggedIn }) {
         })
         .then((response) => console.log(response, "-------------->"))
         .catch((e) => console.log(e, "error message"));
-      // console.log(data.user.email, "111111111111111");
       if (localStorage.getItem("token")) {
         navigate("/home");
         setGoogle(localStorage.getItem("email"));
       }
-      // console.log("++++",google);
     });
   };
   useEffect(() => {
-    if (localStorage.getItem("token") && localStorage.getItem('email')) {
+    if (localStorage.getItem("token") ) {
       navigate("/home");
     }else{
       navigate("/");
@@ -68,33 +66,38 @@ function Login({ isLoggedIn }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data.full_name, "-------------------->");
+        // console.log(data.data.full_name, "-------------------->");
         setResponseData(data);
+        if (responseData.status === true) {
+          message.open({
+            type: "success",
+            content: "Login Successfull",
+          });
+           navigate("/home");
+        } else {
+          // navigate("/");
+          message.open({
+            type: "error",
+            content: "Please enter email and password correctly",
+          });
+        }
+        localStorage.setItem("Admintoken",data.token );
         // Handle data
         localStorage.setItem("full_name", data.data.full_name);
         localStorage.setItem("email", data.data.email);
         // console.log(full_name,"<<<>>>>");
       })
       .catch((err) => {
-        console.log("catch");
         console.log(err.message);
       });
-    if (responseData.status === true) {
-      console.log("login success");
-      navigate("/home");
-      message.open({
-        type: "success",
-        content: "Login Successfull",
-      });
-    } else {
-      console.log("unsuccess");
-    }
+    
   };
   return (
     
     <div style={{display:'flex'}}>
       <div className="container">
         <Card className="card">
+        {contextHolder}
           <Form layout="vertical" onFinishFailed={onFinishFailed}>
             <img src={download} className="skein-logo" alt="skeinlogo" />
 
@@ -139,7 +142,7 @@ function Login({ isLoggedIn }) {
               />
             </Form.Item>
             <Form.Item>
-              {contextHolder}
+             
               <Button
                 type="primary"
                 htmlType="submit"
@@ -168,7 +171,7 @@ function Login({ isLoggedIn }) {
       </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ marginLeft: "100px",marginTop:'20px' }}>
-        <Typography style={{textAlign:'center',marginBottom:'-10px',letterSpacing:'1px',wordSpacing:'4px'}}><h1>Apraisal 2022-2023</h1></Typography>
+        <Typography style={{textAlign:'center',marginBottom:'-10px',letterSpacing:'1px',wordSpacing:'4px'}}><h1>Apraisal 2022-23</h1></Typography>
           <img
             src={undraw_Team}
             alt="skeinlogo"

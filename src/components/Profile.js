@@ -19,13 +19,6 @@ const Profile = () => {
             label: user || email
         },
         {
-            type: 'divider'
-        } ,
-        {
-            key:'2',
-            label:'Profile Settings'
-        },
-        {
             type:'divider'
         } ,
         {
@@ -36,7 +29,7 @@ const Profile = () => {
     return(
         <div>
             <Dropdown menu={{items}}>
-                <Space className='header-profile' style={{color:'grey'}} >{displayName}{full_name}<UserOutlined /></Space>
+                <Space className='header-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
             </Dropdown>
         </div>
     )

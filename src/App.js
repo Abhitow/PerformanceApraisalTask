@@ -14,8 +14,6 @@ function App() {
           <Route path='*' element={<Home />}/>
           {/* <Route path="/" exact component={!isLoggedIn ? <Login /> : <Login />} />
           <Route path="/home" exact component={isLoggedIn ? <Home /> : <Login />} /> */}
-
-          {/* {!isLoggedIn ?  <Route index  element={ <Login />  } /> : <Route path='/home' element={<Home /> }/>} */}
         </Routes>
       </BrowserRouter>
      

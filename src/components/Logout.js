@@ -8,20 +8,21 @@ const Logout = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   function handleLogout() {
+   
+    navigate("/");
+    localStorage.clear();
+    window.location.reload();
+
     messageApi.open({
       type: "success",
       content: "Logout Successfull",
     });
-    navigate("/");
-
-    localStorage.clear();
-    window.location.reload();
   }
 
   return (
     <>
       {contextHolder}
-      <Button type="default" onClick={handleLogout} style={{ border: "none" }}>
+      <Button type="default" onClick={handleLogout} style={{ marginLeft:'40px' }}>
         Logout
       </Button>
     </>
