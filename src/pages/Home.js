@@ -180,7 +180,7 @@ const Home = (props) => {
   const RankingData = ["select Rating", "1", "2", "3", "4", "5"];
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("token") || !localStorage.getItem("Admintoken")) {
       navigate("/");
     }
   }, []);
@@ -202,7 +202,7 @@ const Home = (props) => {
       payload
     )
     .then((response) => {
-      setResponseData(response.data);
+      console.log(response.data);
     })
     .catch((e) => {
       console.log("e", e);
@@ -229,7 +229,7 @@ const Home = (props) => {
 
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
           localEmail,
         initialData
       )
@@ -542,7 +542,7 @@ const Home = (props) => {
                                     </label>
                                   }
                                 >
-                                  <div className="self-rating-input">
+                                  <div className="self-rating-input" key={d.t_id}>
                                     <Select
                                       className="performance-input-rating"
                                       defaultValue={RankingData[0]}
@@ -551,6 +551,7 @@ const Home = (props) => {
                                         marginLeft: "20px",
                                       }}
                                       onChange={(e) => {
+                                        initialData[index].t_id = d.t_id;
                                         initialData[index].self_rating = e;
                                       }}
                                       options={RankingData.map(

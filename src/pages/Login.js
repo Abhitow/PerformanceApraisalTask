@@ -51,7 +51,7 @@ function Login({ isLoggedIn }) {
     }else{
       navigate("/");
     }
-  }, []);
+  },[]);
 
   const handleClick = () => {
     fetch("https://demo.emeetify.com:81/daytodaytask/admin/adminlogin", {
@@ -66,13 +66,14 @@ function Login({ isLoggedIn }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data.data.full_name, "-------------------->");
+        console.log(data, "-------------------->");
         setResponseData(data);
-        if (responseData.status === true) {
+        if (responseData.status !== false) {
           message.open({
             type: "success",
             content: "Login Successfull",
           });
+          localStorage.setItem("token",data.data.token);
            navigate("/home");
         } else {
           // navigate("/");
