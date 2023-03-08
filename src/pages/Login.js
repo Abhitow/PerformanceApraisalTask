@@ -46,7 +46,7 @@ function Login({ isLoggedIn }) {
     });
   };
   useEffect(() => {
-    if (localStorage.getItem("token") ) {
+    if (localStorage.getItem("token") || localStorage.getItem("token")) {
       navigate("/home");
     }else{
       navigate("/");
@@ -54,7 +54,7 @@ function Login({ isLoggedIn }) {
   },[]);
 
   const handleClick = () => {
-    fetch("https://demo.emeetify.com:81/daytodaytask/admin/adminlogin", {
+    fetch("https://demo.emeetify.com:81/appraisel/users/adminLogin", {
       method: "POST",
       body: JSON.stringify({
         email: email,
@@ -82,7 +82,7 @@ function Login({ isLoggedIn }) {
             content: "Please enter email and password correctly",
           });
         }
-        localStorage.setItem("Admintoken",data.token );
+        // localStorage.setItem("Admintoken",data.token );
         // Handle data
         localStorage.setItem("full_name", data.data.full_name);
         localStorage.setItem("email", data.data.email);

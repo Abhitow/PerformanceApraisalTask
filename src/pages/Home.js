@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
 import Title from "antd/es/skeleton/Title";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -64,11 +65,12 @@ const Home = (props) => {
   const [date, setDate] = useState();
   const [review_date, setReviewDate] = useState();
   const [responseData, setResponseData] = useState("");
-  const [consolidateRating , setConsolidateRating] = useState();
+  const [consolidateRating, setConsolidateRating] = useState();
+  const [selectValue, setSelectValue] = useState("");
+  const [avg , setAvg] =useState(0);
+  const [formData , setFormData] = useState();
   /* performance apraisal form ends here */
 
-
- 
   const managerData = [
     "Select Manager",
     "Rajamanickam R",
@@ -120,70 +122,77 @@ const Home = (props) => {
     },
   ];
   const initialData = [
-   
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
     {
       t_id: "",
       email: localEmail,
-      self_rating: "",
+      self_rating: 0,
       self_comment: "",
     },
   ];
 
-  const RankingData = ["select Rating", "1", "2", "3", "4", "5"];
+  const [userData, setUserData] = useState(initialData);
+
+  const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
 
   useEffect(() => {
-    if (!localStorage.getItem("token") || !localStorage.getItem("Admintoken")) {
+    if (!localStorage.getItem("token")) {
       navigate("/");
     }
   }, []);
+
+
+  useEffect(() =>
+  {
+    console.log("PPP")
+  },[userData])
 
   useEffect(() => {
     axios
@@ -193,21 +202,22 @@ const Home = (props) => {
         console.log("e", e);
       });
   }, []);
-// console.log(responseData,"6666666");
-  const empDetails =()=>{
+
+  const empDetails = () => {
     axios
-    .put(
-      "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
-        localEmail,
-      payload
-    )
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((e) => {
-      console.log("e", e);
-    });
-  }
+      .put(
+        "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
+          localEmail,
+        payload
+      )
+      .then((response) => {
+        console.log(response.data);
+        setFormData(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+  };
   const onFinish = (values) => {
     // axios
     //   .post(
@@ -221,15 +231,19 @@ const Home = (props) => {
     //   .catch((e) => {
     //     console.log("e", e);
     //   });
+    if(responseData.status === false){
+      messageApi.open({
+        type: "error",
+        content: "please enter all the details",
+      });
+    }
   };
 
   const handleSubmit = () => {
-    console.log("button working");
     empDetails();
-
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
           localEmail,
         initialData
       )
@@ -239,41 +253,47 @@ const Home = (props) => {
       .catch((e) => {
         console.log("e", e);
       });
-  };
-  // useEffect(()=>{
-  //   axios
-  //   .get("https://demo.emeetify.com:81/appraisel/users/Consolidate?email="+localEmail)
-  //   .then((response) => setConsolidateRating(response.data.data))
-  //   .catch((e) => {
-  //     console.log("e", e);
-  //   });
-  // },[]);
+  }
  
+  
 
   const success = () => {
-      messageApi.open({
-        type: "success",
-        content: "Details Submitted Successfully",
-      });
+    messageApi.open({
+      type: "success",
+      content: "Details Submitted Successfully",
+    });
   };
   const onFinishFailed = (errorInfo) => {};
- 
+
   const userName = localStorage.getItem("displayName");
 
-  const arry = [1,2,3,4,5,6,7,8,9,10];
- function calAvg(array){
-  
-  var total = 0;
-  var count = 0;
+  console.log(selectValue,"??????????????????");
+  function calAvg() {
+    var total = 0;
+    var count = 0;
 
-  array.forEach(function(item,index){
-    total += item;
-    count++;
-  });
-  return total / count;
- 
+    userData.forEach(function (item, index) {
+      total=parseInt(total)+parseInt(item?.self_rating)
+      setAvg(total);
+      console.log('???',total);
+      count++;
+      console.log("count",count);
+      console.log("check",typeof(item.self_rating));
+      console.log("total",typeof(total));
+
+    });
+    let d =total / count ;
+    let average = d.toFixed(2); 
+    setAvg(average);
+    console.log(average);
   }
-  console.log(calAvg(arry));
+  // console.log(calAvg(arry));
+
+  // console.log("????", userData);
+
+
+    
+  
   return (
     <>
       {contextHolder}
@@ -298,10 +318,7 @@ const Home = (props) => {
                 autoComplete="off"
               >
                 <div>
-                  <Card
-                    className="form-card"
-                    title="Employee Details"
-                  >
+                  <Card className="form-card" title="Employee Details">
                     {contextHolder}
                     <Row className="performance-form-row-one">
                       <Col span={12}>
@@ -321,7 +338,7 @@ const Home = (props) => {
                             defaultValue={userName}
                             className="performance-input"
                             value={name}
-                            onChange={(e,defaultValue) => {
+                            onChange={(e, defaultValue) => {
                               setName(e.target.value || defaultValue);
                             }}
                           />
@@ -462,7 +479,7 @@ const Home = (props) => {
                   }}
                 />
 
-                    {/* Ratings and comment section Starts here */}
+                {/* Ratings and comment section Starts here */}
                 <Typography
                   style={{
                     marginTop: "80px",
@@ -484,7 +501,6 @@ const Home = (props) => {
                               display: "flex",
                               flexDirection: "row",
                               marginLeft: "10px",
-                             
                             }}
                           >
                             <Row>
@@ -528,7 +544,8 @@ const Home = (props) => {
                           <div>
                             <Row style={{ marginTop: "20px" }}>
                               <Col span={12}>
-                                <Form.Item style={{marginLeft:'100px'}}
+                                <Form.Item
+                                  style={{ marginLeft: "100px" }}
                                   name="selfRating"
                                   rules={[
                                     {
@@ -542,7 +559,10 @@ const Home = (props) => {
                                     </label>
                                   }
                                 >
-                                  <div className="self-rating-input" key={d.t_id}>
+                                  <div
+                                    className="self-rating-input"
+                                    key={d.t_id}
+                                  >
                                     <Select
                                       className="performance-input-rating"
                                       defaultValue={RankingData[0]}
@@ -551,8 +571,10 @@ const Home = (props) => {
                                         marginLeft: "20px",
                                       }}
                                       onChange={(e) => {
-                                        initialData[index].t_id = d.t_id;
-                                        initialData[index].self_rating = e;
+                                        userData[index].self_rating = e
+                                        console.log("changed",userData);
+                                        setUserData(userData);
+                                        calAvg();
                                       }}
                                       options={RankingData.map(
                                         (selectData) => ({
@@ -587,8 +609,7 @@ const Home = (props) => {
                                     <TextArea
                                       onChange={(e) => {
                                         initialData[index].t_id = d.t_id;
-                                        initialData[index].self_comment =
-                                          e.target.value;
+                                        initialData[index].self_comment =e.target.value;
                                       }}
                                       rows={4}
                                       style={{ width: "400px", marginTop: "" }}
@@ -600,7 +621,8 @@ const Home = (props) => {
 
                             <Row>
                               <Col span={12}>
-                                <Form.Item style={{marginLeft:'110px'}}
+                                <Form.Item
+                                  style={{ marginLeft: "110px" }}
                                   label={
                                     <label className="manager-rating">
                                       Manager Rating
@@ -687,7 +709,29 @@ const Home = (props) => {
                 />
                 <Row>
                   <Col span={12}>
+                    <Form.Item readOnly
+                      label={
+                        <label style={{ fontSize: "18px", marginLeft: "30px" }}>
+                          Employee Self Rating
+                        </label>
+                      }
+                    >
+                      <Card style={{height:'50px',width:'100px', marginTop: "50px",
+                          marginLeft: "-130px"}}>
+                        <Typography style={{textAlign:'center',margin:'auto',
+                      marginTop:'-20px',fontSize:'24px'}}>{avg}</Typography>
+                      </Card>
+                      {/* <Input
+                        // onChange={(e)=>{setConsolidateRating(e.target.value)}}
+                        // onChange={avg}
+                        value={avg}
+                        rows={4}
+                      /> */}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
                     <Form.Item
+                      style={{ marginLeft: "15px" }}
                       label={
                         <label className="self-aspiration">
                           Self Aspiration
@@ -705,42 +749,10 @@ const Home = (props) => {
                     >
                       <div>
                         <TextArea
-                          style={{ marginTop: "40px", marginLeft: "-200px" }}
+                          style={{ marginTop: "40px", marginLeft: "-250px" }}
                           className="self-aspiration-input"
                           onChange={(e) => {
                             setSelfAspiration(e.target.value);
-                          }}
-                          rows={4}
-                        />
-                      </div>
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label={
-                        <label className="teamlead-feedback">
-                          Manager Feedback
-                        </label>
-                      }
-                      name="teamleadFeedback"
-                      rules={[
-                        {
-                          required: true,
-                          message: "please give comments",
-                        },
-                      ]}
-                      hasFeedback
-                      required
-                    >
-                      <div>
-                        <TextArea
-                          style={{
-                            marginTop: "40px",
-                            marginLeft: "-250px",
-                            width: "400px",
-                          }}
-                          onChange={(e) => {
-                            setLeadFeedback(e.target.value);
                           }}
                           rows={4}
                         />
@@ -753,27 +765,7 @@ const Home = (props) => {
                   <Col span={12}>
                     <Form.Item
                       label={
-                        <label style={{ fontSize: "18px", marginLeft: "30px" }}>
-                          Employee Self Rating
-                        </label>
-                      }
-                    >
-                      <Input
-                        // onChange={(e)=>{setConsolidateRating(e.target.value)}}
-                        defaultValue={calAvg(arry)}
-                        rows={4}
-                        style={{
-                          width: "300px",
-                          marginTop: "50px",
-                          marginLeft: "-180px",
-                        }}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label={
-                        <label style={{ fontSize: "18px", marginLeft: "40px" }}>
+                        <label style={{ fontSize: "18px", marginLeft: "35px" }}>
                           Manager's Consolidated Rating
                         </label>
                       }
@@ -783,9 +775,33 @@ const Home = (props) => {
                         style={{
                           width: "300px",
                           marginTop: "50px",
-                          marginLeft: "-180px",
+                          marginLeft: "-450px",
                         }}
                       />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label={
+                        <label className="teamlead-feedback">
+                          Manager Feedback
+                        </label>
+                      }
+                      name="managerFeedback"
+                    >
+                      <div>
+                        <TextArea
+                          style={{
+                            marginTop: "40px",
+                            marginLeft: "-330px",
+                            width: "400px",
+                          }}
+                          onChange={(e) => {
+                            setLeadFeedback(e.target.value);
+                          }}
+                          rows={4}
+                        />
+                      </div>
                     </Form.Item>
                   </Col>
                 </Row>
