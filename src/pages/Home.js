@@ -11,17 +11,15 @@ import {
   Row,
   Select,
   Space,
+  Switch,
 } from "antd";
 import HomeHeader from "../components/Header";
-import PerformanceApraisalForm from "../components/PerformanceApraisalForm";
 import ScoringTable from "../components/ScoringTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
-import Title from "antd/es/skeleton/Title";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -50,7 +48,6 @@ const Home = (props) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [detail, setDetail] = useState();
-  const [skill, setSkill] = useState();
   const [messageApi, contextHolder] = message.useMessage();
   const [rank, setRank] = useState();
   const [selfAspiration, setSelfAspiration] = useState();
@@ -65,10 +62,11 @@ const Home = (props) => {
   const [date, setDate] = useState();
   const [review_date, setReviewDate] = useState();
   const [responseData, setResponseData] = useState("");
-  const [consolidateRating, setConsolidateRating] = useState();
   const [selectValue, setSelectValue] = useState("");
   const [avg , setAvg] =useState(0);
   const [formData , setFormData] = useState();
+
+  const [toggle , setToggle] = useState(false);
   /* performance apraisal form ends here */
 
   const managerData = [
@@ -191,7 +189,7 @@ const Home = (props) => {
 
   useEffect(() =>
   {
-    console.log("PPP")
+    
   },[userData])
 
   useEffect(() => {
@@ -219,18 +217,6 @@ const Home = (props) => {
       });
   };
   const onFinish = (values) => {
-    // axios
-    //   .post(
-    //     "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
-    //       localEmail,
-    //     initialData
-    //   )
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   })
-    //   .catch((e) => {
-    //     console.log("e", e);
-    //   });
     if(responseData.status === false){
       messageApi.open({
         type: "error",
@@ -254,9 +240,6 @@ const Home = (props) => {
         console.log("e", e);
       });
   }
- 
-  
-
   const success = () => {
     messageApi.open({
       type: "success",
@@ -267,7 +250,6 @@ const Home = (props) => {
 
   const userName = localStorage.getItem("displayName");
 
-  console.log(selectValue,"??????????????????");
   function calAvg() {
     var total = 0;
     var count = 0;
@@ -275,25 +257,16 @@ const Home = (props) => {
     userData.forEach(function (item, index) {
       total=parseInt(total)+parseInt(item?.self_rating)
       setAvg(total);
-      console.log('???',total);
       count++;
-      console.log("count",count);
-      console.log("check",typeof(item.self_rating));
-      console.log("total",typeof(total));
-
     });
     let d =total / count ;
     let average = d.toFixed(2); 
     setAvg(average);
-    console.log(average);
   }
-  // console.log(calAvg(arry));
-
-  // console.log("????", userData);
-
-
-    
-  
+  const handleSwitch =() =>{
+    console.log("switch working");
+    toggle ? setToggle(false) : setToggle(true);
+  }
   return (
     <>
       {contextHolder}
@@ -309,7 +282,10 @@ const Home = (props) => {
             <HomeHeader />
           </Header>
           <Content style={contentStyle} className="homeContent">
-            <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
+            <Switch onClick={handleSwitch} style={{marginTop:'50px',float:'right',marginRight:'40px'}}/>
+            {toggle ? <span>
+
+              <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
               <Form
                 form={form}
                 onFinishFailed={onFinishFailed}
@@ -480,6 +456,7 @@ const Home = (props) => {
                 />
 
                 {/* Ratings and comment section Starts here */}
+
                 <Typography
                   style={{
                     marginTop: "80px",
@@ -491,7 +468,6 @@ const Home = (props) => {
                   KRA-Technical Aspects
                 </Typography>
                 <div>
-                  {/* {console.log("+++++", detail)} */}
                   {detail !== undefined &&
                     detail.map((d, index) => {
                       return (
@@ -700,6 +676,7 @@ const Home = (props) => {
                 </div>
 
                 {/* technical aspects ends here */}
+
                 <Divider
                   style={{
                     marginTop: "60px",
@@ -828,6 +805,10 @@ const Home = (props) => {
                 </Button>
               </Form>
             </Card>
+
+            </span> : 
+            <span>hellooooo</span>}
+            
           </Content>
         </Layout>
       </Space>
