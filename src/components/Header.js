@@ -22,11 +22,17 @@ const HomeHeader = () => {
 
     const { Search } = Input;
     const onSearch = (value) => console.log(value);
+    const mailId = localStorage.getItem("email");
     return (
         <div>
             <Row>
                 <img src={download} className="skein-logo" alt="skeinlogo" />
-                {btnTogle ? (<Search style={{ width: '200px', marginTop: '20px', marginRight: '40px' }} placeholder="input search text" onSearch={onSearch} enterButton />) : null}
+                {
+                    mailId ==="admin@gmail.com" ?
+                    <Search style={{ width: '200px', marginTop: '20px', marginRight: '200px' }} placeholder="input search text" onSearch={onSearch} enterButton /> :
+                    console.log("")
+
+                }
 
                 {/* <Search style={{width:'200px',marginTop:'20px',marginRight:'40px'}} placeholder="input search text" onSearch={onSearch} enterButton /> */}
 
