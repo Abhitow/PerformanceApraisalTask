@@ -44,6 +44,18 @@ const contentStyle = {
   minHeight: "950%",
 };
 
+
+const error = {
+  self_rating: {
+    self_rating_error:true ,
+    valid: "please select ratings"
+  },
+  justify_comment: {
+    justify_comment_error:true,
+    valid: "please select ratings"
+  },
+}
+
 const Home = (props) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -63,11 +75,19 @@ const Home = (props) => {
   const [review_date, setReviewDate] = useState();
   const [responseData, setResponseData] = useState("");
   const [selectValue, setSelectValue] = useState("");
-  const [avg , setAvg] =useState(0);
-  const [formData , setFormData] = useState();
+  const [avg, setAvg] = useState(0);
+  const [formData, setFormData] = useState();
+  const [roles, setRoles] = useState();
+  const [toggle, setToggle] = useState(false);
 
-  const [toggle , setToggle] = useState(false);
+  const [btnTogle, setBtnTogle] = useState(false);
+  const [windowsOptions, setWindowsOptions] = useState("")
+  // const [windowsClose, setWindowsClose] = useState(false)
+
   /* performance apraisal form ends here */
+
+  const [errorData , setErrorData] =useState();
+  const [indexValue, setIndexValue] = useState(0);
 
   const managerData = [
     "Select Manager",
@@ -89,9 +109,22 @@ const Home = (props) => {
     "UI/UX Desgin",
   ];
 
+  const roleIdData = [
+    {
+      roleId: 1,
+      roles: 'Manager'
+    },
+    {
+      roleId: 2,
+      roles: 'Employee'
+    },
+
+  ]
+
   const payload = {
     username: name,
     manager_name: manager,
+    role_id: roles,
     designation: designation,
     department: department,
     joining_date: date,
@@ -100,6 +133,7 @@ const Home = (props) => {
   const handleChange = (e) => {
     setManager(e);
   };
+
   const handleDesignation = (e) => {
     setDesignation(e);
   };
@@ -109,6 +143,9 @@ const Home = (props) => {
   const handleJoiningDate = (e) => {
     setDate(e);
   };
+  const handleRoleChange = (e) => {
+    setRoles(e)
+  }
 
   const localEmail = localStorage.getItem("email");
   const consolidatedData = [
@@ -187,25 +224,47 @@ const Home = (props) => {
   }, []);
 
 
-  useEffect(() =>
-  {
-    
-  },[userData])
+  useEffect(() => {
+
+  }, [userData])
 
   useEffect(() => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
-      .then((response) => setDetail(response.data.data))
+      .then((response) => 
+      {
+        setDetail(response.data.data);
+        var getData =[]
+        console.log(response.data.data.length,"22222");
+        for(let i=0;i<response.data.data.length;i++){
+          // response.data.data[i].error = {
+          //   self_rating: {
+          //     self_rating_error:false ,
+          //     valid: "please select ratings"
+          //   },
+          //   justify_comment: {
+          //     justify_comment_error:false ,
+          //     valid: "please select ratings"
+          //   },
+          // };
+          //   console.log("for loop working ");
+          getData.push(error)
+          console.log('test',error)
+        }
+        console.log(getData,"33333");
+        setErrorData(getData);
+      })
       .catch((e) => {
         console.log("e", e);
       });
   }, []);
 
   const empDetails = () => {
+    console.log("payload", payload)
     axios
       .put(
-        "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
-          localEmail,
+        "https://demo.emeetify.com:81/appraisel/users/FormDetails?email=" +
+        localEmail,
         payload
       )
       .then((response) => {
@@ -217,7 +276,7 @@ const Home = (props) => {
       });
   };
   const onFinish = (values) => {
-    if(responseData.status === false){
+    if (responseData.status === false) {
       messageApi.open({
         type: "error",
         content: "please enter all the details",
@@ -230,7 +289,7 @@ const Home = (props) => {
     axios
       .post(
         "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
-          localEmail,
+        localEmail,
         initialData
       )
       .then((response) => {
@@ -246,27 +305,64 @@ const Home = (props) => {
       content: "Details Submitted Successfully",
     });
   };
-  const onFinishFailed = (errorInfo) => {};
+  const onFinishFailed = (errorInfo) => { };
 
   const userName = localStorage.getItem("displayName");
+
+
+
+
+  useEffect(() => {
+    const emailCheck = localStorage.getItem("email")
+    console.log("email", emailCheck)
+    if (emailCheck == "admin@gmail.com") {
+      setBtnTogle(true)
+    }
+    else {
+      setBtnTogle(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get("https://demo.emeetify.com:81/appraisel/users/appraisalWindow")
+      .then((response) =>
+        // console.log("windowssss", response.data.data),
+        setWindowsOptions(response.data.data)
+      )
+      .catch((e) => {
+        console.log("e", e);
+      });
+  }, []);
 
   function calAvg() {
     var total = 0;
     var count = 0;
 
     userData.forEach(function (item, index) {
-      total=parseInt(total)+parseInt(item?.self_rating)
+      total = parseInt(total) + parseInt(item?.self_rating)
       setAvg(total);
       count++;
     });
-    let d =total / count ;
-    let average = d.toFixed(2); 
+    let d = total / count;
+    let average = d.toFixed(2);
     setAvg(average);
   }
-  const handleSwitch =() =>{
+  const handleSwitch = () => {
     console.log("switch working");
+
     toggle ? setToggle(false) : setToggle(true);
+
   }
+  console.log("=========>",errorData);
+  
+ useEffect(()=>{
+  console.log("ErrorData",errorData);
+    },[errorData])
+
+  useEffect(()=>{
+    console.log("index val",indexValue);
+  },[indexValue])
   return (
     <>
       {contextHolder}
@@ -282,10 +378,10 @@ const Home = (props) => {
             <HomeHeader />
           </Header>
           <Content style={contentStyle} className="homeContent">
-            <Switch onClick={handleSwitch} style={{marginTop:'50px',float:'right',marginRight:'40px'}}/>
-            {toggle ? <span>
 
-              <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
+            {btnTogle===true ? (<Switch onClick={handleSwitch} style={{ marginTop: '50px', float: 'right', marginRight: '40px' }} />) : null}
+
+            {btnTogle===true ? (<Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
               <Form
                 form={form}
                 onFinishFailed={onFinishFailed}
@@ -337,7 +433,7 @@ const Home = (props) => {
                             defaultValue={managerData[0]}
                             style={{
                               width: 250,
-                              marginLeft: "20px",
+                              // marginLeft: "20px",
                             }}
                             value={manager}
                             onChange={handleChange}
@@ -350,6 +446,35 @@ const Home = (props) => {
                       </Col>
                     </Row>
                     <Row className="performance-form-row-two">
+                      <Col span={12}>
+                        <Form.Item
+                          name={"roleId"}
+                          className="label5"
+                          label="Role Id"
+                          // name={"manager"}
+                          rules={[
+                            {
+                              required: true,
+                              message: "please select the manager",
+                            },
+                          ]}
+                        >
+                          <Select
+                            className="performance-input-manager"
+                            defaultValue={roleIdData[0].roles}
+                            style={{
+                              width: 250,
+                              marginLeft: "10px",
+                            }}
+                            value={roleIdData.roleId}
+                            onChange={handleRoleChange}
+                            options={roleIdData.map((selectData) => ({
+                              label: selectData.roles,
+                              value: selectData.roleId,
+                            }))}
+                          />
+                        </Form.Item>
+                      </Col>
                       <Col span={12}>
                         <Form.Item
                           className="label3"
@@ -378,6 +503,12 @@ const Home = (props) => {
                           />
                         </Form.Item>
                       </Col>
+
+                    </Row>
+
+
+                    <Row className="performance-form-row-two">
+
                       <Col span={12}>
                         <Form.Item
                           className="label4"
@@ -406,8 +537,6 @@ const Home = (props) => {
                           />
                         </Form.Item>
                       </Col>
-                    </Row>
-                    <Row className="performance-form-row-three">
                       <Col span={12}>
                         <Form.Item
                           className="joiningdate-label"
@@ -428,6 +557,586 @@ const Home = (props) => {
                           />
                         </Form.Item>
                       </Col>
+
+                    </Row>
+                    <Row className="performance-form-row-three">
+
+                      <Col span={12}>
+                        <Form.Item
+                          label="Review Period"
+                          className="review-period"
+                        >
+                          <Input
+                            defaultValue={"2022-23"}
+                            readOnly
+                            onChange={(e, defaultValue) => {
+                              setReviewDate(defaultValue("2022-23"));
+                            }}
+                            className="performance-date"
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
+                </div>
+                <ScoringTable />
+                <Divider
+                  style={{
+                    marginTop: "60px",
+                    backgroundColor: "green",
+                    height: "5px",
+                  }}
+                />
+
+                {/* Ratings and comment section Starts here */}
+
+                <Typography
+                  style={{
+                    marginTop: "80px",
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  KRA-Technical Aspects
+                </Typography>
+                <div>
+                  {detail !== undefined &&
+                    detail.map((d, index) => {
+                      return (
+                        <>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            <Row>
+                              <Col style={{ float: "left", fontSize: "16px" }}>
+                                <h1 key={d.t_id}>{d.kra_id} : </h1>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col
+                                style={{
+                                  float: "left",
+                                  fontSize: "14px",
+                                  marginTop: "6px",
+                                  marginLeft: "4px",
+                                  fontWeight: "none",
+                                }}
+                              >
+                                <h1 key={d.t_id}> {d.kra}</h1>
+                              </Col>
+                            </Row>
+                          </div>
+                          <div>
+                            <Card
+                              style={{
+                                height: "75px",
+                                borderColor: "blue",
+                                textAlign: "left",
+                                marginTop: "0px",
+                                marginLeft: "10px",
+                                marginRight: "20px",
+                              }}
+                            >
+                              <p
+                                style={{ fontSize: "17px", marginTop: "-10px" }}
+                                key={d.t_id}
+                              >
+                                {d.measures}
+                              </p>
+                            </Card>
+                          </div>
+                          <div>
+                            <Row style={{ marginTop: "20px" }}>
+                              <Col span={12}>
+                                {console.log("check erro msg",errorData[index].self_rating.self_rating_error)}
+                                <Form.Item
+                                  style={{ marginLeft: "100px" }}
+                                  name="selfRating"
+                                  hasFeedback
+                                  rules={[
+                                    {
+                                      required: errorData[index].self_rating.self_rating_error,
+                                      message: errorData[index].self_rating.valid,
+                                    },
+                                  ]}
+                                  label={
+                                    <label className="self-rating">
+                                      Self Rating
+                                    </label>
+                                  }
+                                >
+                                  <div
+                                    className="self-rating-input"
+                                  
+                                  >
+                                    <Select
+                                      
+                                      className="performance-input-rating"
+                                      defaultValue={RankingData[0]}
+                                      style={{
+                                        width: 150,
+                                        marginLeft: "20px",
+                                      }}
+                                      onChange={(e) => {
+                                        console.log("check")
+                                        setIndexValue(index)
+                                       var updateError = [...errorData]
+                                       errorData[0].self_rating.self_rating_error = false 
+                                      console.log("123",updateError);
+                                      setErrorData(updateError)
+                                        userData[index].self_rating = e
+                                        console.log("changed", userData);
+                                        setUserData(userData);
+                                        calAvg();
+                                      }}
+                                      options={RankingData.map(
+                                        (selectData) => ({
+                                          label: selectData,
+                                          value: selectData,
+                                        })
+                                      )}
+                                    />
+                                  </div>
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item
+                                  label={
+                                    <label className="self-comment">
+                                      Justify Your Comment
+                                    </label>
+                                  }
+                                  name="selfComment"
+                                  rules={[
+                                    {
+                                      required: errorData[index].justify_comment.justify_comment_error,
+                                      message: errorData[index].justify_comment.valid ,
+                                    },
+                                  ]}
+                                  hasFeedback
+                                >
+                                  <div
+                                    className="self-comment-input"
+                                    key={d.t_id}
+                                  >
+                                    <TextArea
+                                      onChange={(e) => {
+                                        errorData[index].justify_comment.justify_comment_error = false
+                                        console.log('errorData ',errorData);
+                                        setErrorData(errorData)
+                                        initialData[index].t_id = d.t_id;
+                                        initialData[index].self_comment = e.target.value;
+                                      }}
+                                      rows={4}
+                                      style={{ width: "400px", marginTop: "" }}
+                                    />
+                                  </div>
+                                </Form.Item>
+                              </Col>
+                            </Row>
+
+                            <Row>
+                              <Col span={12}>
+                                <Form.Item
+                                  style={{ marginLeft: "110px" }}
+                                  label={
+                                    <label className="manager-rating">
+                                      Manager Rating
+                                    </label>
+                                  }
+                                  name="managerRating"
+                                >
+                                  <div className="manager-rating-input">
+                                    <Select
+                                      // rules={[
+                                      //   {
+                                      //     required: true,
+                                      //     message: "please give ratings",
+                                      //   },
+                                      // ]}
+                                      // hasFeedback
+                                      className="performance-input"
+                                      defaultValue={RankingData[0]}
+                                      style={{
+                                        width: 150,
+                                        marginLeft: "20px",
+                                      }}
+                                      value={rank}
+                                      // onChange={(e) => {
+                                      //   initialData[index].self_rating = e;
+                                      // }}
+                                      options={RankingData.map(
+                                        (selectData) => ({
+                                          label: selectData,
+                                          value: selectData,
+                                        })
+                                      )}
+                                    />
+                                  </div>
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item
+                                  label={
+                                    <label className="manager-comment">
+                                      Manager Comment
+                                    </label>
+                                  }
+                                  name="managerComment"
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //     message: "please give comments",
+                                //   },
+                                // ]}
+                                // hasFeedback
+                                // required
+                                >
+                                  <div
+                                    className="manager-comment-input"
+                                  // key={d.t_id}
+                                  >
+                                    <TextArea
+                                      // onChange={(e) => {
+                                      //   initialData[index].t_id = d.t_id;
+                                      //   initialData[index].self_comment =
+                                      //     e.target.value;
+                                      // }}
+                                      rows={4}
+                                      style={{ width: "400px" }}
+                                    />
+                                  </div>
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          </div>
+                        </>
+                      );
+                    })}
+                </div>
+
+                {/* technical aspects ends here */}
+
+                <Divider
+                  style={{
+                    marginTop: "60px",
+                    backgroundColor: "violet",
+                    height: "5px",
+                  }}
+                />
+                <Row>
+                  <Col span={12}>
+                    <Form.Item readOnly
+                      label={
+                        <label style={{ fontSize: "18px", marginLeft: "30px" }}>
+                          Employee Self Rating
+                        </label>
+                      }
+                    >
+                      <Card style={{
+                        height: '50px', width: '100px', marginTop: "50px",
+                        marginLeft: "-130px"
+                      }}>
+                        <Typography style={{
+                          textAlign: 'center', margin: 'auto',
+                          marginTop: '-20px', fontSize: '24px'
+                        }}>{avg}</Typography>
+                      </Card>
+                      {/* <Input
+                        // onChange={(e)=>{setConsolidateRating(e.target.value)}}
+                        // onChange={avg}
+                        value={avg}
+                        rows={4}
+                      /> */}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      style={{ marginLeft: "15px" }}
+                      label={
+                        <label className="self-aspiration">
+                          Self Aspiration
+                        </label>
+                      }
+                      name="selfAspiration"
+                      rules={[
+                        {
+                          required: true,
+                          message: "please give comments",
+                        },
+                      ]}
+                      hasFeedback
+                      required
+                    >
+                      <div>
+                        <TextArea
+                          style={{ marginTop: "40px", marginLeft: "-250px" }}
+                          className="self-aspiration-input"
+                          onChange={(e) => {
+                            setSelfAspiration(e.target.value);
+                          }}
+                          rows={4}
+                        />
+                      </div>
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Row style={{ marginTop: "30px" }}>
+                  <Col span={12}>
+                    <Form.Item
+                      label={
+                        <label style={{ fontSize: "18px", marginLeft: "35px" }}>
+                          Manager's Consolidated Rating
+                        </label>
+                      }
+                    >
+                      <Input
+                        rows={4}
+                        style={{
+                          width: "300px",
+                          marginTop: "50px",
+                          marginLeft: "-450px",
+                        }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label={
+                        <label className="teamlead-feedback">
+                          Manager Feedback
+                        </label>
+                      }
+                      name="managerFeedback"
+                    >
+                      <div>
+                        <TextArea
+                          style={{
+                            marginTop: "40px",
+                            marginLeft: "-330px",
+                            width: "400px",
+                          }}
+                          onChange={(e) => {
+                            setLeadFeedback(e.target.value);
+                          }}
+                          rows={4}
+                        />
+                      </div>
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Divider
+                  style={{
+                    marginTop: "40px",
+                    backgroundColor: "lightBlue",
+                    height: "3px",
+                  }}
+                />
+
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  style={{
+                    backgroundColor: "green",
+                    height: "40px",
+                    width: "100px",
+                  }}
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </Button>
+              </Form>
+            </Card>) : null}
+
+              
+            {(windowsOptions.is_appraisal_window_open===true && btnTogle===false && windowsOptions.is_appraisal_open_for_employee===true ) || (windowsOptions.is_appraisal_window_open===true && btnTogle===false)?
+             (<Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
+              <Form
+                form={form}
+                onFinishFailed={onFinishFailed}
+                onFinish={onFinish}
+                scrollToFirstError={true}
+                autoComplete="off"
+              >
+                <div>
+                  <Card className="form-card" title="Employee Details">
+                    {contextHolder}
+                    <Row className="performance-form-row-one">
+                      <Col span={12}>
+                        <Form.Item
+                          label="Name of Employee"
+                          name={"name"}
+                          className="label1"
+                          rules={[
+                            {
+                              required: true,
+                              message: "please enter name of employee",
+                            },
+                          ]}
+                          hasFeedback
+                        >
+                          <Input
+                            defaultValue={userName}
+                            className="performance-input"
+                            value={name}
+                            onChange={(e, defaultValue) => {
+                              setName(e.target.value || defaultValue);
+                            }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          className="label2"
+                          label="Manager Name"
+                          name={"manager"}
+                          rules={[
+                            {
+                              required: true,
+                              message: "please select the manager",
+                            },
+                          ]}
+                        >
+                          <Select
+                            className="performance-input-manager"
+                            defaultValue={managerData[0]}
+                            style={{
+                              width: 250,
+                              // marginLeft: "20px",
+                            }}
+                            value={manager}
+                            onChange={handleChange}
+                            options={managerData.map((selectData) => ({
+                              label: selectData,
+                              value: selectData,
+                            }))}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row className="performance-form-row-two">
+                      <Col span={12}>
+                        <Form.Item
+                          name={"roleId"}
+                          className="label5"
+                          label="Role Id"
+                          // name={"manager"}
+                          rules={[
+                            {
+                              required: true,
+                              message: "please select the manager",
+                            },
+                          ]}
+                        >
+                          <Select
+                            className="performance-input-manager"
+                            defaultValue={roleIdData[0].roles}
+                            style={{
+                              width: 250,
+                              marginLeft: "10px",
+                            }}
+                            value={roleIdData.roleId}
+                            onChange={handleRoleChange}
+                            options={roleIdData.map((selectData) => ({
+                              label: selectData.roles,
+                              value: selectData.roleId,
+                            }))}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          className="label3"
+                          label="Designation"
+                          name={"designation"}
+                          rules={[
+                            {
+                              required: true,
+                              message: "please enter Your designation",
+                            },
+                          ]}
+                        >
+                          <Select
+                            className="performance-input-designation"
+                            defaultValue={designationData[0]}
+                            style={{
+                              width: 250,
+                              marginLeft: 65,
+                            }}
+                            value={designation}
+                            onChange={handleDesignation}
+                            options={designationData.map((selectData) => ({
+                              label: selectData,
+                              value: selectData,
+                            }))}
+                          />
+                        </Form.Item>
+                      </Col>
+
+                    </Row>
+
+
+                    <Row className="performance-form-row-two">
+
+                      <Col span={12}>
+                        <Form.Item
+                          className="label4"
+                          label="Department"
+                          name={"department"}
+                          rules={[
+                            {
+                              required: true,
+                              message: "please enter your department",
+                            },
+                          ]}
+                        >
+                          <Select
+                            className="performance-input-department"
+                            defaultValue={departmentData[0]}
+                            style={{
+                              width: 250,
+                              marginLeft: 43,
+                            }}
+                            value={department}
+                            onChange={handleDepartment}
+                            options={departmentData.map((selectData) => ({
+                              label: selectData,
+                              value: selectData,
+                            }))}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          className="joiningdate-label"
+                          label="Joining Date"
+                          name={"date"}
+                          rules={[
+                            {
+                              required: true,
+                              message: "please enter your joining date",
+                            },
+                          ]}
+                          hasFeedback
+                        >
+                          <DatePicker
+                            className="performance-joiningdate"
+                            value={date}
+                            onChange={handleJoiningDate}
+                          />
+                        </Form.Item>
+                      </Col>
+
+                    </Row>
+                    <Row className="performance-form-row-three">
+
                       <Col span={12}>
                         <Form.Item
                           label="Review Period"
@@ -548,7 +1257,6 @@ const Home = (props) => {
                                       }}
                                       onChange={(e) => {
                                         userData[index].self_rating = e
-                                        console.log("changed",userData);
                                         setUserData(userData);
                                         calAvg();
                                       }}
@@ -585,7 +1293,7 @@ const Home = (props) => {
                                     <TextArea
                                       onChange={(e) => {
                                         initialData[index].t_id = d.t_id;
-                                        initialData[index].self_comment =e.target.value;
+                                        initialData[index].self_comment = e.target.value;
                                       }}
                                       rows={4}
                                       style={{ width: "400px", marginTop: "" }}
@@ -595,80 +1303,80 @@ const Home = (props) => {
                               </Col>
                             </Row>
 
-                            <Row>
-                              <Col span={12}>
-                                <Form.Item
-                                  style={{ marginLeft: "110px" }}
-                                  label={
-                                    <label className="manager-rating">
-                                      Manager Rating
-                                    </label>
-                                  }
-                                  name="managerRating"
+                            {/* <Row>
+                            <Col span={12}>
+                              <Form.Item
+                                style={{ marginLeft: "110px" }}
+                                label={
+                                  <label className="manager-rating">
+                                    Manager Rating
+                                  </label>
+                                }
+                                name="managerRating"
+                              >
+                                <div className="manager-rating-input">
+                                  <Select
+                                    // rules={[
+                                    //   {
+                                    //     required: true,
+                                    //     message: "please give ratings",
+                                    //   },
+                                    // ]}
+                                    // hasFeedback
+                                    className="performance-input"
+                                    defaultValue={RankingData[0]}
+                                    style={{
+                                      width: 150,
+                                      marginLeft: "20px",
+                                    }}
+                                    value={rank}
+                                    // onChange={(e) => {
+                                    //   initialData[index].self_rating = e;
+                                    // }}
+                                    options={RankingData.map(
+                                      (selectData) => ({
+                                        label: selectData,
+                                        value: selectData,
+                                      })
+                                    )}
+                                  />
+                                </div>
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item
+                                label={
+                                  <label className="manager-comment">
+                                    Manager Comment
+                                  </label>
+                                }
+                                name="managerComment"
+                              // rules={[
+                              //   {
+                              //     required: true,
+                              //     message: "please give comments",
+                              //   },
+                              // ]}
+                              // hasFeedback
+                              // required
+                              >
+                                <div
+                                  className="manager-comment-input"
+                                // key={d.t_id}
                                 >
-                                  <div className="manager-rating-input">
-                                    <Select
-                                      // rules={[
-                                      //   {
-                                      //     required: true,
-                                      //     message: "please give ratings",
-                                      //   },
-                                      // ]}
-                                      // hasFeedback
-                                      className="performance-input"
-                                      defaultValue={RankingData[0]}
-                                      style={{
-                                        width: 150,
-                                        marginLeft: "20px",
-                                      }}
-                                      value={rank}
-                                      // onChange={(e) => {
-                                      //   initialData[index].self_rating = e;
-                                      // }}
-                                      options={RankingData.map(
-                                        (selectData) => ({
-                                          label: selectData,
-                                          value: selectData,
-                                        })
-                                      )}
-                                    />
-                                  </div>
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item
-                                  label={
-                                    <label className="manager-comment">
-                                      Manager Comment
-                                    </label>
-                                  }
-                                  name="managerComment"
-                                  // rules={[
-                                  //   {
-                                  //     required: true,
-                                  //     message: "please give comments",
-                                  //   },
-                                  // ]}
-                                  // hasFeedback
-                                  // required
-                                >
-                                  <div
-                                    className="manager-comment-input"
-                                    // key={d.t_id}
-                                  >
-                                    <TextArea
-                                      // onChange={(e) => {
-                                      //   initialData[index].t_id = d.t_id;
-                                      //   initialData[index].self_comment =
-                                      //     e.target.value;
-                                      // }}
-                                      rows={4}
-                                      style={{ width: "400px" }}
-                                    />
-                                  </div>
-                                </Form.Item>
-                              </Col>
-                            </Row>
+                                  <TextArea
+                                    // onChange={(e) => {
+                                    //   initialData[index].t_id = d.t_id;
+                                    //   initialData[index].self_comment =
+                                    //     e.target.value;
+                                    // }}
+                                    rows={4}
+                                    style={{ width: "400px" }}
+                                  />
+                                </div>
+                              </Form.Item>
+                            </Col>
+                          </Row> */}
                           </div>
                         </>
                       );
@@ -693,17 +1401,21 @@ const Home = (props) => {
                         </label>
                       }
                     >
-                      <Card style={{height:'50px',width:'100px', marginTop: "50px",
-                          marginLeft: "-130px"}}>
-                        <Typography style={{textAlign:'center',margin:'auto',
-                      marginTop:'-20px',fontSize:'24px'}}>{avg}</Typography>
+                      <Card style={{
+                        height: '50px', width: '100px', marginTop: "50px",
+                        marginLeft: "-130px"
+                      }}>
+                        <Typography style={{
+                          textAlign: 'center', margin: 'auto',
+                          marginTop: '-20px', fontSize: '24px'
+                        }}>{avg}</Typography>
                       </Card>
                       {/* <Input
-                        // onChange={(e)=>{setConsolidateRating(e.target.value)}}
-                        // onChange={avg}
-                        value={avg}
-                        rows={4}
-                      /> */}
+                      // onChange={(e)=>{setConsolidateRating(e.target.value)}}
+                      // onChange={avg}
+                      value={avg}
+                      rows={4}
+                    /> */}
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -738,7 +1450,7 @@ const Home = (props) => {
                   </Col>
                 </Row>
 
-                <Row style={{ marginTop: "30px" }}>
+                {/* <Row style={{ marginTop: "30px" }}>
                   <Col span={12}>
                     <Form.Item
                       label={
@@ -781,7 +1493,7 @@ const Home = (props) => {
                       </div>
                     </Form.Item>
                   </Col>
-                </Row>
+                </Row> */}
 
                 <Divider
                   style={{
@@ -805,10 +1517,13 @@ const Home = (props) => {
                 </Button>
               </Form>
             </Card>
+            ) : (
+              <Card className="form-card" style={{height:'80vh',position:'fixed',marginLeft:'200px'}}>
+                <Typography style={{textAlign:"center",marginTop:'35vh',fontSize:'24px',fontWeight:'bold',color:'grey '}}>Currently Appraisel Form Window is Close</Typography>
 
-            </span> : 
-            <span>hellooooo</span>}
-            
+
+              </Card>)}
+
           </Content>
         </Layout>
       </Space>

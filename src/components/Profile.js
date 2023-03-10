@@ -16,7 +16,7 @@ const Profile = () => {
       const items =[
         {
             key:'1' ,
-            label: user || email
+            label: user || email    
         },
         {
             type:'divider'
