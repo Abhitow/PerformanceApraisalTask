@@ -329,3 +329,8 @@
   display: inline-block;
   font-size: 18px !important;
  }
+ .ant-modal-content{
+  width: 1000px;
+  margin-left: -200px;
+  height:auto;
+ }

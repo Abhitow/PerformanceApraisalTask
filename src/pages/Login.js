@@ -26,6 +26,7 @@ function Login({ isLoggedIn }) {
   // const [datas , setDatas] = useState([]);
 
   const [google, setGoogle] = useState("");
+  const [search , setSearch] = useState();
 
   const handleGoogle = () => {
     signInWithPopup(auth, provider).then((data) => {
@@ -84,14 +85,14 @@ function Login({ isLoggedIn }) {
         }
         // localStorage.setItem("Admintoken",data.token );
         // Handle data
-        localStorage.setItem("full_name", data.data.full_name);
+        localStorage.setItem("username", data.data.username);
         localStorage.setItem("email", data.data.email);
         // console.log(full_name,"<<<>>>>");
       })
       .catch((err) => {
         console.log(err.message);
       });
-    
+     
   };
   return (
     

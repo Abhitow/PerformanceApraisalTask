@@ -6,13 +6,13 @@ import Logout from './Logout'
 
 const Profile = () => {
     const [user , setUser] = useState(localStorage.getItem("email"));
-    const [full_name , setFull_Name] =useState(localStorage.getItem("full_name"));
+    const [username , setUserName] =useState(localStorage.getItem("username"));
     const [ email , setEmail ] = useState(localStorage.getItem("email"));
 
     const[displayName , setDisplayName] = useState(localStorage.getItem("displayName"));
   
-    //   console.log(user);
-    //   console.log(full_name,">>>>>>>>>>>>>>>>>>>>>>>>>>");
+  const adminUserName = "Admin" ;
+  const mailId = localStorage.getItem("email");
       const items =[
         {
             key:'1' ,
@@ -29,7 +29,11 @@ const Profile = () => {
     return(
         <div>
             <Dropdown menu={{items}}>
-                <Space className='header-profile' style={{color:'grey'}} >{displayName}{full_name}<UserOutlined /></Space>
+                {
+                    mailId === "admin@gmail.com" ? 
+                    <Space className='header-profile' style={{color:'grey'}} >{adminUserName}<UserOutlined /></Space> :
+                    <Space className='header-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
+                }
             </Dropdown>
         </div>
     )

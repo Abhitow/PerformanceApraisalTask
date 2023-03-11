@@ -8,6 +8,7 @@ import {
   Input,
   Layout,
   message,
+  Modal,
   Row,
   Select,
   Space,
@@ -21,7 +22,8 @@ import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
 import { ContactsOutlined } from "@ant-design/icons";
-
+import Profile from "../components/Profile";
+import download from '../download.png'
 const { Header, Content } = Layout;
 const layoutStyle = {
   height: "100vh",
@@ -38,11 +40,12 @@ const headerStyle = {
   width: "100vw",
   zIndex: 1,
 };
+
 const contentStyle = {
   textAlign: "center",
   marginTop: "50px",
   backgroundColor: "#f5f5f5",
-  minHeight: "950%",
+  minHeight: "auto",
 };
 
 
@@ -90,14 +93,19 @@ const Home = (props) => {
   const [errorData , setErrorData] =useState();
   const [indexValue, setIndexValue] = useState(0);
 
-  // const [active , setActive] = useState(true);
+  const [avgTotal , setAvgTotal] = useState();
 
-  /* Manager Button  */
+  /* Home header starts here */
+  const [search , setSearch] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchData , setSearchData] = useState();
+  const { Search } = Input;
+  const onSearch = (search) => setSearchData(search);
+  const mailId = localStorage.getItem("email");
 
-  const [is_appraisal_window_open , setIs_appraisal_window_open] = useState(true);
-  const [is_appraisal_open_for_employee , setIs_appraisal_open_for_employee] = useState(true);
+  /* Home header starts here */
+console.log(searchData);
 
-   /* Manager Button  */
   const managerData = [
     "Select Manager",
     "Rajamanickam R",
@@ -279,7 +287,7 @@ const Home = (props) => {
       )
       .then((response) => {
         setFormData(response.data);
-        console.log(response.data,"111111");
+        // console.log(response.data,"111111");
       })
       .catch((e) => {
         console.log("e", e);
@@ -318,7 +326,6 @@ const Home = (props) => {
   const onFinishFailed = (errorInfo) => { };
 
   const userName = localStorage.getItem("displayName");
-  const mailId = localStorage.getItem("email");
   useEffect(() => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/appraisalWindow")
@@ -331,39 +338,56 @@ const Home = (props) => {
       });
   }, []);
 
-console.log(windowsOptions.is_appraisal_window_open,"555555");
-  const handleManagerButton = () =>{
-    console.log("manager button working");
-    setIs_appraisal_open_for_employee(current => !current);
-    setIs_appraisal_window_open(current => !current);
+  // const handleManagerButton = () =>{
+  //   console.log("manager button working");
+  //   setIs_appraisal_open_for_employee(current => !current);
+  //   setIs_appraisal_window_open(current => !current);
 
-  }
+  // }
 
   function calAvg() {
     var total = 0;
     var count = 0;
-
     userData.forEach(function (item, index) {
-      var b =item?.self_rating
-      console.log(typeof(b),"kkkkkkkkkk")
-      total = parseInt(total) + parseInt(b)
-      // console.log(typeof(item?.self_rating));
+      
+      var a = parseInt(total);
+      var b = parseInt(item?.self_rating);
+
+      console.log(a,"total check");
+      console.log(b,"self Rating check");
+
+      total=parseInt(a)+parseInt(b);
       setAvg(total);
       count++;
-      // console.log(total,"33333333333");
     });
-    let d = total / count;
-    console.log(d,"dddddddddd");
-    let average = d.toFixed(2);
-    setAvg(average);
+    let d = parseInt(total) / count ;
+    // let average = d.toFixed(2); 
+    setAvg(d);
   }
-  console.log(avg,"avggggggg");
+  // console.log(avg,"avggggggg");
  useEffect(()=>{
     },[errorData])
 
   useEffect(()=>{
   },[indexValue])
  
+  useEffect( () => {
+    axios.get("https://demo.emeetify.com:81/appraisel/users/userNames").
+    then((response) => {setSearch(response.data.data ,"111111111")}).
+    catch((e)=>{console.log(e ,"error message")})
+},[]);
+// console.log(search.data[0].user_id,"11111111");
+
+const showModal = () => {
+  setIsModalOpen(true);
+};
+const handleOk = () => {
+  setIsModalOpen(false);
+};
+const handleCancel = () => {
+  setIsModalOpen(false);
+};
+
   return (
     <>
       {contextHolder}
@@ -377,9 +401,52 @@ console.log(windowsOptions.is_appraisal_window_open,"555555");
 
 
   <Layout style={layoutStyle}>
+
+
+
+
+
           <Header style={headerStyle}>
-            <HomeHeader />
+          <div>
+            <Row>
+               <Col span={3}>
+               <img src={download} className="skein-logo" alt="skeinlogo" />
+               </Col>
+               <Col span={3}>
+                {
+                    mailId ==="admin@gmail.com" ?
+                      <>
+                      <div style={{marginLeft:'30px'}}>
+                      <Button type="primary" onClick={showModal} style={{}}> 
+                         User Details
+                       </Button>
+                      </div>
+                       <Modal title="Employee Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
+                       <Search autoComplete style={{ width: '200px'}} placeholder="Employee Name" onSearch={onSearch} enterButton /> 
+                       {console.log(search,"5555555")}
+                          {/* {search !== undefined &&
+                          search.map( (a , index) => {
+                             console.log(a.user_id,"aaaaaaaaaaaaaaaa");
+                             <h1 key={a.user_id}>{a.user_id}</h1>
+                          })} */}
+                       </Modal>
+                      </>
+                   
+                    :
+                    console.log("")
+
+                }
+               </Col>
+                
+               <Col span={14}>
+                    <h1 style={{ textAlign: 'center', marginTop: '0px',marginLeft:'-30px'  }}>Performance Appraisal Form</h1>
+               </Col>
+
+                <Col span={4}>< Profile /></Col>
+            </Row>
+        </div>
           </Header>
+
           {/* {
               mailId === "admin@gmail.com" ? 
               <div style={{float:'left',marginTop:'70px',marginLeft:'60px',position:'fixed'}}>
@@ -686,17 +753,10 @@ console.log(windowsOptions.is_appraisal_window_open,"555555");
                                         width: 150,
                                         marginLeft: "20px",
                                       }}
+                                      
                                       onChange={(e) => {
-                                        console.log("check")
-                                        setIndexValue(index)
-                                       var updateError = [...errorData]
-                                       errorData[0].self_rating.self_rating_error = false 
-                                      console.log("123",updateError);
-                                      setErrorData(updateError)
                                         userData[index].self_rating = e
-                                        var d = parseInt(e);
-                                        console.log(typeof(d),"typeeeeee")
-                                        console.log("changed", userData);
+                                        console.log("changed",userData);
                                         setUserData(userData);
                                         calAvg();
                                       }}
@@ -745,6 +805,7 @@ console.log(windowsOptions.is_appraisal_window_open,"555555");
 
                           {
                             mailId === "admin@gmail.com" ?
+                            
                             <Row id="manager_id">
                             <Col span={12}>
                               <Form.Item 
@@ -888,7 +949,10 @@ console.log(windowsOptions.is_appraisal_window_open,"555555");
                   </Col>
                 </Row>
 
-                <Row style={{ marginTop: "30px" }}>
+                {
+                  mailId === "admin@gmail.com" ?
+
+                  <Row style={{ marginTop: "30px" }}>
                   <Col span={12}>
                     <Form.Item
                       label={
@@ -932,6 +996,9 @@ console.log(windowsOptions.is_appraisal_window_open,"555555");
                     </Form.Item>
                   </Col>
                 </Row>
+                  : console.log("")
+                }
+               
 
                 <Divider
                   style={{
