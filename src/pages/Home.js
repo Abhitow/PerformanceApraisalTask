@@ -14,7 +14,6 @@ import {
   Space,
   Switch,
 } from "antd";
-import HomeHeader from "../components/Header";
 import ScoringTable from "../components/ScoringTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -104,7 +103,7 @@ const Home = (props) => {
   const mailId = localStorage.getItem("email");
 
   /* Home header starts here */
-console.log(searchData);
+// console.log(searchData);
 
   const managerData = [
     "Select Manager",
@@ -278,7 +277,7 @@ console.log(searchData);
   }, []);
 
   const empDetails = () => {
-    console.log("payload", payload)
+    // console.log("payload", payload)
     axios
       .put(
         "https://demo.emeetify.com:81/appraisel/users/FormDetails?email=" +
@@ -293,13 +292,15 @@ console.log(searchData);
         console.log("e", e);
       });
   };
-  const onFinish = (values) => {
-    if (responseData.status === false) {
-      messageApi.open({
-        type: "error",
-        content: "please enter all the details",
-      });
-    }
+  
+  const onFinish = (formData) => {
+    // if (responseData.status === true) {
+    //   messageApi.open({
+    //     type: "error",
+    //     content: "please enter all the details",
+    //   });
+    // }
+   
   };
 
   const handleSubmit = () => {
@@ -316,6 +317,12 @@ console.log(searchData);
       .catch((e) => {
         console.log("e", e);
       });
+      console.log(formData.status,"555555555");
+      if(formData.status === false){
+          success();
+      }else{
+        console.log("erorrrrrrr");
+      }
   }
   const success = () => {
     messageApi.open({
@@ -390,7 +397,7 @@ const handleCancel = () => {
 
   return (
     <>
-      {contextHolder}
+     
       <Space
         direction="vertical"
         style={{
@@ -399,13 +406,8 @@ const handleCancel = () => {
         size={[0, 48]}
       >
 
-
+{contextHolder}
   <Layout style={layoutStyle}>
-
-
-
-
-
           <Header style={headerStyle}>
           <div>
             <Row>
@@ -423,7 +425,7 @@ const handleCancel = () => {
                       </div>
                        <Modal title="Employee Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
                        <Search autoComplete style={{ width: '200px'}} placeholder="Employee Name" onSearch={onSearch} enterButton /> 
-                       {console.log(search,"5555555")}
+                       {/* {console.log(search,"5555555")} */}
                           {/* {search !== undefined &&
                           search.map( (a , index) => {
                              console.log(a.user_id,"aaaaaaaaaaaaaaaa");
@@ -434,7 +436,6 @@ const handleCancel = () => {
                    
                     :
                     console.log("")
-
                 }
                </Col>
                 
@@ -446,7 +447,6 @@ const handleCancel = () => {
             </Row>
         </div>
           </Header>
-
           {/* {
               mailId === "admin@gmail.com" ? 
               <div style={{float:'left',marginTop:'70px',marginLeft:'60px',position:'fixed'}}>
@@ -454,12 +454,9 @@ const handleCancel = () => {
             </div> :
             console.log("")
             } */}
-
           { 
             windowsOptions.is_appraisal_window_open === true && windowsOptions.is_appraisal_open_for_employee === true ?
             <Content style={contentStyle} className="homeContent">
-           
-             
              <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
               <Form
                 form={form}
