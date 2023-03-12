@@ -23,6 +23,7 @@ import TextArea from "antd/es/input/TextArea";
 import { ContactsOutlined } from "@ant-design/icons";
 import Profile from "../components/Profile";
 import download from '../download.png'
+import SearchDetails from "../components/SearchDetails";
 const { Header, Content } = Layout;
 const layoutStyle = {
   height: "100vh",
@@ -307,7 +308,7 @@ const Home = (props) => {
     empDetails();
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
         localEmail,
         initialData
       )
@@ -420,17 +421,12 @@ const handleCancel = () => {
                       <>
                       <div style={{marginLeft:'30px'}}>
                       <Button type="primary" onClick={showModal} style={{}}> 
-                         User Details
+                         Employee Details
                        </Button>
                       </div>
                        <Modal title="Employee Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
-                       <Search autoComplete style={{ width: '200px'}} placeholder="Employee Name" onSearch={onSearch} enterButton /> 
-                       {/* {console.log(search,"5555555")} */}
-                          {/* {search !== undefined &&
-                          search.map( (a , index) => {
-                             console.log(a.user_id,"aaaaaaaaaaaaaaaa");
-                             <h1 key={a.user_id}>{a.user_id}</h1>
-                          })} */}
+                        <SearchDetails />
+                       {/* <Search autoComplete style={{ width: '200px'}} placeholder="Employee Name" onSearch={onSearch} enterButton />  */}
                        </Modal>
                       </>
                    
