@@ -281,7 +281,7 @@ const Home = (props) => {
     // console.log("payload", payload)
     axios
       .put(
-        "https://demo.emeetify.com:81/appraisel/users/FormDetails?email=" +
+        "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
         localEmail,
         payload
       )
@@ -295,13 +295,19 @@ const Home = (props) => {
   };
   
   const onFinish = (formData) => {
-    // if (responseData.status === true) {
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "please enter all the details",
-    //   });
-    // }
-   
+    if (responseData.status !== true) {
+      messageApi.open({
+        type: "error",
+        content: "please enter all the details",
+      });
+    }
+  };
+
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "Details Submitted Successfully",
+    });
   };
 
   const handleSubmit = () => {
@@ -318,19 +324,13 @@ const Home = (props) => {
       .catch((e) => {
         console.log("e", e);
       });
-      console.log(formData.status,"555555555");
-      if(formData.status === false){
+      if(formData.status !== false){
           success();
       }else{
         console.log("erorrrrrrr");
       }
   }
-  const success = () => {
-    messageApi.open({
-      type: "success",
-      content: "Details Submitted Successfully",
-    });
-  };
+  
   const onFinishFailed = (errorInfo) => { };
 
   const userName = localStorage.getItem("displayName");
@@ -443,13 +443,7 @@ const handleCancel = () => {
             </Row>
         </div>
           </Header>
-          {/* {
-              mailId === "admin@gmail.com" ? 
-              <div style={{float:'left',marginTop:'70px',marginLeft:'60px',position:'fixed'}}>
-              <Button onClick={handleManagerButton} type="primary">Active</Button>
-            </div> :
-            console.log("")
-            } */}
+
           { 
             windowsOptions.is_appraisal_window_open === true && windowsOptions.is_appraisal_open_for_employee === true ?
             <Content style={contentStyle} className="homeContent">
@@ -473,7 +467,7 @@ const handleCancel = () => {
                           rules={[
                             {
                               required: true,
-                              message: "please enter name of employee",
+                              message: "Please enter name of employee",
                             },
                           ]}
                           hasFeedback
@@ -496,7 +490,7 @@ const handleCancel = () => {
                           rules={[
                             {
                               required: true,
-                              message: "please select the manager",
+                              message: "Please select the manager",
                             },
                           ]}
                         >
@@ -526,7 +520,7 @@ const handleCancel = () => {
                           rules={[
                             {
                               required: true,
-                              message: "please select the role Id",
+                              message: "Please select the role Id",
                             },
                           ]}
                         >
@@ -554,7 +548,7 @@ const handleCancel = () => {
                           rules={[
                             {
                               required: true,
-                              message: "please enter Your designation",
+                              message: "Please enter Your designation",
                             },
                           ]}
                         >
@@ -588,7 +582,7 @@ const handleCancel = () => {
                           rules={[
                             {
                               required: true,
-                              message: "please enter your department",
+                              message: "Please enter your department",
                             },
                           ]}
                         >
@@ -612,7 +606,7 @@ const handleCancel = () => {
                           rules={[
                             {
                               required: true,
-                              message: "please enter your joining date",
+                              message: "Please enter your joining date",
                             },
                           ]}
                           hasFeedback
@@ -809,6 +803,14 @@ const handleCancel = () => {
                                   </label>
                                 }
                                 name="managerRating"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "please give comments",
+                                  },
+                                ]}
+                                hasFeedback
+                                required
                               >
                                 <div className="manager-rating-input">
                                   <Select
@@ -879,7 +881,7 @@ const handleCancel = () => {
                         </>
                       );
                     })}
-                </div>
+                    </div>
 
                 {/* technical aspects ends here */}
 

@@ -334,3 +334,12 @@
   margin-left: -200px;
   height:auto;
  }
+.search-details-card{
+  display:flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+.search-details-column{
+  display:flex !important;
+  flex-direction: row !important;
+}
