@@ -356,7 +356,72 @@
 }
 .fetchedRating{
  margin-top: 40px;
-  margin-left: -100px;
-  width: 50px;
-  height: 60px; 
+  margin-left: -105px;
+  width: 150px;
+  height: 35px; 
+}
+.adminLabel1{
+  margin-left: -50px !important;
+}
+.admin-performance-input{
+  width:250px;
+  margin-right: 60px;
+}
+.admin-label2{
+ margin-left: 10px;
+}
+.admin-performance-input-manager{
+  width:250px;
+  margin-left: -30px;
+}
+.admin-label5{
+  margin-left: -50px;
+}
+.admin-performance-input-roleId{
+  width:250px !important ;
+  margin-left: 19px !important;
+}
+.admin-label3{
+  margin-left: 15px;
+}
+.admin-performance-input-designation{
+  width:250px;
+  margin-left: -8px !important;
+}
+.admin-label4{
+  margin-left: -47px;
+}
+.admin-performance-input-department{
+  width:250px !important ;
+  margin-left: -5px !important;
+}
+.admin-joiningdate-label{
+  margin-left: 15px;
+}
+.admin-performance-joiningdate{
+  width:250px;
+  margin-left: -8px;
+}
+.admin-review-period{
+  margin-left: -47px;
+}
+.admin-performance-date{
+  width:250px;
+  margin-left: -20px;
+}
+.admin-self-comment{
+  display: inline-block;
+  font-size: 18px !important;
+}
+.admin-fetchedCard{
+  margin-top: 40px;
+  margin-left: -190px;
+  width:400px;
+  height: 100px;
+}
+.fetchedDetailedRating{
+  margin-top: 40px;
+  margin-left: -105px;
+  width: 120px;
+  height: 35px; 
 }
