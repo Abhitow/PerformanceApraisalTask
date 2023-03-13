@@ -14,15 +14,31 @@ function SearchDetails() {
   const [search , setSearch] = useState();
   const [searchDetails , setSearchDetails] = useState();
   const [answer , setAnswer] = useState();
+  const [comments , setComments] = useState();
+  const [searched , setSearched] = useState([]);
 
   useEffect( () =>{
     const loadUsers = async()=>{
       const response = await axios.get("https://demo.emeetify.com:81/appraisel/users/userNames");
       // console.log(response.data);
       setUsers(response.data.data);
+      setComments(response.data.data);
+     console.log(response,"rrrrrrr");
+     let userDetails = response.data.data;
+     for (let i = 0; i < userDetails.length; i++) {
+      // console.log(userDetails,"------>");
+      let comments = userDetails[i].comments
+      for (let j = 0; j < comments.length; j++) {
+        const element = comments[j];
+        console.log(element,"------>");
+        
+      }
+     }
     }
     loadUsers();
   },[]);
+
+  // console.log(comments,"kkkkkkkkkkk");
 
   const onChangeHandler = (text) =>{
     let matches = [];
@@ -42,15 +58,23 @@ function SearchDetails() {
     setText(text);
     setSuggestions([]);
   }
-
+  let arr =[]
   const onSearch = () => {
-    if(search.length === 1 && text != null){
+    if(search.length === 1 && text != null ){
       // console.log(search,"searched");
       setSearchDetails(search);
+      console.log(search[0].comments,"ssssssssssss");
+      for (let i =0; i<comments.length; i++){
+        console.log(comments[1] ,"consolled");
+        setSearched(arr.push(comments[1].comments[i]));
+      }
     }else{
       console.log("please enter name")
     }
+   
   };
+  console.log(typeof(arr,"aaaaaa"));
+ 
 
   useEffect( () =>{
     axios.get("https://demo.emeetify.com:81/appraisel/users/getDetails")
@@ -72,7 +96,7 @@ function SearchDetails() {
      </div>)}
 
 <div style={{marginLeft:'45px'}}>
-   { searchDetails?.length === 1 ?
+   { searchDetails?.length === 1?
       <div style={{marginTop:'10px',marginLeft:'100px'}}>
         {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
 
@@ -169,41 +193,14 @@ function SearchDetails() {
                           </div>
 
                           <div>
-                            <Row style={{ marginTop: "20px" }}>
-                              <Col span={12}>
-                                <Form.Item
-                                  style={{ marginLeft: "100px" }}
-                                  name="selfRating"
-                                  label={
-                                    <label className="self-rating">
-                                      Self Rating
-                                    </label>
-                                  }
-                                >
-                                  <div
-                                    className="self-rating-input"
-                                    key={d.t_id}
-                                  >
-                                  </div>
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item
-                                  label={
-                                    <label className="self-comment">
-                                      Justify Your Comment
-                                    </label>
-                                  }
-                                  name="selfComment"
-                                >
-                                  <div
-                                    className="self-comment-input"
-                                    key={d.t_id}
-                                  >
-                                  </div>
-                                </Form.Item>
-                              </Col>
-                            </Row>
+                            { searched !== undefined &&
+                            searched.map( (item) => {
+                                <li key={item.t_id}>
+                                  {item.self_rating}
+                                </li>
+                            })
+                            }
+                            
                           </div>
            
                         </Form>
