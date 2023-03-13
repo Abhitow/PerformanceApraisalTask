@@ -1,231 +1,319 @@
-import {Card, Col, Form, Input, Row, Select} from 'antd'
-import TextArea from 'antd/es/input/TextArea';
-import Typography from 'antd/es/typography/Typography';
-import axios from 'axios'
-import { useEffect, useState } from 'react';
-const {Search} = Input;
-
-
+import { Card, Col, Form, Input, Row, Select } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import Typography from "antd/es/typography/Typography";
+import axios from "axios";
+import { useEffect, useState } from "react";
+const { Search } = Input;
 
 function SearchDetails() {
-  const [users , setUsers] = useState([]);
-  const [text , setText] = useState();
-  const [suggestions , setSuggestions] = useState([]);
-  const [search , setSearch] = useState();
-  const [searchDetails , setSearchDetails] = useState();
-  const [answer , setAnswer] = useState();
-  const [comments , setComments] = useState();
-  const [searched , setSearched] = useState([]);
-
-  useEffect( () =>{
-    const loadUsers = async()=>{
-      const response = await axios.get("https://demo.emeetify.com:81/appraisel/users/userNames");
-      // console.log(response.data);
-      setUsers(response.data.data);
-      setComments(response.data.data);
-     console.log(response,"rrrrrrr");
-     let userDetails = response.data.data;
-     for (let i = 0; i < userDetails.length; i++) {
-      // console.log(userDetails,"------>");
-      let comments = userDetails[i].comments
-      for (let j = 0; j < comments.length; j++) {
-        const element = comments[j];
-        console.log(element,"------>");
-        
-      }
-     }
-    }
-    loadUsers();
-  },[]);
-
+  const [users, setUsers] = useState([]);
+  const [text, setText] = useState();
+  const [suggestions, setSuggestions] = useState([]);
+  const [search, setSearch] = useState();
+  const [searchDetails, setSearchDetails] = useState();
+  const [answer, setAnswer] = useState();
+  const [email, setEmail] = useState();
+  const [comment, setComment] = useState();
+  const [userData, setUserData] = useState();
   // console.log(comments,"kkkkkkkkkkk");
 
-  const onChangeHandler = (text) =>{
+  const onChangeHandler = (text) => {
     let matches = [];
-    if(text.length>0){
-        matches = users.filter( (users) => {
-            const regex = new RegExp( `${text}`,"gi");
-            return users.email.match(regex)
-        });
+    if (text.length > 0) {
+      matches = users.filter((users) => {
+        const regex = new RegExp(`${text}`, "gi");
+        return users.email.match(regex);
+      });
     }
     // console.log(matches,"matches");
     setSuggestions(matches);
-    setText(text);  
+    setText(text);
     setSearch(matches);
-  }
+  };
 
-  const onSuggestHandler = (text) =>{
+  console.log(text, "///////////");
+
+  const onSuggestHandler = (text) => {
     setText(text);
     setSuggestions([]);
-  }
-  let arr =[]
-  const onSearch = () => {
-    if(search.length === 1 && text != null ){
-      // console.log(search,"searched");
-      setSearchDetails(search);
-      console.log(search[0].comments,"ssssssssssss");
-      for (let i =0; i<comments.length; i++){
-        console.log(comments[1] ,"consolled");
-        setSearched(arr.push(comments[1].comments[i]));
-      }
-    }else{
-      console.log("please enter name")
-    }
-   
   };
-  console.log(typeof(arr,"aaaaaa"));
- 
+  const onSearch = () => {
+    if (search.length === 1 && text != null) {
+      console.log(search[0].email, "searched -------->");
 
-  useEffect( () =>{
-    axios.get("https://demo.emeetify.com:81/appraisel/users/getDetails")
-    .then( (response) => {setAnswer(response.data.data)})
-    .catch( (e) => {console.log(e ,"error message")});
-  },[]);
+      if (text === search[0].email) {
+        console.log(search[0].comments);
+        setUserData(search[0].comments);
+      } else {
+        console.log("not matched");
+      }
+
+      setSearchDetails(search);
+    } else {
+      console.log("please enter name");
+    }
+  };
+  console.log(typeof userData, ".........");
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      const response = await axios.get(
+        "https://demo.emeetify.com:81/appraisel/users/userNames"
+      );
+      setUsers(response.data.data);
+      let userDetails = response.data.data;
+
+      for (let i = 0; i < userDetails.length; i++) {
+        let comments = userDetails[i].comments;
+        for (let j = 0; j < comments.length; j++) {
+          const element = comments[j];
+          // console.log(element,"------>");
+          setComment(element);
+        }
+      }
+    };
+    loadUsers();
+  }, []);
+
+  // console.log(searchDetails[0].email,"ddddddddddddd");
+
+  useEffect(() => {
+    axios
+      .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
+      .then((response) => {
+        setAnswer(response.data.data);
+      })
+      .catch((e) => {
+        console.log(e, "error message");
+      });
+  }, []);
 
   return (
-    <div >
-      <Search type='text' style={{width:'300px' , marginLeft:'150px',marginTop:'-35px'}}
-      placeholder='Employee Email'
-        onChange={(e)=>onChangeHandler(e.target.value)}
+    <div>
+      <Search
+        type="text"
+        style={{ width: "300px", marginLeft: "150px", marginTop: "-35px" }}
+        placeholder="Employee Email"
+        onChange={(e) => onChangeHandler(e.target.value)}
         onSearch={onSearch}
-        value={text} 
+        value={text}
       />
-     {suggestions && suggestions.map( (suggestion , i) =>
-     <div key={i} className="suggestion" onClick={() =>onSuggestHandler(suggestion.email)}>
-        {suggestion.email}
-     </div>)}
+      {suggestions &&
+        suggestions.map((suggestion, i) => (
+          <div
+            key={i}
+            className="suggestion"
+            onClick={() => onSuggestHandler(suggestion.email)}
+          >
+            {suggestion.email}
+          </div>
+        ))}
 
-<div style={{marginLeft:'45px'}}>
-   { searchDetails?.length === 1?
-      <div style={{marginTop:'10px',marginLeft:'100px'}}>
-        {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
+      <div style={{ marginLeft: "45px" }}>
+        {searchDetails?.length === 1 ? (
+          <div style={{ marginTop: "10px", marginLeft: "100px" }}>
+            {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
 
-          <Card style={{width:'900px',marginLeft:'-115px'}}>
+            <Card style={{ width: "900px", marginLeft: "-115px" }}>
+              <Row className="search-details-card">
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "30px" }}>
+                    Name of Employee:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "30px" }}>
+                    {searchDetails[0].username}
+                  </Typography>
+                </Col>
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "40px" }}>
+                    Manager Name:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "30px" }}>
+                    {searchDetails[0].manager_name}
+                  </Typography>
+                </Col>
+              </Row>
 
-          <Row className='search-details-card'>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'30px'}}>Name of Employee:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'30px'}}>{searchDetails[0].username}</Typography>
-            </Col>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'40px'}}>Manager Name:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'30px'}}>{searchDetails[0].manager_name}</Typography>
-            </Col>
-          </Row>
+              <Row className="search-details-card">
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "30px" }}>
+                    Role Id:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "125px" }}>
+                    {searchDetails[0].role_id}
+                  </Typography>
+                </Col>
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "40px" }}>
+                    Designation:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "56px" }}>
+                    {searchDetails[0].designation}
+                  </Typography>
+                </Col>
+              </Row>
 
-          <Row className='search-details-card'>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'30px'}}>Role Id:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'125px'}}>{searchDetails[0].role_id}</Typography>
-            </Col>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'40px'}}>Designation:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'56px'}}>{searchDetails[0].designation}</Typography>
-            </Col>
-          </Row>
+              <Row className="search-details-card">
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "30px" }}>
+                    Department:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "85px" }}>
+                    {searchDetails[0].department}
+                  </Typography>
+                </Col>
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "40px" }}>
+                    Joining Date:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "53px" }}>
+                    {searchDetails[0].joining_date}
+                  </Typography>
+                </Col>
+              </Row>
 
-          <Row className='search-details-card'>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'30px'}}>Department:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'85px'}}>{searchDetails[0].department}</Typography>
-            </Col>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'40px'}}>Joining Date:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'53px'}}>{searchDetails[0].joining_date}</Typography>
-            </Col>
-          </Row>
+              <Row className="search-details-card">
+                <Col span={12} className="search-details-column">
+                  <Typography style={{ fontSize: "18px", marginLeft: "30px" }}>
+                    Review Period:
+                  </Typography>
+                  <Typography style={{ fontSize: "18px", marginLeft: "20px" }}>
+                    {searchDetails[0].review_period}
+                  </Typography>
+                </Col>
+              </Row>
 
-          <Row className='search-details-card'>
-            <Col span={12} className="search-details-column" >
-              <Typography style={{fontSize:'18px',marginLeft:'30px'}}>Review Period:</Typography>
-              <Typography style={{fontSize:'18px',marginLeft:'20px'}}>{searchDetails[0].review_period}</Typography>
-            </Col>
-          </Row>
-
-          {answer !==undefined && answer.map((d,index) =>{
-              return(
-                      <>
-                        <Form>
-
+              {answer !== undefined &&
+                answer.map((d, index) => {
+                  return (
+                    <>
+                      <Form>
                         <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              marginLeft: "10px",
-                            }}
-                          >
-                            <Row>
-                              <Col style={{ float: "left", fontSize: "12px" }}>
-                                <h1 key={d.t_id}>{d.kra_id} : </h1>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col
-                                style={{
-                                  float: "left",
-                                  fontSize: "12px",
-                                  marginLeft: "4px",
-                                  fontWeight: "none",
-                                }}
-                              >
-                                <h1 key={d.t_id}> {d.kra}</h1>
-                              </Col>
-                            </Row>
-                          </div>
-                          <div>
-                            <Card
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            marginLeft: "10px",
+                          }}
+                        >
+                          <Row>
+                            <Col style={{ float: "left", fontSize: "12px" }}>
+                              <h1 key={d.t_id}>{d.kra_id} : </h1>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col
                               style={{
-                                height: "75px",
-                                borderColor: "blue",
-                                textAlign: "left",
-                                marginTop: "0px",
-                                marginLeft: "10px",
-                                marginRight: "20px",
+                                float: "left",
+                                fontSize: "12px",
+                                marginLeft: "4px",
+                                fontWeight: "none",
                               }}
                             >
-                              <p
-                                style={{ fontSize: "17px", marginTop: "-10px" }}
-                                key={d.t_id}
-                              >
-                                {d.measures}
-                              </p>
-                            </Card>
-                          </div>
+                              <h1 key={d.t_id}> {d.kra}</h1>
+                            </Col>
+                          </Row>
+                        </div>
+                        <div>
+                          <Card
+                            style={{
+                              height: "75px",
+                              borderColor: "blue",
+                              textAlign: "left",
+                              marginTop: "0px",
+                              marginLeft: "10px",
+                              marginRight: "20px",
+                            }}
+                          >
+                            <p
+                              style={{ fontSize: "17px", marginTop: "-10px" }}
+                              key={d.t_id}
+                            >
+                              {d.measures}
+                            </p>
+                            <div></div>
+                          </Card>
+                        </div>
 
-                          <div>
-                            { searched !== undefined &&
-                            searched.map( (item) => {
-                                <li key={item.t_id}>
-                                  {item.self_rating}
-                                </li>
-                            })
+                        {userData !== undefined &&
+                          userData.map((item, index) => {
+                            if (d.t_id === item.t_id) {
+                              return (
+                                // <Typography key={item.t_id}>{item.self_rating}</Typography>
+                                // <Typography>hiiiii</Typography>
+                                <Row style={{ marginTop: "20px" }}>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      style={{ marginLeft: "100px" }}
+                                      name="selfRating"
+                                      label={
+                                        <label className="self-rating">
+                                          Self Rating
+                                        </label>
+                                      }
+                                    >
+                                      <div>
+                                        <Card
+                                          className="fetchedRating"
+                                          key={item.t_id}
+                                        >
+                                          <Typography
+                                            style={{
+                                              fontSize: "20px",
+                                              marginTop: "-10px",
+                                              marginLeft: "-5px",
+                                              fontWeight: "light",
+                                            }}
+                                          >
+                                            {item.self_rating}
+                                          </Typography>
+                                        </Card>
+                                      </div>
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label={
+                                        <label className="self-comment">
+                                          Justify Your Comment
+                                        </label>
+                                      }
+                                      name="selfComment"
+                                    >
+                                      <div>
+                                        <Card
+                                          className="fetchedCard"
+                                          key={item.t_id}
+                                        >
+                                          <Typography
+                                            style={{
+                                              marginTop: "-15px",
+                                              marginLeft: "-5px",
+                                              fontSize: "16px",
+                                            }}
+                                          >
+                                            {item.self_comment}
+                                          </Typography>
+                                        </Card>
+                                      </div>
+                                    </Form.Item>
+                                  </Col>
+                                </Row>
+                                
+                              );
                             }
-                            
-                          </div>
-           
-                        </Form>
-                      </>
-              )
-            })
-          }
-
-           
-
-          </Card>
+                          })}
+                      </Form>
+                    </>
+                  );
+                })}
+            </Card>
+          </div>
+        ) : (
+          <div>{console.log("")}</div>
+        )}
       </div>
-      :
-      <div>
-         {console.log("not working")}
-      </div>
-    
-    }
-   
-  
-</div>
     </div>
   );
 }
 
 export default SearchDetails;
-
-

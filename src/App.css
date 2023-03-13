@@ -348,3 +348,15 @@
   display:flex !important;
   flex-direction: row !important;
 }
+.fetchedCard{
+  margin-top: 40px;
+  margin-left: -185px;
+  height: 100px;
+  
+}
+.fetchedRating{
+ margin-top: 40px;
+  margin-left: -100px;
+  width: 50px;
+  height: 60px; 
+}
