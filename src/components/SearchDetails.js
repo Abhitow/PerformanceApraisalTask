@@ -86,7 +86,6 @@ function SearchDetails() {
   // console.log(avgTotal.employee_self_rating);
   const a = parseFloat(avgTotal?.employee_self_rating).toFixed(2);
   const b = parseFloat(avgTotal?.manager_consolidated_rating).toFixed(2);
-  console.log(b);
   useEffect(() => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
