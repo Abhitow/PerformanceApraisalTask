@@ -373,9 +373,10 @@ useEffect( () =>{
   .catch(e => console.log(e , "error Message"));
 },[]);
 
-// console.log(avgTotal,"??????");
-const decimalAvg = avgTotal?.manager_rating?.toFixed(2);
-console.log(decimalAvg,"aaaaa");
+
+const a = parseFloat(avgTotal?.employee_self_rating).toFixed(2);
+
+
   const onFinish = (formData) => {
     if (responseData.status === true && commentData.status === true ) {
       messageApi.open({
@@ -390,7 +391,6 @@ console.log(decimalAvg,"aaaaa");
     }
   };
 
-  console.log(text,"ttttttt");
   const handleSubmit = () => {
   empDetails();
   axios
@@ -1562,10 +1562,10 @@ const handleAdmin =() =>{
                             style={{
                               textAlign: "center",
                               margin: "auto",
-                              marginTop: "-20px",
+                              marginTop: "-25px",
                               fontSize: "24px",
                             }}
-                          > {avgTotal?.employee_self_rating}</Typography>
+                          > {a}</Typography>
                         </Card>
                       </Form.Item>
                     </Col>
@@ -1582,11 +1582,11 @@ const handleAdmin =() =>{
                         <div key={empData?.t_id}>
                           <Card style={{marginTop:'40px',marginLeft:'-125px',width:'400px',height:'100px'}}>
                               <Typography
-                                style={{ marginTop: "40px", marginLeft: "-250px" }}
+                                style={{  marginLeft: "-300px",marginTop:'-20px',fontSize:'16px' }}
                                 className="self-aspiration-input"
                                 rows={4} 
                                >
-                                {empData?.self_aspirations}
+                                {avgTotal?.self_aspirations}
                               </Typography>
                           </Card>
                           

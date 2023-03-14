@@ -15,7 +15,7 @@ function SearchDetails() {
   const [email, setEmail] = useState();
   const [comment, setComment] = useState();
   const [empData, setEmpData] = useState();
-  const [avgTotal , setAvgTotal] = useState();
+  const [avgTotal, setAvgTotal] = useState();
   // console.log(comments,"kkkkkkkkkkk");
 
   const onChangeHandler = (text) => {
@@ -31,8 +31,6 @@ function SearchDetails() {
     setText(text);
     setSearch(matches);
   };
-
-  console.log(text, "///////////");
 
   const onSuggestHandler = (text) => {
     setText(text);
@@ -75,15 +73,20 @@ function SearchDetails() {
     loadUsers();
   }, []);
 
-  
-  useEffect( () =>{
-    axios.get("https://demo.emeetify.com:81/appraisel/users/Consolidate?email="+text)
-    .then((response) =>{setAvgTotal(response.data.data)})
-    .catch(e => console.log(e , "error Message"));
-  },[text])
-
-  // console.log(searchDetails[0].email,"ddddddddddddd");
-
+  useEffect(() => {
+    axios
+      .get(
+        "https://demo.emeetify.com:81/appraisel/users/Consolidate?email=" + text
+      )
+      .then((response) => {
+        setAvgTotal(response.data.data);
+      })
+      .catch((e) => console.log(e, "error Message"));
+  }, [text]);
+  // console.log(avgTotal.employee_self_rating);
+  const a = parseFloat(avgTotal?.employee_self_rating).toFixed(2);
+  const b = parseFloat(avgTotal?.manager_consolidated_rating).toFixed(2);
+  console.log(b);
   useEffect(() => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
@@ -107,7 +110,7 @@ function SearchDetails() {
       />
       {suggestions &&
         suggestions.map((suggestion, i) => (
-          <div style={{marginLeft:'155px'}}
+          <div style={{marginLeft:'150px'}}
             key={i}
             className="suggestion"
             onClick={() => onSuggestHandler(suggestion.email)}
@@ -245,131 +248,135 @@ function SearchDetails() {
                           empData.map((item, index) => {
                             if (d.t_id === item.t_id) {
                               return (
-
                                 <>
-                                <Row style={{ marginTop: "20px" }}>
-                                  <Col span={12}>
-                                    <Form.Item
-                                      style={{ marginLeft: "100px" }}
-                                      name="selfRating"
-                                      label={
-                                        <label className="self-rating">
-                                          Self Rating
-                                        </label>
-                                      }
-                                    >
-                                      <div>
-                                        <Card
-                                          className="fetchedDetailedRating"
-                                          key={item.t_id}
-                                        >
-                                          <Typography
-                                            style={{
-                                              fontSize: "20px",
-                                              marginTop: "-23px",
-                                              marginLeft: "25px",
-                                              fontWeight: "light",
-                                            }}
+                                  <Row style={{ marginTop: "20px" }}>
+                                    <Col span={12}>
+                                      <Form.Item
+                                        style={{ marginLeft: "100px" }}
+                                        name="selfRating"
+                                        label={
+                                          <label className="self-rating">
+                                            Self Rating
+                                          </label>
+                                        }
+                                      >
+                                        <div>
+                                          <Card
+                                            className="fetchedDetailedRating"
+                                            key={item.t_id}
                                           >
-                                            {item.self_rating}
-                                          </Typography>
-                                        </Card>
-                                      </div>
-                                    </Form.Item>
-                                  </Col>
-                                  <Col span={12}>
-                                    <Form.Item
-                                      label={
-                                        <label className="self-comment">
-                                          Justify Your Comment
-                                        </label>
-                                      }
-                                      name="selfComment"
-                                    >
-                                      <div>
-                                        <Card style={{marginLeft:'-180px',marginRight:'20px'}}
-                                          className="fetchedCard"
-                                          key={item.t_id}
-                                        >
-                                          <Typography
-                                            style={{
-                                              marginTop: "-15px",
-                                              marginLeft: "-5px",
-                                              fontSize: "16px",
-                                            }}
+                                            <Typography
+                                              style={{
+                                                fontSize: "20px",
+                                                marginTop: "-23px",
+                                                marginLeft: "25px",
+                                                fontWeight: "light",
+                                              }}
+                                            >
+                                              {item.self_rating}
+                                            </Typography>
+                                          </Card>
+                                        </div>
+                                      </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                      <Form.Item
+                                        label={
+                                          <label className="self-comment">
+                                            Justify Your Comment
+                                          </label>
+                                        }
+                                        name="selfComment"
+                                      >
+                                        <div>
+                                          <Card
+                                            className="fetchedCard"
+                                            key={item.t_id}
                                           >
-                                            {item.self_comment}
-                                          </Typography>
-                                        </Card>
-                                      </div>
-                                    </Form.Item>
-                                  </Col>
-                                </Row>
+                                            <Typography
+                                              style={{
+                                                marginTop: "-15px",
+                                                marginLeft: "-5px",
+                                                fontSize: "16px",
+                                              }}
+                                            >
+                                              {item.self_comment}
+                                            </Typography>
+                                          </Card>
+                                        </div>
+                                      </Form.Item>
+                                    </Col>
+                                  </Row>
 
-                                <Row style={{ marginTop: "20px" }}>
-                                  <Col span={12}>
-                                    <Form.Item
-                                      style={{ marginLeft: "100px" }}
-                                      name="selfRating"
-                                      label={
-                                        <label className="self-rating">
-                                          Manager Rating
-                                        </label>
-                                      }
-                                    >
-                                      <div>
-                                        <Card style={{marginLeft:'-140px'}}
-                                          className="fetchedDetailedRating"
-                                          key={item.t_id}
-                                        >
-                                          <Typography
-                                            style={{
-                                              fontSize: "20px",
-                                              marginTop: "-23px",
-                                              marginLeft: "25px",
-                                              fontWeight: "light",
-                                            }}
+                                  <Row style={{ marginTop: "20px" }}>
+                                    <Col span={12}>
+                                      <Form.Item
+                                        style={{ marginLeft: "100px" }}
+                                        name="selfRating"
+                                        label={
+                                          <label className="self-rating">
+                                            Manager Rating
+                                          </label>
+                                        }
+                                      >
+                                        <div>
+                                          <Card
+                                            style={{ marginLeft: "-140px" }}
+                                            className="fetchedDetailedRating"
+                                            key={item.t_id}
                                           >
-                                            {item.manager_rating}
-                                          </Typography>
-                                        </Card>
-                                      </div>
-                                    </Form.Item>
-                                  </Col>
-                                  <Col span={12}>
-                                    <Form.Item
-                                      label={
-                                        <label style={{marginLeft:'5px'}} className="self-comment">
-                                          Manager Comment
-                                        </label>
-                                      }
-                                      name="selfComment"
-                                    >
-                                      <div>
-                                        <Card style={{marginLeft:'-160px',marginRight:'20px'}}
-                                          className="fetchedCard"
-                                          key={item.t_id}
-                                        >
-                                          <Typography
-                                            style={{
-                                              marginTop: "-15px",
-                                              marginLeft: "-5px",
-                                              fontSize: "16px",
-                                            }}
+                                            <Typography
+                                              style={{
+                                                fontSize: "20px",
+                                                marginTop: "-23px",
+                                                marginLeft: "25px",
+                                                fontWeight: "light",
+                                              }}
+                                            >
+                                              {item.manager_rating}
+                                            </Typography>
+                                          </Card>
+                                        </div>
+                                      </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                      <Form.Item
+                                        label={
+                                          <label
+                                            className="self-comment"
+                                            style={{ marginLeft: "10px" }}
                                           >
-                                            {item.manager_comment}
-                                          </Typography>
-                                        </Card>
-                                      </div>
-                                    </Form.Item>
-                                  </Col>
-                                </Row>
+                                            Manager Comment
+                                          </label>
+                                        }
+                                        name="selfComment"
+                                      >
+                                        <div>
+                                          <Card
+                                            style={{
+                                              marginLeft: "-170px",
+                                              marginTop: "40px",
+                                              height: "100px",
+                                            }}
+                                            key={item.t_id}
+                                          >
+                                            <Typography
+                                              style={{
+                                                marginTop: "-15px",
+                                                marginLeft: "-5px",
+                                                fontSize: "16px",
+                                              }}
+                                            >
+                                              {item.manager_comment}
+                                            </Typography>
+                                          </Card>
+                                        </div>
+                                      </Form.Item>
+                                    </Col>
+                                  </Row>
                                 </>
                                 // <Typography key={item.t_id}>{item.self_rating}</Typography>
                                 // <Typography>hiiiii</Typography>
-                                
-
-                                
                               );
                             }
                           })}
@@ -378,118 +385,133 @@ function SearchDetails() {
                   );
                 })}
 
-<Divider
-                    style={{
-                      marginTop: "60px",
-                      backgroundColor: "violet",
-                      height: "5px",
-                    }}
-                  />
+              <Divider
+                style={{
+                  marginTop: "60px",
+                  backgroundColor: "violet",
+                  height: "5px",
+                }}
+              />
 
-<Row>
-                    <Col span={12}>
-                      <Form.Item
-                        readOnly
-                        label={
-                          <label
-                            style={{ fontSize: "18px", marginLeft: "100px" }}
-                          >
-                            Employee Self Rating
-                          </label>
-                        }
+              <Row>
+                <Col span={12}>
+                  <Form.Item
+                    readOnly
+                    label={
+                      <label style={{ fontSize: "18px", marginLeft: "100px" }}>
+                        Employee Self Rating
+                      </label>
+                    }
+                  >
+                    <Card
+                      style={{
+                        height: "50px",
+                        width: "100px",
+                        marginTop: "40px",
+                        marginLeft: "-185px",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          textAlign: "center",
+                          margin: "auto",
+                          marginTop: "-20px",
+                          fontSize: "24px",
+                        }}
                       >
-                        <Card
-                          style={{
-                            height: "50px",
-                            width: "100px",
-                            marginTop: "50px",
-                            marginLeft: "-185px",
-                          }}
+                        {a}
+                      </Typography>
+                    </Card>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginLeft: "15px" }}
+                    label={
+                      <label className="self-aspiration">Self Aspiration</label>
+                    }
+                    name="selfAspiration"
+                  >
+                    <div>
+                      <Card
+                        style={{
+                          marginTop: "40px",
+                          marginLeft: "-125px",
+                          height: "100px",
+                        }}
+                      >
+                        <Typography
+                          style={{ marginTop: "-15px", fontSize: "16px" }}
+                          rows={4}
                         >
-                          <Typography
-                            style={{
-                              textAlign: "center",
-                              margin: "auto",
-                              marginTop: "-20px",
-                              fontSize: "24px",
-                            }}
-                          > {avgTotal?.employee_self_rating}</Typography>
-                        </Card>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        style={{ marginLeft: "15px" }}
-                        label={
-                          <label style={{marginLeft:'30px'}} className="self-aspiration">
-                            Self Aspiration
-                          </label>
-                        }
-                        name="selfAspiration"
+                          {avgTotal?.self_aspirations}
+                        </Typography>
+                      </Card>
+                    </div>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: "30px" }}>
+                <Col span={12}>
+                  <Form.Item
+                    readOnly
+                    label={
+                      <label style={{ fontSize: "18px", marginLeft: "100px" }}>
+                        Manager's Consolidated Rating
+                      </label>
+                    }
+                  >
+                    <Card
+                      style={{
+                        height: "50px",
+                        width: "100px",
+                        marginTop: "50px",
+                        marginLeft: "-260px",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          textAlign: "center",
+                          margin: "auto",
+                          marginTop: "-20px",
+                          fontSize: "24px",
+                        }}
                       >
-                        <div>
-                            <Card style={{ marginTop: "10px", marginLeft: "30px",width:'380px',height:'100px'}}>
-                            <Typography
-                            rows={4}
-                          >{empData?.self_aspirations}</Typography>
-                            </Card>
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "30px" }}>
-                    <Col span={12}>
-                      <Form.Item
-                        readOnly
-                        label={
-                          <label
-                            style={{ fontSize: "18px", marginLeft: "100px" }}
-                          >
-                            Manager's Consolidated Rating
-                          </label>
-                        }
+                        {b}
+                      </Typography>
+                    </Card>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label={
+                      <label className="teamlead-feedback">
+                        Manager's Feedback
+                      </label>
+                    }
+                    name="managerFeedback"
+                  >
+                    <div key={empData.t_id}>
+                      <Card
+                        style={{
+                          marginTop: "40px",
+                          marginLeft: "-180px",
+                          height: "100px",
+                        }}
                       >
-                        <Card
+                        <Typography
                           style={{
-                            height: "50px",
-                            width: "100px",
-                            marginTop: "50px",
-                            marginLeft: "-250px",
+                            marginTop:'-10px'
                           }}
+                          rows={4}
                         >
-                          <Typography
-                            style={{
-                              textAlign: "center",
-                              margin: "auto",
-                              marginTop: "-20px",
-                              fontSize: "24px",
-                            }}
-                          >
-                            {avgTotal?.manager_consolidated_rating}
-                          </Typography>
-                        </Card>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label={
-                          <label style={{marginLeft:'45px'}} className="teamlead-feedback">
-                            Manager's Feedback
-                          </label>
-                        }
-                        name="managerFeedback"
-                      >
-                        <div>
-                          <Card style={{ marginTop: "10px", marginLeft: "45px",width:'380px',height:'100px'}}>
-                          <Typography
-                            rows={4}
-                          >{empData?.manager_feedback}</Typography>
-                          </Card>
-                         
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                          {avgTotal?.manager_feedback}
+                        </Typography>
+                      </Card>
+                    </div>
+                  </Form.Item>
+                </Col>
+              </Row>
             </Card>
           </div>
         ) : (
