@@ -19,12 +19,21 @@ const Logout = () => {
     });
   }
 
+  const mail = localStorage.getItem("email");
+
   return (
     <>
       {contextHolder}
-      <Button type="default" onClick={handleLogout} style={{ marginLeft:'40px' }}>
+      {
+        mail === "admin@gmail.com" ?
+        <Button type="default" onClick={handleLogout} style={{ marginLeft:'20px' }}>
+        Logout
+      </Button>:
+        <Button type="default" onClick={handleLogout} style={{ marginLeft:'40px' }}>
         Logout
       </Button>
+      }
+      
     </>
   );
 };

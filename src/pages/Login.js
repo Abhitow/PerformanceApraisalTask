@@ -101,7 +101,7 @@ function Login({ isLoggedIn }) {
         <Card className="card">
         {contextHolder}
           <Form layout="vertical" onFinishFailed={onFinishFailed}>
-            <img src={download} className="skein-logo" alt="skeinlogo" />
+            <img src={download} className="login-skein-logo" alt="skeinlogo" />
 
             {/* <h1 className='form-login-h1'>Login</h1> */}
             <Form.Item

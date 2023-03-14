@@ -107,7 +107,7 @@ function SearchDetails() {
       />
       {suggestions &&
         suggestions.map((suggestion, i) => (
-          <div
+          <div style={{marginLeft:'155px'}}
             key={i}
             className="suggestion"
             onClick={() => onSuggestHandler(suggestion.email)}
@@ -287,7 +287,7 @@ function SearchDetails() {
                                       name="selfComment"
                                     >
                                       <div>
-                                        <Card
+                                        <Card style={{marginLeft:'-180px',marginRight:'20px'}}
                                           className="fetchedCard"
                                           key={item.t_id}
                                         >
@@ -318,7 +318,7 @@ function SearchDetails() {
                                       }
                                     >
                                       <div>
-                                        <Card
+                                        <Card style={{marginLeft:'-140px'}}
                                           className="fetchedDetailedRating"
                                           key={item.t_id}
                                         >
@@ -339,14 +339,14 @@ function SearchDetails() {
                                   <Col span={12}>
                                     <Form.Item
                                       label={
-                                        <label className="self-comment">
+                                        <label style={{marginLeft:'5px'}} className="self-comment">
                                           Manager Comment
                                         </label>
                                       }
                                       name="selfComment"
                                     >
                                       <div>
-                                        <Card
+                                        <Card style={{marginLeft:'-160px',marginRight:'20px'}}
                                           className="fetchedCard"
                                           key={item.t_id}
                                         >
@@ -421,18 +421,18 @@ function SearchDetails() {
                       <Form.Item
                         style={{ marginLeft: "15px" }}
                         label={
-                          <label className="self-aspiration">
+                          <label style={{marginLeft:'30px'}} className="self-aspiration">
                             Self Aspiration
                           </label>
                         }
                         name="selfAspiration"
                       >
                         <div>
-                          <TextArea
-                            style={{ marginTop: "40px", marginLeft: "-250px" }}
-                            className="self-aspiration-input"
+                            <Card style={{ marginTop: "10px", marginLeft: "30px",width:'380px',height:'100px'}}>
+                            <Typography
                             rows={4}
-                          />
+                          >{empData?.self_aspiration}</Typography>
+                            </Card>
                         </div>
                       </Form.Item>
                     </Col>
@@ -473,22 +473,19 @@ function SearchDetails() {
                     <Col span={12}>
                       <Form.Item
                         label={
-                          <label className="teamlead-feedback">
+                          <label style={{marginLeft:'45px'}} className="teamlead-feedback">
                             Manager's Feedback
                           </label>
                         }
                         name="managerFeedback"
                       >
                         <div>
-                          <TextArea
-                            style={{
-                              marginTop: "40px",
-                              marginLeft: "-350px",
-                              width: "400px",
-                            }}
-                           
+                          <Card style={{ marginTop: "10px", marginLeft: "45px",width:'380px',height:'100px'}}>
+                          <Typography
                             rows={4}
-                          />
+                          >{empData?.manager_feedback}</Typography>
+                          </Card>
+                         
                         </div>
                       </Form.Item>
                     </Col>

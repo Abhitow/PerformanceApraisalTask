@@ -15,6 +15,15 @@
   height: 55px;
   width: 120px;
 }
+.login-skein-logo{
+  margin-top: 8px !important; 
+  margin:auto;
+  margin-left: 110px;
+  margin-bottom: 20px;
+  z-index: -1;
+  height: 55px;
+  width: 120px;
+}
 .card{
   margin-left: 800px;
   margin-top: 50px;
@@ -96,7 +105,7 @@
 }
 .performance-date{
   width:250px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 .performance-form-row-one{
   margin-top:30px;
@@ -327,7 +336,6 @@
  }
  .self-aspiration-input{
   display: inline-block;
-  
  }
  .teamlead-feedback{
   margin-left: 30px;

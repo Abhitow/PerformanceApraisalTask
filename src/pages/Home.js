@@ -74,9 +74,9 @@ const Home = (props) => {
   const [leadFeedback, setLeadFeedback] = useState();
 
   const [empSelfRating, setEmpSelfRating] = useState();
-  const [mngSelfRating, setMngSelfRating] = useState();
+  const [mngComment, setMngComment] = useState();
 
-  const [managerFeedback, setManagerFeedback] = useState();
+  const [managerFeedback, setManagerFeedback] = useState("");
   const [managerAvg, setManagerAvg] = useState();
   /* performance apraisal form  */
   const [name, setName] = useState();
@@ -233,92 +233,94 @@ const Home = (props) => {
     setRoles(e);
   };
   const localEmail = localStorage.getItem("email");
-  const consolidatedData = {
-    self_aspirations: selfAspiration,
-    manager_feedback: managerFeedback,
-  };
+// console.log(managerFeedback,">,<<<<<<<<<<<<<<<<<<<<<<");
+  const initialData = {
+    questions : 
+    [
+      {
+        t_id: 1,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 2,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 3,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 4,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 5,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 6,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 7,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 8,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+      },
+      {
+        t_id: 9,
+        email: localEmail,
+        self_rating: 0,
+        self_comment: "",
+        manager_rating: 0,
+        manager_comment: "",
+       
+      },
+    ],
 
-  const initialData = [
-    {
-      t_id: 1,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 2,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 3,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 4,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 5,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 6,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 7,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 8,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-    },
-    {
-      t_id: 9,
-      email: localEmail,
-      self_rating: 0,
-      self_comment: "",
-      manager_rating: 0,
-      manager_comment: "",
-      self_aspirations: selfAspiration,
-    },
-  ];
-  console.log(selfAspiration, "aaaaaaaa");
+    self_aspirations: "",
+    manager_feedback: "",
+  }
+   
   const [userData, setUserData] = useState(initialData);
-  // const [payLoadData,setPayloadData] = useState()
+
+
 
   const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
-
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/");
@@ -326,7 +328,6 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log("@@@", userData);
   }, [userData]);
 
   useEffect(() => {
@@ -391,21 +392,12 @@ useEffect( () =>{
       });
     }
   };
-
-  const success = () => {
-    messageApi.open({
-      type: "success",
-      content: "Employee Details Submitted Successfully",
-    });
-  };
-
   const handleSubmit = () => {
-    console.log("payload", userData);
     empDetails();
     axios
       .post(
         "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
-          localEmail,
+          text,
         userData
       )
       .then((response) => {
@@ -414,7 +406,12 @@ useEffect( () =>{
       })
       .catch((e) => {
         console.log("e", e);
-      });
+      }
+      );
+
+      
+
+
     // if(payload.username !== undefined && commentData.data.self_rating !== 0 && commentData === true){
     //     success();
     // }else{
@@ -460,8 +457,7 @@ useEffect( () =>{
   function calAvg() {
     var total = 0;
     var count = 0;
-    console.log("+++", userData);
-    userData.map((i) => {
+    userData.questions.map((i) => {
       if (i.self_rating !== undefined) {
         total = total + parseInt(i.self_rating);
         count++;
@@ -474,8 +470,7 @@ useEffect( () =>{
   function calManagerAverage() {
     var total = 0;
     var count = 0;
-    console.log("+++", userData);
-    userData.map((i) => {
+    userData.questions.map((i) => {
       if (i.manager_rating !== undefined) {
         total = total + parseInt(i.manager_rating);
         count++;
@@ -880,11 +875,12 @@ useEffect( () =>{
                                             width: 150,
                                             marginLeft: "20px",
                                           }}
+
                                           onChange={(e) => {
-                                            console.log("----->", e);
-                                            initialData[index].self_rating = e;
-                                            userData[index]["self_rating"] = e;
-                                            console.log("changed", userData);
+                                            console.log("heloooooo")
+                                            initialData.questions[index].self_rating = e;
+                                            userData.questions[index]["self_rating"] = e;
+                                           
                                             setUserData(userData);
                                             calAvg();
                                           }}
@@ -920,9 +916,9 @@ useEffect( () =>{
                                       >
                                         <TextArea
                                           onChange={(e) => {
-                                            initialData[index].self_comment =
+                                            initialData.questions[index].self_comment =
                                               e.target.value;
-                                            userData[index]["self_comment"] =
+                                            userData.questions[index]["self_comment"] =
                                               e.target.value;
                                             setUserData(userData);
                                           }}
@@ -936,98 +932,6 @@ useEffect( () =>{
                                     </Form.Item>
                                   </Col>
                                 </Row>
-
-                                {mailId === "admin@gmail.com" ? (
-                                  <Row id="manager_id">
-                                    <Col span={12}>
-                                      <Form.Item
-                                        style={{ marginLeft: "110px" }}
-                                        label={
-                                          <label className="manager-rating">
-                                            Manager Rating
-                                          </label>
-                                        }
-                                        name="managerRating"
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message: "please give comments",
-                                          },
-                                        ]}
-                                        hasFeedback
-                                        required
-                                      >
-                                        <div className="manager-rating-input">
-                                          <Select
-                                            className="performance-input"
-                                            defaultValue={RankingData[0]}
-                                            style={{
-                                              width: 150,
-                                              marginLeft: "20px",
-                                            }}
-                                            value={rank}
-                                            onChange={(e) => {
-                                              initialData[
-                                                index
-                                              ].manager_rating = e;
-                                              userData[index][
-                                                "manager_rating"
-                                              ] = e;
-                                              setUserData(userData);
-                                              calManagerAverage();
-                                            }}
-                                            options={RankingData.map(
-                                              (selectData) => ({
-                                                label: selectData,
-                                                value: selectData,
-                                              })
-                                            )}
-                                          />
-                                        </div>
-                                      </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                      <Form.Item
-                                        label={
-                                          <label className="manager-comment">
-                                            Manager Comment
-                                          </label>
-                                        }
-                                        name="managerComment"
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message: "please give comments",
-                                          },
-                                        ]}
-                                        hasFeedback
-                                        required
-                                      >
-                                        <div
-                                          className="manager-comment-input"
-                                          key={d.t_id}
-                                        >
-                                          <TextArea
-                                            onChange={(e) => {
-                                              initialData[
-                                                index
-                                              ].manager_comment =
-                                                e.target.value;
-                                              userData[index][
-                                                "manager_comment"
-                                              ] = e.target.value;
-                                              setUserData(userData);
-                                            }}
-                                            rows={4}
-                                            style={{ width: "400px" }}
-                                          />
-                                        </div>
-                                      </Form.Item>
-                                    </Col>
-                                  </Row>
-                                ) : (
-                                  console.log("")
-                                )}
                               </div>
                             </>
                           );
@@ -1105,7 +1009,11 @@ useEffect( () =>{
                               }}
                               className="self-aspiration-input"
                               onChange={(e) => {
-                                setSelfAspiration(e.target.value);
+                                // console.log(e.target.value);
+                                // setSelfAspiration(e.target.value);
+                                userData.self_aspirations =
+                                e.target.value;
+                                setUserData(userData);
                               }}
                               rows={4}
                             />
@@ -1525,96 +1433,84 @@ useEffect( () =>{
                                             </Form.Item>
                                           </Col>
                                         </Row>
-
                                         <Row id="manager_id">
-                                          <Col span={12}>
-                                            <Form.Item
-                                              style={{ marginLeft: "110px" }}
-                                              label={
-                                                <label className="manager-rating">
-                                                  Manager Rating
-                                                </label>
-                                              }
-                                              name="managerRating"
-                                              rules={[
-                                                {
-                                                  required: true,
-                                                  message:
-                                                    "please give comments",
-                                                },
-                                              ]}
-                                              hasFeedback
-                                              required
-                                            >
-                                              <div className="manager-rating-input">
-                                                <Select
-                                                  className="performance-input"
-                                                  defaultValue={RankingData[0]}
-                                                  style={{
-                                                    width: 150,
-                                                    marginLeft: "20px",
-                                                  }}
-                                                  value={rank}
-                                                  onChange={(e) => {
-                                                    initialData[
-                                                      index
-                                                    ].manager_rating = e;
-                                                    userData[index][
-                                                      "manager_rating"
-                                                    ] = e;
-                                                    setUserData(userData);
-                                                    calManagerAverage();
-                                                  }}
-                                                  options={RankingData.map(
-                                                    (selectData) => ({
-                                                      label: selectData,
-                                                      value: selectData,
-                                                    })
-                                                  )}
-                                                />
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                          <Col span={12}>
-                                            <Form.Item
-                                              label={
-                                                <label className="manager-comment">
-                                                  Manager Comment
-                                                </label>
-                                              }
-                                              name="managerComment"
-                                              rules={[
-                                                {
-                                                  required: true,
-                                                  message:
-                                                    "please give comments",
-                                                },
-                                              ]}
-                                              hasFeedback
-                                              required
-                                            >
-                                              <div
-                                                className="manager-comment-input"
-                                                key={d.t_id}
-                                              >
-                                                <TextArea
-                                                  onChange={(e) => {
-                                                    initialData[
-                                                      index
-                                                    ].manager_comment =
-                                                      e.target.value;
-                                                    userData[index][
-                                                      "manager_comment"
-                                                    ] = e.target.value;
-                                                    setUserData(userData);
-                                                  }}
-                                                  rows={4}
-                                                  style={{ width: "400px" }}
-                                                />
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                        </Row>
+                                    <Col span={12}>
+                                      <Form.Item
+                                        style={{ marginLeft: "110px" }}
+                                        label={
+                                          <label className="manager-rating">
+                                            Manager Rating
+                                          </label>
+                                        }
+                                        name="managerRating"
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message: "please give comments",
+                                          },
+                                        ]}
+                                        hasFeedback
+                                        required
+                                      >
+                                        <div className="manager-rating-input">
+                                          <Select
+                                            className="performance-input"
+                                            defaultValue={RankingData[0]}
+                                            style={{
+                                              width: 150,
+                                              marginLeft: "20px",
+                                            }}
+                                            value={rank}
+                                            onChange={(e) => {
+                                              initialData.questions[index].manager_rating = e;
+                                              userData.questions[index]["manager_rating"] = e;
+                                              setUserData(userData);
+                                              calManagerAverage();
+                                            }}
+                                            options={RankingData.map(
+                                              (selectData) => ({
+                                                label: selectData,
+                                                value: selectData,
+                                              })
+                                            )}
+                                          />
+                                        </div>
+                                      </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                      <Form.Item
+                                        label={
+                                          <label className="manager-comment">
+                                            Manager Comment
+                                          </label>
+                                        }
+                                        name="managerComment"
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message: "please give comments",
+                                          },
+                                        ]}
+                                        hasFeedback
+                                        required
+                                      >
+                                        <div
+                                          className="manager-comment-input"
+                                          key={d.t_id}
+                                        >
+                                          <TextArea
+                                            onChange={(e) => {
+                                              initialData.questions[index].manager_comment =e.target.value;
+                                              userData.questions[index]["manager_comment"] = e.target.value;
+                                              setUserData(userData);
+                                            }}
+                                            rows={4}
+                                            style={{ width: "400px" }}
+                                          />
+                                        </div>
+                                      </Form.Item>
+                                    </Col>
+                                  </Row>
                                       </>
                                     );
                                   }
@@ -1675,12 +1571,17 @@ useEffect( () =>{
                         }
                         name="selfAspiration"
                       >
-                        <div>
-                          <TextArea
-                            style={{ marginTop: "40px", marginLeft: "-250px" }}
-                            className="self-aspiration-input"
-                            rows={4}
-                          />
+                        <div key={empData?.t_id}>
+                          <Card style={{marginTop:'40px',marginLeft:'-125px',width:'400px',height:'100px'}}>
+                              <Typography
+                                style={{ marginTop: "40px", marginLeft: "-250px" }}
+                                className="self-aspiration-input"
+                                rows={4} 
+                               >
+                                {empData?.self_aspiration}
+                              </Typography>
+                          </Card>
+                          
                         </div>
                       </Form.Item>
                     </Col>
@@ -1737,7 +1638,11 @@ useEffect( () =>{
                               height:'100px'
                             }}
                             onChange={(e) => {
-                              setManagerFeedback(e.target.value);
+                             
+                              userData.manager_feedback =
+                                e.target.value;
+                                setUserData(userData);
+
                             }}
                             rows={4}
                           />
