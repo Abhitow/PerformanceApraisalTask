@@ -134,6 +134,7 @@ const Home = (props) => {
     setText(text);
     setSearch(matches);
   };
+  
   const onSuggestHandler = (text) => {
     setText(text);
     setSuggestions([]);
@@ -154,6 +155,12 @@ const Home = (props) => {
       console.log("please enter name");
     }
   };
+  // console.log(searchDetails,"////////");
+  // const onlyDate = searchDetails[0]?.joining_date;
+  // console.log(onlyDate ,",,,,,,,");
+
+//  const selfAvg = parseInt(empData.self_aspirations).toFixed(2);
+// console.log(selfAvg,);
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -318,8 +325,6 @@ const Home = (props) => {
    
   const [userData, setUserData] = useState(initialData);
 
-
-
   const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -337,17 +342,6 @@ const Home = (props) => {
         setDetail(response.data.data);
         var getData = [];
         for (let i = 0; i < response.data.data.length; i++) {
-          // response.data.data[i].error = {
-          //   self_rating: {
-          //     self_rating_error:false ,
-          //     valid: "please select ratings"
-          //   },
-          //   justify_comment: {
-          //     justify_comment_error:false ,
-          //     valid: "please select ratings"
-          //   },
-          // };
-          //   console.log("for loop working ");
           getData.push(error);
         }
         setErrorData(getData);
@@ -358,7 +352,6 @@ const Home = (props) => {
   }, []);
 
   const empDetails = () => {
-    // console.log("payload", payload)
     axios
       .put(
         "https://demo.emeetify.com:81/appraisel/users/FormDetails?email=" +
@@ -367,7 +360,7 @@ const Home = (props) => {
       )
       .then((response) => {
         setFormData(response.data);
-        // console.log(response.data,"111111");
+        console.log(response.data,"111111");
       })
       .catch((e) => {
         console.log("e", e);
@@ -378,37 +371,59 @@ useEffect( () =>{
   axios.get("https://demo.emeetify.com:81/appraisel/users/Consolidate?email="+text)
   .then((response) =>{setAvgTotal(response.data.data)})
   .catch(e => console.log(e , "error Message"));
-},[localEmail]);
+},[]);
+
+// console.log(avgTotal,"??????");
+const decimalAvg = avgTotal?.manager_rating?.toFixed(2);
+console.log(decimalAvg,"aaaaa");
   const onFinish = (formData) => {
-    if (responseData.status === true && commentData.status === true) {
-      messageApi.open({
-        type: "error",
-        content: "please enter all the details",
-      });
-    } else {
+    if (responseData.status === true && commentData.status === true ) {
       messageApi.open({
         type: "success",
         content: "Thank you",
       });
+    } else {
+      messageApi.open({
+        type: "error",
+        content: "please enter all the details",
+      });
     }
   };
-  const handleSubmit = () => {
-    empDetails();
-    axios
-      .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
-          text,
-        userData
-      )
-      .then((response) => {
-        console.log(response.data);
-        setCommentData(response.data);
-      })
-      .catch((e) => {
-        console.log("e", e);
-      }
-      );
 
+  console.log(text,"ttttttt");
+  const handleSubmit = () => {
+  empDetails();
+  axios
+  .post(
+    "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
+      localEmail,
+    userData
+  )
+  .then((response) => {
+    console.log(response.data);
+    setCommentData(response.data);
+  })
+  .catch((e) => {
+    console.log("e", e);
+  }
+  );
+}
+const handleAdmin =() =>{
+  axios
+  .post(
+    "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
+      text,
+    userData
+  )
+  .then((response) => {
+    console.log(response.data);
+    setCommentData(response.data);
+  })
+  .catch((e) => {
+    console.log("e", e);
+  }
+  );
+}
       
 
 
@@ -433,7 +448,7 @@ useEffect( () =>{
     //   });
 
     // }
-  };
+  
 
   const onFinishFailed = (errorInfo) => {};
 
@@ -1033,7 +1048,8 @@ useEffect( () =>{
                       }}
                     />
 
-                    <Button
+                 
+                  <Button
                       htmlType="submit"
                       type="primary"
                       style={{
@@ -1044,7 +1060,7 @@ useEffect( () =>{
                       onClick={handleSubmit}
                     >
                       Submit
-                    </Button>
+                    </Button> 
                   </Form>
                 </Card>
               </Content>
@@ -1443,14 +1459,6 @@ useEffect( () =>{
                                           </label>
                                         }
                                         name="managerRating"
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message: "please give comments",
-                                          },
-                                        ]}
-                                        hasFeedback
-                                        required
                                       >
                                         <div className="manager-rating-input">
                                           <Select
@@ -1557,7 +1565,7 @@ useEffect( () =>{
                               marginTop: "-20px",
                               fontSize: "24px",
                             }}
-                          > {avgTotal?.self_rating}</Typography>
+                          > {avgTotal?.employee_self_rating}</Typography>
                         </Card>
                       </Form.Item>
                     </Col>
@@ -1578,7 +1586,7 @@ useEffect( () =>{
                                 className="self-aspiration-input"
                                 rows={4} 
                                >
-                                {empData?.self_aspiration}
+                                {empData?.self_aspirations}
                               </Typography>
                           </Card>
                           
@@ -1669,7 +1677,7 @@ useEffect( () =>{
                       height: "40px",
                       width: "100px",
                     }}
-                    onClick={handleSubmit}
+                    onClick={handleAdmin}
                   >
                     Submit
                   </Button>

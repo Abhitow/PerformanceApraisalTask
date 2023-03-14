@@ -413,7 +413,7 @@ function SearchDetails() {
                               marginTop: "-20px",
                               fontSize: "24px",
                             }}
-                          > {avgTotal?.self_rating}</Typography>
+                          > {avgTotal?.employee_self_rating}</Typography>
                         </Card>
                       </Form.Item>
                     </Col>
@@ -431,7 +431,7 @@ function SearchDetails() {
                             <Card style={{ marginTop: "10px", marginLeft: "30px",width:'380px',height:'100px'}}>
                             <Typography
                             rows={4}
-                          >{empData?.self_aspiration}</Typography>
+                          >{empData?.self_aspirations}</Typography>
                             </Card>
                         </div>
                       </Form.Item>
@@ -465,7 +465,7 @@ function SearchDetails() {
                               fontSize: "24px",
                             }}
                           >
-                            {avgTotal?.manager_rating}
+                            {avgTotal?.manager_consolidated_rating}
                           </Typography>
                         </Card>
                       </Form.Item>
