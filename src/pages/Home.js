@@ -101,7 +101,7 @@ const Home = (props) => {
   const [errorData, setErrorData] = useState();
   const [indexValue, setIndexValue] = useState(0);
 
-  const [avgTotal, setAvgTotal] = useState();
+  const [avgTotal, setAvgTotal] = useState(0);
   // const [search, setSearch] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const mailId = localStorage.getItem("email");
@@ -373,8 +373,9 @@ useEffect( () =>{
   .catch(e => console.log(e , "error Message"));
 },[]);
 
+ console.log(parseFloat(avgTotal?.employee_self_rating).toFixed(2));
 
-const a = parseFloat(avgTotal?.employee_self_rating).toFixed(2);
+
 
 
   const onFinish = (formData) => {
@@ -1565,7 +1566,7 @@ const handleAdmin =() =>{
                               marginTop: "-25px",
                               fontSize: "24px",
                             }}
-                          > {a}</Typography>
+                          >{parseFloat(avgTotal?.employee_self_rating).toFixed(2)} </Typography>
                         </Card>
                       </Form.Item>
                     </Col>
