@@ -37,22 +37,22 @@ function SearchDetails() {
     setSuggestions([]);
   };
   const onSearch = () => {
-    if (search.length === 1 && text != null) {
-      console.log(search[0].email, "searched -------->");
-
+    if (search?.length === 1 && text != null) {
       if (text === search[0].email) {
         console.log(search[0].comments);
         setEmpData(search[0].comments);
       } else {
         console.log("not matched");
       }
-
       setSearchDetails(search);
     } else {
       console.log("please enter name");
     }
   };
 
+  useEffect( () => {
+    onSearch();
+  },[search]);
   useEffect(() => {
     const loadUsers = async () => {
       const response = await axios.get(
@@ -490,7 +490,7 @@ function SearchDetails() {
                     }
                     name="managerFeedback"
                   >
-                    <div key={empData.t_id}>
+                    <div key={empData?.t_id}>
                       <Card
                         style={{
                           marginTop: "40px",

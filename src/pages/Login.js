@@ -87,7 +87,8 @@ function Login({ isLoggedIn }) {
         // Handle data
         localStorage.setItem("username", data.data.username);
         localStorage.setItem("email", data.data.email);
-        // console.log(full_name,"<<<>>>>");
+        localStorage.setItem("role_id" , data.data.role_id)
+
       })
       .catch((err) => {
         console.log(err.message);

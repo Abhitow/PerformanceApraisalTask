@@ -70,13 +70,7 @@ const Home = (props) => {
   const [detail, setDetail] = useState();
   const [messageApi, contextHolder] = message.useMessage();
   const [rank, setRank] = useState();
-  const [selfAspiration, setSelfAspiration] = useState("");
-  const [leadFeedback, setLeadFeedback] = useState();
-
   const [empSelfRating, setEmpSelfRating] = useState();
-  const [mngComment, setMngComment] = useState();
-
-  const [managerFeedback, setManagerFeedback] = useState("");
   const [managerAvg, setManagerAvg] = useState();
   /* performance apraisal form  */
   const [name, setName] = useState();
@@ -86,13 +80,9 @@ const Home = (props) => {
   const [date, setDate] = useState();
   const [review_date, setReviewDate] = useState();
   const [responseData, setResponseData] = useState("");
-  const [selectValue, setSelectValue] = useState("");
   const [avg, setAvg] = useState(0);
   const [formData, setFormData] = useState();
   const [roles, setRoles] = useState();
-  const [toggle, setToggle] = useState(false);
-
-  const [btnTogle, setBtnTogle] = useState(false);
   const [windowsOptions, setWindowsOptions] = useState("");
   // const [windowsClose, setWindowsClose] = useState(false)
 
@@ -100,11 +90,11 @@ const Home = (props) => {
 
   const [errorData, setErrorData] = useState();
   const [indexValue, setIndexValue] = useState(0);
-
-  const [avgTotal, setAvgTotal] = useState(0);
+  const [avgValue, setAvgValue] = useState();
   // const [search, setSearch] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const mailId = localStorage.getItem("email");
+  const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
 
   /*<----Search Details starts here */
@@ -113,15 +103,14 @@ const Home = (props) => {
   const [suggestions, setSuggestions] = useState([]);
   const [search, setSearch] = useState();
   const [searchDetails, setSearchDetails] = useState();
-  const [answer, setAnswer] = useState();
-  const [email, setEmail] = useState();
   const [comment, setComment] = useState();
   const [empData, setEmpData] = useState();
-
 
   /*<----Search Details starts here */
 
   /*<------Search deatils function starts here  */
+
+  console.log(role, "----->>>>>");
   const onChangeHandler = (text) => {
     let matches = [];
     if (text.length > 0) {
@@ -134,7 +123,7 @@ const Home = (props) => {
     setText(text);
     setSearch(matches);
   };
-  
+
   const onSuggestHandler = (text) => {
     setText(text);
     setSuggestions([]);
@@ -159,8 +148,8 @@ const Home = (props) => {
   // const onlyDate = searchDetails[0]?.joining_date;
   // console.log(onlyDate ,",,,,,,,");
 
-//  const selfAvg = parseInt(empData.self_aspirations).toFixed(2);
-// console.log(selfAvg,);
+  //  const selfAvg = parseInt(empData.self_aspirations).toFixed(2);
+  // console.log(selfAvg,);
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -240,10 +229,9 @@ const Home = (props) => {
     setRoles(e);
   };
   const localEmail = localStorage.getItem("email");
-// console.log(managerFeedback,">,<<<<<<<<<<<<<<<<<<<<<<");
+  // console.log(managerFeedback,">,<<<<<<<<<<<<<<<<<<<<<<");
   const initialData = {
-    questions : 
-    [
+    questions: [
       {
         t_id: 1,
         email: localEmail,
@@ -315,14 +303,13 @@ const Home = (props) => {
         self_comment: "",
         manager_rating: 0,
         manager_comment: "",
-       
       },
     ],
 
     self_aspirations: "",
     manager_feedback: "",
-  }
-   
+  };
+
   const [userData, setUserData] = useState(initialData);
 
   const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
@@ -332,24 +319,18 @@ const Home = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-  }, [userData]);
+  useEffect(() => {}, [userData]);
 
   useEffect(() => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
       .then((response) => {
         setDetail(response.data.data);
-        var getData = [];
-        for (let i = 0; i < response.data.data.length; i++) {
-          getData.push(error);
-        }
-        setErrorData(getData);
       })
       .catch((e) => {
         console.log("e", e);
       });
-  }, []);
+  }, [text]);
 
   const empDetails = () => {
     axios
@@ -360,26 +341,27 @@ const Home = (props) => {
       )
       .then((response) => {
         setFormData(response.data);
-        console.log(response.data,"111111");
       })
       .catch((e) => {
         console.log("e", e);
       });
   };
 
-useEffect( () =>{
-  axios.get("https://demo.emeetify.com:81/appraisel/users/Consolidate?email="+text)
-  .then((response) =>{setAvgTotal(response.data.data)})
-  .catch(e => console.log(e , "error Message"));
-},[]);
-
- console.log(parseFloat(avgTotal?.employee_self_rating).toFixed(2));
-
-
-
+  useEffect(() => {
+    axios
+      .get(
+        "https://demo.emeetify.com:81/appraisel/users/Consolidate?email=" + text
+      )
+      .then((response) => {
+        setAvgValue(response.data.data);
+        console.log(response.data.data,"nnnnnnnnn");
+      })
+      .catch((e) => console.log(e, "error Message"));   
+  }, [text]);
+console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
   const onFinish = (formData) => {
-    if (responseData.status === true && commentData.status === true ) {
+    if (responseData.status === true && commentData.status === true) {
       messageApi.open({
         type: "success",
         content: "Thank you",
@@ -393,63 +375,57 @@ useEffect( () =>{
   };
 
   const handleSubmit = () => {
-  empDetails();
-  axios
-  .post(
-    "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
-      localEmail,
-    userData
-  )
-  .then((response) => {
-    console.log(response.data);
-    setCommentData(response.data);
-  })
-  .catch((e) => {
-    console.log("e", e);
-  }
-  );
-}
-const handleAdmin =() =>{
-  axios
-  .post(
-    "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
-      text,
-    userData
-  )
-  .then((response) => {
-    console.log(response.data);
-    setCommentData(response.data);
-  })
-  .catch((e) => {
-    console.log("e", e);
-  }
-  );
-}
-      
+    empDetails();
+    axios
+      .post(
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
+          localEmail,
+        userData
+      )
+      .then((response) => {
+        console.log(response.data);
+        setCommentData(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+  };
+  const handleAdmin = () => {
+    axios
+      .post(
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" + text,
+        userData
+      )
+      .then((response) => {
+        console.log(response.data);
+        setCommentData(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
+  };
 
+  // if(payload.username !== undefined && commentData.data.self_rating !== 0 && commentData === true){
+  //     success();
+  // }else{
+  //   messageApi.open({
+  //     type: "error",
+  //     content: "Please fill all the details",
+  //   });
+  // }
 
-    // if(payload.username !== undefined && commentData.data.self_rating !== 0 && commentData === true){
-    //     success();
-    // }else{
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "Please fill all the details",
-    //   });
-    // }
+  // if(commentData.data.self_rating === 0 && commentData.status === true){
+  //   messageApi.open({
+  //     type: "error",
+  //     content: "please give ratings and comments",
+  //   });
+  // }else{
+  //   messageApi.open({
+  //     type: "success",
+  //     content: "Employee comments submitted successfully",
+  //   });
 
-    // if(commentData.data.self_rating === 0 && commentData.status === true){
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "please give ratings and comments",
-    //   });
-    // }else{
-    //   messageApi.open({
-    //     type: "success",
-    //     content: "Employee comments submitted successfully",
-    //   });
-
-    // }
-  
+  // }
 
   const onFinishFailed = (errorInfo) => {};
 
@@ -462,13 +438,6 @@ const handleAdmin =() =>{
         console.log("e", e);
       });
   }, []);
-
-  // const handleManagerButton = () =>{
-  //   console.log("manager button working");
-  //   setIs_appraisal_open_for_employee(current => !current);
-  //   setIs_appraisal_window_open(current => !current);
-
-  // }
 
   function calAvg() {
     var total = 0;
@@ -496,22 +465,9 @@ const handleAdmin =() =>{
       setManagerAvg(managerAverage);
     });
   }
-  // console.log(avg,"avggggggg");
   useEffect(() => {}, [errorData]);
 
   useEffect(() => {}, [indexValue]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("https://demo.emeetify.com:81/appraisel/users/userNames")
-  //     .then((response) => {
-  //       setSearch(response.data.data, "111111111");
-  //     })
-  //     .catch((e) => {
-  //       console.log(e, "error message");
-  //     });
-  // }, []);
-  // console.log(search.data[0].user_id,"11111111");
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -525,7 +481,7 @@ const handleAdmin =() =>{
 
   return (
     <>
-      {mailId !== "admin@gmail.com" ? (
+      {role !== "1" ? (
         <Space
           direction="vertical"
           style={{
@@ -546,7 +502,7 @@ const handleAdmin =() =>{
                     />
                   </Col>
                   <Col span={3}>
-                    {mailId === "admin@gmail.com" ? (
+                    {role === "1" ? (
                       <>
                         <div style={{ marginLeft: "30px" }}>
                           <Button type="primary" onClick={showModal} style={{}}>
@@ -891,12 +847,15 @@ const handleAdmin =() =>{
                                             width: 150,
                                             marginLeft: "20px",
                                           }}
-
                                           onChange={(e) => {
-                                            console.log("heloooooo")
-                                            initialData.questions[index].self_rating = e;
-                                            userData.questions[index]["self_rating"] = e;
-                                           
+                                            console.log("heloooooo");
+                                            initialData.questions[
+                                              index
+                                            ].self_rating = e;
+                                            userData.questions[index][
+                                              "self_rating"
+                                            ] = e;
+
                                             setUserData(userData);
                                             calAvg();
                                           }}
@@ -932,10 +891,12 @@ const handleAdmin =() =>{
                                       >
                                         <TextArea
                                           onChange={(e) => {
-                                            initialData.questions[index].self_comment =
-                                              e.target.value;
-                                            userData.questions[index]["self_comment"] =
-                                              e.target.value;
+                                            initialData.questions[
+                                              index
+                                            ].self_comment = e.target.value;
+                                            userData.questions[index][
+                                              "self_comment"
+                                            ] = e.target.value;
                                             setUserData(userData);
                                           }}
                                           rows={4}
@@ -1027,8 +988,7 @@ const handleAdmin =() =>{
                               onChange={(e) => {
                                 // console.log(e.target.value);
                                 // setSelfAspiration(e.target.value);
-                                userData.self_aspirations =
-                                e.target.value;
+                                userData.self_aspirations = e.target.value;
                                 setUserData(userData);
                               }}
                               rows={4}
@@ -1037,7 +997,6 @@ const handleAdmin =() =>{
                         </Form.Item>
                       </Col>
                     </Row>
-                     
 
                     {/* <------ here ends your code -----> */}
 
@@ -1049,8 +1008,7 @@ const handleAdmin =() =>{
                       }}
                     />
 
-                 
-                  <Button
+                    <Button
                       htmlType="submit"
                       type="primary"
                       style={{
@@ -1061,14 +1019,11 @@ const handleAdmin =() =>{
                       onClick={handleSubmit}
                     >
                       Submit
-                    </Button> 
+                    </Button>
                   </Form>
                 </Card>
               </Content>
-            ) :
-            
-            
-            (
+            ) : (
               /*<-----Admin Code Starts Here ---> */
               <div>
                 <Card
@@ -1170,15 +1125,20 @@ const handleAdmin =() =>{
                         onChange={(e) => onChangeHandler(e.target.value)}
                         onSearch={onSearch}
                         value={text}
-                        style={{float:'left',marginBottom:'20px',marginLeft:'5px',marginTop:'-65px'}}
+                        style={{
+                          float: "left",
+                          marginBottom: "20px",
+                          marginLeft: "5px",
+                          marginTop: "-65px",
+                        }}
                       />
                       {suggestions &&
                         suggestions.map((suggestion, i) => (
                           <div
                             style={{
-                              display:'flex',
-                              padding:'5px',
-                              cursor:'pointer'
+                              display: "flex",
+                              padding: "5px",
+                              cursor: "pointer",
                             }}
                             key={i}
                             className="suggestion"
@@ -1188,10 +1148,10 @@ const handleAdmin =() =>{
                           </div>
                         ))}
                       {searchDetails?.length === 1 ? (
-                        <div style={{ marginTop: "10px", marginLeft: "100px"}}>
+                        <div style={{ marginTop: "10px", marginLeft: "100px" }}>
                           {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
                           <Row className="performance-form-row-one">
-                            <Col span={12} >
+                            <Col span={12}>
                               <Form.Item
                                 label="Name of Employee"
                                 name={"name"}
@@ -1423,7 +1383,8 @@ const handleAdmin =() =>{
                                             </Form.Item>
                                           </Col>
                                           <Col span={12}>
-                                            <Form.Item style={{marginLeft:'20px'}}
+                                            <Form.Item
+                                              style={{ marginLeft: "20px" }}
                                               label={
                                                 <label className="admin-self-comment">
                                                   Justify Your Comment
@@ -1451,75 +1412,85 @@ const handleAdmin =() =>{
                                           </Col>
                                         </Row>
                                         <Row id="manager_id">
-                                    <Col span={12}>
-                                      <Form.Item
-                                        style={{ marginLeft: "110px" }}
-                                        label={
-                                          <label className="manager-rating">
-                                            Manager Rating
-                                          </label>
-                                        }
-                                        name="managerRating"
-                                      >
-                                        <div className="manager-rating-input">
-                                          <Select
-                                            className="performance-input"
-                                            defaultValue={RankingData[0]}
-                                            style={{
-                                              width: 150,
-                                              marginLeft: "20px",
-                                            }}
-                                            value={rank}
-                                            onChange={(e) => {
-                                              initialData.questions[index].manager_rating = e;
-                                              userData.questions[index]["manager_rating"] = e;
-                                              setUserData(userData);
-                                              calManagerAverage();
-                                            }}
-                                            options={RankingData.map(
-                                              (selectData) => ({
-                                                label: selectData,
-                                                value: selectData,
-                                              })
-                                            )}
-                                          />
-                                        </div>
-                                      </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                      <Form.Item
-                                        label={
-                                          <label className="manager-comment">
-                                            Manager Comment
-                                          </label>
-                                        }
-                                        name="managerComment"
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message: "please give comments",
-                                          },
-                                        ]}
-                                        hasFeedback
-                                        required
-                                      >
-                                        <div
-                                          className="manager-comment-input"
-                                          key={d.t_id}
-                                        >
-                                          <TextArea
-                                            onChange={(e) => {
-                                              initialData.questions[index].manager_comment =e.target.value;
-                                              userData.questions[index]["manager_comment"] = e.target.value;
-                                              setUserData(userData);
-                                            }}
-                                            rows={4}
-                                            style={{ width: "400px" }}
-                                          />
-                                        </div>
-                                      </Form.Item>
-                                    </Col>
-                                  </Row>
+                                          <Col span={12}>
+                                            <Form.Item
+                                              style={{ marginLeft: "110px" }}
+                                              label={
+                                                <label className="manager-rating">
+                                                  Manager Rating
+                                                </label>
+                                              }
+                                              name="managerRating"
+                                            >
+                                              <div className="manager-rating-input">
+                                                <Select
+                                                  className="performance-input"
+                                                  defaultValue={RankingData[0]}
+                                                  style={{
+                                                    width: 150,
+                                                    marginLeft: "20px",
+                                                  }}
+                                                  value={rank}
+                                                  onChange={(e) => {
+                                                    initialData.questions[
+                                                      index
+                                                    ].manager_rating = e;
+                                                    userData.questions[index][
+                                                      "manager_rating"
+                                                    ] = e;
+                                                    setUserData(userData);
+                                                    calManagerAverage();
+                                                  }}
+                                                  options={RankingData.map(
+                                                    (selectData) => ({
+                                                      label: selectData,
+                                                      value: selectData,
+                                                    })
+                                                  )}
+                                                />
+                                              </div>
+                                            </Form.Item>
+                                          </Col>
+                                          <Col span={12}>
+                                            <Form.Item
+                                              label={
+                                                <label className="manager-comment">
+                                                  Manager Comment
+                                                </label>
+                                              }
+                                              name="managerComment"
+                                              rules={[
+                                                {
+                                                  required: true,
+                                                  message:
+                                                    "please give comments",
+                                                },
+                                              ]}
+                                              hasFeedback
+                                              required
+                                            >
+                                              <div
+                                                className="manager-comment-input"
+                                                key={d.t_id}
+                                              >
+                                                <TextArea
+                                                  onChange={(e) => {
+                                                    initialData.questions[
+                                                      index
+                                                    ].manager_comment =
+                                                      e.target.value;
+                                                    userData.questions[index][
+                                                      "manager_comment"
+                                                    ] = e.target.value;
+                                                    setUserData(userData);
+                                                  }}
+                                                  rows={4}
+                                                  style={{ width: "400px" }}
+                                                />
+                                              </div>
+                                            </Form.Item>
+                                          </Col>
+                                        </Row>
                                       </>
                                     );
                                   }
@@ -1566,7 +1537,11 @@ const handleAdmin =() =>{
                               marginTop: "-25px",
                               fontSize: "24px",
                             }}
-                          >{parseFloat(avgTotal?.employee_self_rating).toFixed(2)} </Typography>
+                          >
+                            {parseFloat(avgValue?.employee_self_rating).toFixed(
+                              2
+                            )}{" "}
+                          </Typography>
                         </Card>
                       </Form.Item>
                     </Col>
@@ -1581,16 +1556,26 @@ const handleAdmin =() =>{
                         name="selfAspiration"
                       >
                         <div key={empData?.t_id}>
-                          <Card style={{marginTop:'40px',marginLeft:'-125px',width:'400px',height:'100px'}}>
-                              <Typography
-                                style={{  marginLeft: "-300px",marginTop:'-20px',fontSize:'16px' }}
-                                className="self-aspiration-input"
-                                rows={4} 
-                               >
-                                {avgTotal?.self_aspirations}
-                              </Typography>
+                          <Card
+                            style={{
+                              marginTop: "40px",
+                              marginLeft: "-125px",
+                              width: "400px",
+                              height: "100px",
+                            }}
+                          >
+                            <Typography
+                              style={{
+                                marginLeft: "-250px",
+                                marginTop: "-40px",
+                                fontSize: "16px",
+                              }}
+                              className="self-aspiration-input"
+                              rows={4}
+                            >
+                              {avgValue?.self_aspirations}
+                            </Typography>
                           </Card>
-                          
                         </div>
                       </Form.Item>
                     </Col>
@@ -1642,16 +1627,14 @@ const handleAdmin =() =>{
                           <TextArea
                             style={{
                               marginTop: "40px",
-                              marginLeft: "-350px",
-                              width: "450px",
-                              height:'100px'
+                              width:'400px',
+                              maxWidth:'130%' ,
+                              height: "110px",
+                              marginLeft:'-260px'
                             }}
                             onChange={(e) => {
-                             
-                              userData.manager_feedback =
-                                e.target.value;
-                                setUserData(userData);
-
+                              userData.manager_feedback = e.target.value;
+                              setUserData(userData);
                             }}
                             rows={4}
                           />

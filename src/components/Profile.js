@@ -26,12 +26,14 @@ const Profile = () => {
             label:<Logout />
         }
     ]
+    const role = localStorage.getItem("role_id");
+    
     return(
         <div>
             <Dropdown menu={{items}}>
                 {
-                    mailId === "admin@gmail.com" ? 
-                    <Space className='header-profile' style={{color:'grey'}} >{adminUserName}<UserOutlined /></Space> :
+                    role === "1" ? 
+                    <Space className='header-profile' style={{color:'grey'}} >{username}<UserOutlined /></Space> :
                     <Space className='header-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
                 }
             </Dropdown>
