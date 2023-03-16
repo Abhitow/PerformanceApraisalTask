@@ -84,14 +84,6 @@ const MngEmployeeDetails = (props) => {
   const [text, setText] = useState();
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
-
-  const [input , setInput] = useState();
-
-  const [] = useState();
-  /*<----Search Details starts here */
-
-  /*<------Search deatils function starts here  */
-
   const selectMail = localStorage.getItem("selectMail");
 
   /*<------Search deatils function Ends here  */
@@ -199,12 +191,10 @@ const MngEmployeeDetails = (props) => {
           const element = comments[j];
           // setComment(element);
           a.push(element)
-          
         }
       }
     //  console.log(a,"///////");
     setComment(a);
-
     };
     loadUsers();
   }, []);
@@ -275,19 +265,6 @@ const MngEmployeeDetails = (props) => {
       setManagerAvg(managerAverage);
     });
   }
-
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-
   // console.log(users[0].email,"hhhhhhhh");
   return (
     <div>
