@@ -418,7 +418,7 @@ function SearchDetails() {
                           fontSize: "24px",
                         }}
                       >
-                        {a}
+                        {parseFloat(avgTotal?.employee_self_rating).toFixed(2)}
                       </Typography>
                     </Card>
                   </Form.Item>

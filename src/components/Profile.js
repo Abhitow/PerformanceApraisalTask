@@ -11,8 +11,6 @@ const Profile = () => {
 
     const[displayName , setDisplayName] = useState(localStorage.getItem("displayName"));
   
-  const adminUserName = "Admin" ;
-  const mailId = localStorage.getItem("email");
       const items =[
         {
             key:'1' ,
@@ -27,7 +25,6 @@ const Profile = () => {
         }
     ]
     const role = localStorage.getItem("role_id");
-    
     return(
         <div>
             <Dropdown menu={{items}}>

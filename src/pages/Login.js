@@ -6,6 +6,7 @@ import { Card, Form, Input, Button, message, Typography } from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Home from "./Home";
+import ManagerHome from "./ManagerHome";
 
 import { auth, provider } from "../components/GoogleLogin";
 import { signInWithPopup } from "firebase/auth";
@@ -26,7 +27,6 @@ function Login({ isLoggedIn }) {
   // const [datas , setDatas] = useState([]);
 
   const [google, setGoogle] = useState("");
-  const [search , setSearch] = useState();
 
   const handleGoogle = () => {
     signInWithPopup(auth, provider).then((data) => {
@@ -46,14 +46,16 @@ function Login({ isLoggedIn }) {
       }
     });
   };
-  useEffect(() => {
-    if (localStorage.getItem("token") || localStorage.getItem("token")) {
-      navigate("/home");
-    }else{
-      navigate("/");
-    }
-  },[]);
 
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/home");
+  //   }else{
+  //     navigate("/");
+  //   }
+  // },[]);
+
+  /* Admin login Button Starts Here */
   const handleClick = () => {
     fetch("https://demo.emeetify.com:81/appraisel/users/adminLogin", {
       method: "POST",
@@ -69,32 +71,29 @@ function Login({ isLoggedIn }) {
       .then((data) => {
         console.log(data, "-------------------->");
         setResponseData(data);
+        
         if (responseData.status !== false) {
           message.open({
             type: "success",
             content: "Login Successfull",
           });
-          localStorage.setItem("token",data.data.token);
-           navigate("/home");
+           navigate("/managerhome");
         } else {
-          // navigate("/");
           message.open({
             type: "error",
             content: "Please enter email and password correctly",
           });
         }
-        // localStorage.setItem("Admintoken",data.token );
-        // Handle data
         localStorage.setItem("username", data.data.username);
         localStorage.setItem("email", data.data.email);
         localStorage.setItem("role_id" , data.data.role_id)
-
       })
       .catch((err) => {
         console.log(err.message);
       });
      
   };
+  /* Admin Login Buttn Ends Here  */
   return (
     
     <div style={{display:'flex'}}>
@@ -181,12 +180,6 @@ function Login({ isLoggedIn }) {
             style={{ height: "500px", width: "600px" }}
           />
         </div>
-        {/* <div style={{marginTop:'200px'}}>
-            <img src={undraw_Personal}  alt="skeinlogo" style={{height:'250px',width:'250px',marginLeft:'50px'}}/>
-      </div>
-      <div style={{marginTop:'20px'}}>
-            <img src={undraw_Meeting}  alt="skeinlogo" style={{height:'300px',width:'300px',marginLeft:'50px'}}/>
-      </div> */}
       </div>
     </div>
   );

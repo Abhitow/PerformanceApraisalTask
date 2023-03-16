@@ -7,11 +7,14 @@ const Logout = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
+
+  const roleid = localStorage.getItem("role_id");
+  console.log(roleid,"lllllllll");
   function handleLogout() {
-   
+
     navigate("/");
     localStorage.clear();
-    window.location.reload();
+    // window.location.reload();
 
     messageApi.open({
       type: "success",
@@ -20,12 +23,13 @@ const Logout = () => {
   }
 
   const mail = localStorage.getItem("email");
+  const role = localStorage.getItem("role_id");
 
   return (
     <>
       {contextHolder}
       {
-        mail === "admin@gmail.com" ?
+        role === "1" ?
         <Button type="default" onClick={handleLogout} style={{ marginLeft:'20px' }}>
         Logout
       </Button>:

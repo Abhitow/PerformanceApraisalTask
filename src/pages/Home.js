@@ -110,7 +110,6 @@ const Home = (props) => {
 
   /*<------Search deatils function starts here  */
 
-  console.log(role, "----->>>>>");
   const onChangeHandler = (text) => {
     let matches = [];
     if (text.length > 0) {
@@ -237,72 +236,54 @@ const Home = (props) => {
         email: localEmail,
         self_rating: 0,
         self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
       },
       {
         t_id: 2,
         email: localEmail,
         self_rating: 0,
-        self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
+        self_comment: "", 
       },
       {
         t_id: 3,
         email: localEmail,
         self_rating: 0,
         self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
       },
       {
         t_id: 4,
         email: localEmail,
         self_rating: 0,
-        self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
+        self_comment: "", 
       },
       {
         t_id: 5,
         email: localEmail,
         self_rating: 0,
         self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
       },
       {
         t_id: 6,
         email: localEmail,
         self_rating: 0,
-        self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
+        self_comment: "", 
       },
       {
         t_id: 7,
         email: localEmail,
         self_rating: 0,
         self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
       },
       {
         t_id: 8,
         email: localEmail,
         self_rating: 0,
         self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
       },
       {
         t_id: 9,
         email: localEmail,
         self_rating: 0,
         self_comment: "",
-        manager_rating: 0,
-        manager_comment: "",
       },
     ],
 
@@ -313,11 +294,11 @@ const Home = (props) => {
   const [userData, setUserData] = useState(initialData);
 
   const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!localStorage.getItem("token")) {
+  //     navigate("/");
+  //   }
+  // }, []);
 
   useEffect(() => {}, [userData]);
 
@@ -354,7 +335,6 @@ const Home = (props) => {
       )
       .then((response) => {
         setAvgValue(response.data.data);
-        console.log(response.data.data,"nnnnnnnnn");
       })
       .catch((e) => console.log(e, "error Message"));   
   }, [text]);
@@ -390,42 +370,8 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
         console.log("e", e);
       });
   };
-  const handleAdmin = () => {
-    axios
-      .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" + text,
-        userData
-      )
-      .then((response) => {
-        console.log(response.data);
-        setCommentData(response.data);
-      })
-      .catch((e) => {
-        console.log("e", e);
-      });
-  };
 
-  // if(payload.username !== undefined && commentData.data.self_rating !== 0 && commentData === true){
-  //     success();
-  // }else{
-  //   messageApi.open({
-  //     type: "error",
-  //     content: "Please fill all the details",
-  //   });
-  // }
 
-  // if(commentData.data.self_rating === 0 && commentData.status === true){
-  //   messageApi.open({
-  //     type: "error",
-  //     content: "please give ratings and comments",
-  //   });
-  // }else{
-  //   messageApi.open({
-  //     type: "success",
-  //     content: "Employee comments submitted successfully",
-  //   });
-
-  // }
 
   const onFinishFailed = (errorInfo) => {};
 
@@ -452,19 +398,7 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
       setAvg(Average);
     });
   }
-  function calManagerAverage() {
-    var total = 0;
-    var count = 0;
-    userData.questions.map((i) => {
-      if (i.manager_rating !== undefined) {
-        total = total + parseInt(i.manager_rating);
-        count++;
-      }
-      let getManagerAvg = total / count;
-      let managerAverage = getManagerAvg.toFixed(2);
-      setManagerAvg(managerAverage);
-    });
-  }
+
   useEffect(() => {}, [errorData]);
 
   useEffect(() => {}, [indexValue]);
@@ -481,7 +415,7 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
   return (
     <>
-      {role !== "1" ? (
+      
         <Space
           direction="vertical"
           style={{
@@ -502,26 +436,7 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
                     />
                   </Col>
                   <Col span={3}>
-                    {role === "1" ? (
-                      <>
-                        <div style={{ marginLeft: "30px" }}>
-                          <Button type="primary" onClick={showModal} style={{}}>
-                            Employee Details
-                          </Button>
-                        </div>
-                        <Modal
-                          title="Employee Details"
-                          open={isModalOpen}
-                          onOk={handleOk}
-                          onCancel={handleCancel}
-                        >
-                          <SearchDetails />
-                          {/* <Search autoComplete style={{ width: '200px'}} placeholder="Employee Name" onSearch={onSearch} enterButton />  */}
-                        </Modal>
-                      </>
-                    ) : (
-                      console.log("")
-                    )}
+                   
                   </Col>
 
                   <Col span={14}>
@@ -986,8 +901,6 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
                               }}
                               className="self-aspiration-input"
                               onChange={(e) => {
-                                // console.log(e.target.value);
-                                // setSelfAspiration(e.target.value);
                                 userData.self_aspirations = e.target.value;
                                 setUserData(userData);
                               }}
@@ -1051,651 +964,7 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
             )}
           </Layout>
         </Space>
-      ) : (
-        <Space
-          direction="vertical"
-          style={{
-            width: "100%",
-          }}
-          size={[0, 48]}
-        >
-          {contextHolder}
-          <Layout style={layoutStyle}>
-            <Header style={headerStyle}>
-              <div>
-                <Row>
-                  <Col span={3}>
-                    <img
-                      src={download}
-                      className="skein-logo"
-                      alt="skeinlogo"
-                    />
-                  </Col>
-                  <Col span={3}>
-                    <div style={{ marginLeft: "30px" }}>
-                      <Button type="primary" onClick={showModal}>
-                        Employee Details
-                      </Button>
-                    </div>
-                    <Modal
-                      title="Employee Details"
-                      open={isModalOpen}
-                      onOk={handleOk}
-                      onCancel={handleCancel}
-                    >
-                      <SearchDetails />
-                      {/* <Search autoComplete style={{ width: '200px'}} placeholder="Employee Name" onSearch={onSearch} enterButton />  */}
-                    </Modal>
-                  </Col>
-
-                  <Col span={14}>
-                    <h1
-                      style={{
-                        textAlign: "center",
-                        marginTop: "0px",
-                        marginLeft: "-30px",
-                      }}
-                    >
-                      Performance Appraisal Form
-                    </h1>
-                  </Col>
-
-                  <Col span={4}>
-                    <Profile />
-                  </Col>
-                </Row>
-              </div>
-            </Header>
-            <Content style={contentStyle} className="homeContent">
-              <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
-                <Form
-                  form={form}
-                  onFinishFailed={onFinishFailed}
-                  onFinish={onFinish}
-                  scrollToFirstError={true}
-                  autoComplete="off"
-                >
-                  <div>
-                    <Card className="form-card" title="Employee Details ">
-                      {contextHolder}
-                      <Search
-                        type="text"
-                        className="performance-input"
-                        placeholder="Employee Email"
-                        onChange={(e) => onChangeHandler(e.target.value)}
-                        onSearch={onSearch}
-                        value={text}
-                        style={{
-                          float: "left",
-                          marginBottom: "20px",
-                          marginLeft: "5px",
-                          marginTop: "-65px",
-                        }}
-                      />
-                      {suggestions &&
-                        suggestions.map((suggestion, i) => (
-                          <div
-                            style={{
-                              display: "flex",
-                              padding: "5px",
-                              cursor: "pointer",
-                            }}
-                            key={i}
-                            className="suggestion"
-                            onClick={() => onSuggestHandler(suggestion.email)}
-                          >
-                            {suggestion.email}
-                          </div>
-                        ))}
-                      {searchDetails?.length === 1 ? (
-                        <div style={{ marginTop: "10px", marginLeft: "100px" }}>
-                          {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
-                          <Row className="performance-form-row-one">
-                            <Col span={12}>
-                              <Form.Item
-                                label="Name of Employee"
-                                name={"name"}
-                                className="adminLabel1"
-                              >
-                                <Input
-                                  className="admin-performance-input"
-                                  defaultValue={searchDetails[0].username}
-                                  readOnly
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                              <Form.Item
-                                className="admin-label2"
-                                label="Manager Name"
-                                name={"manager"}
-                              >
-                                <Input
-                                  className="admin-performance-input-manager"
-                                  style={{
-                                    width: 250,
-                                    // marginLeft: "20px",
-                                  }}
-                                  defaultValue={searchDetails[0].manager_name}
-                                  readOnly
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                          <Row className="performance-form-row-two">
-                            <Col span={12}>
-                              <Form.Item
-                                name={"roleId"}
-                                className="admin-label5"
-                                label="Role Id"
-                              >
-                                <Input
-                                  className="admin-performance-input-roleId"
-                                  style={{
-                                    width: 250,
-                                    marginLeft: "10px",
-                                  }}
-                                  defaultValue={searchDetails[0].role_id}
-                                  readOnly
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                              <Form.Item
-                                className="admin-label3"
-                                label="Designation"
-                                name={"designation"}
-                              >
-                                <Input
-                                  className="admin-performance-input-designation"
-                                  style={{
-                                    width: 250,
-                                    marginLeft: 65,
-                                  }}
-                                  defaultValue={searchDetails[0].designation}
-                                  readOnly
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-
-                          <Row className="performance-form-row-two">
-                            <Col span={12}>
-                              <Form.Item
-                                className="admin-label4"
-                                label="Department"
-                                name={"department"}
-                              >
-                                <Input
-                                  className="admin-performance-input-department"
-                                  defaultValue={searchDetails[0].department}
-                                  readOnly
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                              <Form.Item
-                                className="admin-joiningdate-label"
-                                label="Joining Date"
-                                name={"date"}
-                              >
-                                <Input
-                                  className="admin-performance-joiningdate"
-                                  defaultValue={searchDetails[0].joining_date}
-                                  readOnly
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                          <Row className="performance-form-row-three">
-                            <Col span={12}>
-                              <Form.Item
-                                label="Review Period"
-                                className="admin-review-period"
-                              >
-                                <Input
-                                  defaultValue={"2022-23"}
-                                  readOnly
-                                  className="admin-performance-date"
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                        </div>
-                      ) : (
-                        <div>{console.log("")}</div>
-                      )}
-                    </Card>
-                  </div>
-
-                  <ScoringTable />
-                  <Divider
-                    style={{
-                      marginTop: "60px",
-                      backgroundColor: "green",
-                      height: "5px",
-                    }}
-                  />
-
-                  {/* Ratings and comment section Starts here */}
-
-                  <Typography
-                    style={{
-                      marginTop: "80px",
-                      fontSize: "24px",
-                      fontWeight: "bold",
-                      textDecorationLine: "underline",
-                    }}
-                  >
-                    KRA-Technical Aspects
-                  </Typography>
-                  <div>
-                    {detail !== undefined &&
-                      detail.map((d, index) => {
-                        return (
-                          <>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              <Row>
-                                <Col
-                                  style={{ float: "left", fontSize: "16px" }}
-                                >
-                                  <h1 key={d.t_id}>{d.kra_id} : </h1>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col
-                                  style={{
-                                    float: "left",
-                                    fontSize: "14px",
-                                    marginTop: "6px",
-                                    marginLeft: "4px",
-                                    fontWeight: "none",
-                                  }}
-                                >
-                                  <h1 key={d.t_id}> {d.kra}</h1>
-                                </Col>
-                              </Row>
-                            </div>
-                            <div>
-                              <Card
-                                style={{
-                                  height: "75px",
-                                  borderColor: "blue",
-                                  textAlign: "left",
-                                  marginTop: "0px",
-                                  marginLeft: "10px",
-                                  marginRight: "20px",
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    fontSize: "17px",
-                                    marginTop: "-10px",
-                                  }}
-                                  key={d.t_id}
-                                >
-                                  {d.measures}
-                                </p>
-                              </Card>
-                            </div>
-                            <div>
-                              {empData !== undefined &&
-                                empData.map((item, index) => {
-                                  if (d.t_id === item.t_id) {
-                                    return (
-                                      <>
-                                        <Row style={{ marginTop: "20px" }}>
-                                          <Col span={12}>
-                                            <Form.Item
-                                              style={{ marginLeft: "120px" }}
-                                              name="selfRating"
-                                              label={
-                                                <>
-                                                  <label className="self-rating">
-                                                    Self Rating
-                                                  </label>
-                                                </>
-                                              }
-                                            >
-                                              <div>
-                                                <Card
-                                                  className="fetchedRating"
-                                                  key={item.t_id}
-                                                >
-                                                  <Typography
-                                                    style={{
-                                                      fontSize: "20px",
-                                                      marginTop: "-25px",
-                                                      marginLeft: "-5px",
-                                                      fontWeight: "light",
-                                                    }}
-                                                  >
-                                                    {item.self_rating}
-                                                  </Typography>
-                                                </Card>
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                          <Col span={12}>
-                                            <Form.Item
-                                              style={{ marginLeft: "20px" }}
-                                              label={
-                                                <label className="admin-self-comment">
-                                                  Justify Your Comment
-                                                </label>
-                                              }
-                                              name="selfComment"
-                                            >
-                                              <div>
-                                                <Card
-                                                  className="admin-fetchedCard"
-                                                  key={item.t_id}
-                                                >
-                                                  <Typography
-                                                    style={{
-                                                      marginTop: "-15px",
-                                                      marginLeft: "-5px",
-                                                      fontSize: "16px",
-                                                    }}
-                                                  >
-                                                    {item.self_comment}
-                                                  </Typography>
-                                                </Card>
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                        </Row>
-                                        <Row id="manager_id">
-                                          <Col span={12}>
-                                            <Form.Item
-                                              style={{ marginLeft: "110px" }}
-                                              label={
-                                                <label className="manager-rating">
-                                                  Manager Rating
-                                                </label>
-                                              }
-                                              name="managerRating"
-                                            >
-                                              <div className="manager-rating-input">
-                                                <Select
-                                                  className="performance-input"
-                                                  defaultValue={RankingData[0]}
-                                                  style={{
-                                                    width: 150,
-                                                    marginLeft: "20px",
-                                                  }}
-                                                  value={rank}
-                                                  onChange={(e) => {
-                                                    initialData.questions[
-                                                      index
-                                                    ].manager_rating = e;
-                                                    userData.questions[index][
-                                                      "manager_rating"
-                                                    ] = e;
-                                                    setUserData(userData);
-                                                    calManagerAverage();
-                                                  }}
-                                                  options={RankingData.map(
-                                                    (selectData) => ({
-                                                      label: selectData,
-                                                      value: selectData,
-                                                    })
-                                                  )}
-                                                />
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                          <Col span={12}>
-                                            <Form.Item
-                                              label={
-                                                <label className="manager-comment">
-                                                  Manager Comment
-                                                </label>
-                                              }
-                                              name="managerComment"
-                                              rules={[
-                                                {
-                                                  required: true,
-                                                  message:
-                                                    "please give comments",
-                                                },
-                                              ]}
-                                              hasFeedback
-                                              required
-                                            >
-                                              <div
-                                                className="manager-comment-input"
-                                                key={d.t_id}
-                                              >
-                                                <TextArea
-                                                  onChange={(e) => {
-                                                    initialData.questions[
-                                                      index
-                                                    ].manager_comment =
-                                                      e.target.value;
-                                                    userData.questions[index][
-                                                      "manager_comment"
-                                                    ] = e.target.value;
-                                                    setUserData(userData);
-                                                  }}
-                                                  rows={4}
-                                                  style={{ width: "400px" }}
-                                                />
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                        </Row>
-                                      </>
-                                    );
-                                  }
-                                })}
-                            </div>
-                          </>
-                        );
-                      })}
-                  </div>
-
-                  {/* technical aspects ends here */}
-
-                  <Divider
-                    style={{
-                      marginTop: "60px",
-                      backgroundColor: "violet",
-                      height: "5px",
-                    }}
-                  />
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item
-                        readOnly
-                        label={
-                          <label
-                            style={{ fontSize: "18px", marginLeft: "100px" }}
-                          >
-                            Employee Self Rating
-                          </label>
-                        }
-                      >
-                        <Card
-                          style={{
-                            height: "40px",
-                            width: "120px",
-                            marginTop: "50px",
-                            marginLeft: "-185px",
-                          }}
-                        >
-                          <Typography
-                            style={{
-                              textAlign: "center",
-                              margin: "auto",
-                              marginTop: "-25px",
-                              fontSize: "24px",
-                            }}
-                          >
-                            {parseFloat(avgValue?.employee_self_rating).toFixed(
-                              2
-                            )}{" "}
-                          </Typography>
-                        </Card>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        style={{ marginLeft: "25px" }}
-                        label={
-                          <label className="self-aspiration">
-                            Self Aspiration
-                          </label>
-                        }
-                        name="selfAspiration"
-                      >
-                        <div key={empData?.t_id}>
-                          <Card
-                            style={{
-                              marginTop: "40px",
-                              marginLeft: "-125px",
-                              width: "400px",
-                              height: "100px",
-                            }}
-                          >
-                            <Typography
-                              style={{
-                                marginLeft: "-250px",
-                                marginTop: "-40px",
-                                fontSize: "16px",
-                              }}
-                              className="self-aspiration-input"
-                              rows={4}
-                            >
-                              {avgValue?.self_aspirations}
-                            </Typography>
-                          </Card>
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row style={{ marginTop: "30px" }}>
-                    <Col span={12}>
-                      <Form.Item
-                        readOnly
-                        label={
-                          <label
-                            style={{ fontSize: "18px", marginLeft: "100px" }}
-                          >
-                            Manager's Consolidated Rating
-                          </label>
-                        }
-                      >
-                        <Card
-                          style={{
-                            height: "40px",
-                            width: "120px",
-                            marginTop: "50px",
-                            marginLeft: "-260px",
-                          }}
-                        >
-                          <Typography
-                            style={{
-                              textAlign: "center",
-                              margin: "auto",
-                              marginTop: "-20px",
-                              fontSize: "24px",
-                            }}
-                          >
-                            {managerAvg}
-                          </Typography>
-                        </Card>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label={
-                          <label className="teamlead-feedback">
-                            Manager's Feedback
-                          </label>
-                        }
-                        name="managerFeedback"
-                      >
-                        <div>
-                          <TextArea
-                            style={{
-                              marginTop: "40px",
-                              width:'400px',
-                              maxWidth:'130%' ,
-                              height: "110px",
-                              marginLeft:'-260px'
-                            }}
-                            onChange={(e) => {
-                              userData.manager_feedback = e.target.value;
-                              setUserData(userData);
-                            }}
-                            rows={4}
-                          />
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  {/* <------ here ends your code -----> */}
-
-                  <Divider
-                    style={{
-                      marginTop: "40px",
-                      backgroundColor: "lightBlue",
-                      height: "3px",
-                    }}
-                  />
-
-                  <Button
-                    htmlType="submit"
-                    type="primary"
-                    style={{
-                      backgroundColor: "green",
-                      height: "40px",
-                      width: "100px",
-                    }}
-                    onClick={handleAdmin}
-                  >
-                    Submit
-                  </Button>
-                </Form>
-              </Card>
-            </Content>
-            : (
-            <div>
-              <Card
-                style={{
-                  marginTop: "80px",
-                  width: "1000px",
-                  margin: "auto",
-                  height: "80vh",
-                  position: "fixed",
-                  marginLeft: "260px",
-                }}
-              >
-                <Typography
-                  style={{
-                    textAlign: "center",
-                    marginTop: "30vh",
-                    fontSize: "24px",
-                    color: "grey",
-                  }}
-                >
-                  Appraisal window currently Closed
-                </Typography>
-              </Card>
-            </div>
-            )
-          </Layout>
-        </Space>
-      )}
+       
     </>
   );
 };
