@@ -9,7 +9,7 @@ const Logout = () => {
 
 
   const roleid = localStorage.getItem("role_id");
-  console.log(roleid,"lllllllll");
+  // console.log(roleid,"lllllllll");
   function handleLogout() {
 
     navigate("/");

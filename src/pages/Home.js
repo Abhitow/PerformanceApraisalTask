@@ -8,11 +8,9 @@ import {
   Input,
   Layout,
   message,
-  Modal,
   Row,
   Select,
   Space,
-  Switch,
 } from "antd";
 import ScoringTable from "../components/ScoringTable";
 import { useEffect, useState } from "react";
@@ -20,14 +18,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
-import { ContactsOutlined } from "@ant-design/icons";
 import Profile from "../components/Profile";
 import download from "../download.png";
-import SearchDetails from "../components/SearchDetails";
-
-/*<-----Search details components */
-
-const { Search } = Input;
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -71,7 +63,6 @@ const Home = (props) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [rank, setRank] = useState();
   const [empSelfRating, setEmpSelfRating] = useState();
-  const [managerAvg, setManagerAvg] = useState();
   /* performance apraisal form  */
   const [name, setName] = useState();
   const [manager, setManager] = useState();
@@ -97,79 +88,51 @@ const Home = (props) => {
   const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
 
+
   /*<----Search Details starts here */
   const [users, setUsers] = useState([]);
   const [text, setText] = useState();
-  const [suggestions, setSuggestions] = useState([]);
-  const [search, setSearch] = useState();
-  const [searchDetails, setSearchDetails] = useState();
-  const [comment, setComment] = useState();
+  const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
+  const selectMail = localStorage.getItem("selectMail");
 
-  /*<----Search Details starts here */
-
-  /*<------Search deatils function starts here  */
-
-  const onChangeHandler = (text) => {
-    let matches = [];
-    if (text.length > 0) {
-      matches = users.filter((users) => {
-        const regex = new RegExp(`${text}`, "gi");
-        return users.email.match(regex);
-      });
-    }
-    setSuggestions(matches);
-    setText(text);
-    setSearch(matches);
-  };
-
-  const onSuggestHandler = (text) => {
-    setText(text);
-    setSuggestions([]);
-  };
-  const onSearch = () => {
-    if (search.length === 1 && text != null) {
-      console.log(search[0].email, "searched -------->");
-
-      if (text === search[0].email) {
-        console.log(search[0].comments);
-        setEmpData(search[0].comments);
-      } else {
-        console.log("not matched");
-      }
-
-      setSearchDetails(search);
-    } else {
-      console.log("please enter name");
-    }
-  };
-  // console.log(searchDetails,"////////");
-  // const onlyDate = searchDetails[0]?.joining_date;
-  // console.log(onlyDate ,",,,,,,,");
-
-  //  const selfAvg = parseInt(empData.self_aspirations).toFixed(2);
-  // console.log(selfAvg,);
-
+  /*<------Search deatils function Ends here  */
   useEffect(() => {
     const loadUsers = async () => {
       const response = await axios.get(
-        "https://demo.emeetify.com:81/appraisel/users/userNames"
+        "https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail
       );
-      setUsers(response.data.data);
+      let a =[]
+      setUsers(response.data.data)
+      // console.log(users[0]?.username);
+      // console.log(users);
       let userDetails = response.data.data;
-
-      for (let i = 0; i < userDetails.length; i++) {
+      for (let i = 0; i < userDetails?.length; i++) {
         let comments = userDetails[i].comments;
         for (let j = 0; j < comments.length; j++) {
           const element = comments[j];
-          // console.log(element,"------>");
-          setComment(element);
+          // setComment(element);
+          a.push(element)
         }
       }
+    //  console.log(a,"///////");
+    setComment(a);
     };
     loadUsers();
   }, []);
-  /*<------Search deatils function Ends here  */
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://demo.emeetify.com:81/appraisel/users/Consolidate?email=" +selectMail
+      )
+      .then((response) => {
+        setAvgValue(response.data.data);
+      })
+      .catch((e) => console.log(e, "error Message"));
+  }, [selectMail]);
+
+  /*<------Employee deatils fetching Ends here  */
 
   const managerData = [
     "Select Manager",
@@ -338,7 +301,7 @@ const Home = (props) => {
       })
       .catch((e) => console.log(e, "error Message"));   
   }, [text]);
-console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
+// console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
   const onFinish = (formData) => {
     if (responseData.status === true && commentData.status === true) {
@@ -358,7 +321,7 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
     empDetails();
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" +
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
           localEmail,
         userData
       )
@@ -938,29 +901,508 @@ console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
               </Content>
             ) : (
               /*<-----Admin Code Starts Here ---> */
-              <div>
-                <Card
-                  style={{
-                    marginTop: "80px",
-                    width: "1000px",
-                    margin: "auto",
-                    height: "80vh",
-                    position: "fixed",
-                    marginLeft: "260px",
-                  }}
+              <Content style={contentStyle} className="homeContent">
+              <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
+                <Form
+                  form={form}
+                  onFinishFailed={onFinishFailed}
+                  onFinish={onFinish}
+                  scrollToFirstError={true}
+                  autoComplete="off"
                 >
+                  <div>
+                    <Card className="form-card" title="Employee Details ">
+                      {contextHolder}
+  
+                        <div style={{ marginTop: "10px", marginLeft: "100px" }}>
+                          {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
+                          <Row className="performance-form-row-one">
+                            <Col span={12}>
+                              <Form.Item
+                                label="Name of Employee"
+                                name={"name"}
+                                className="adminLabel1"
+                              >
+                                <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
+                                  <Typography style={{float:'left',marginTop:'-18px'}}>
+                                    {users[0]?.username}
+                                  </Typography>
+                                </Card>
+                               
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item
+                                className="admin-label2"
+                                label="Manager Name"
+                                name={"manager"}
+                              >
+                               <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
+                                  <Typography style={{float:'left',marginTop:'-18px'}}>
+                                    {users[0]?.manager_name}
+                                  </Typography>
+                                </Card>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row className="performance-form-row-two">
+                            <Col span={12}>
+                              <Form.Item
+                                name={"roleId"}
+                                className="admin-label5"
+                                label="Role Id"
+                              >
+                                <Card style={{height:'35px',width:'250px',marginLeft:'95px'}}>
+                                  <Typography style={{float:'left',marginTop:'-18px'}}>
+                                    {users[0]?.role_id}
+                                  </Typography>
+                                </Card>
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item
+                                className="admin-label3"
+                                label="Designation"
+                                name={"designation"}
+                              >
+                               <Card style={{height:'35px',width:'250px',marginLeft:'35px'}}>
+                                  <Typography style={{float:'left',marginTop:'-18px'}}>
+                                    {users[0]?.designation}
+                                  </Typography>
+                                </Card>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+  
+                          <Row className="performance-form-row-two">
+                            <Col span={12}>
+                              <Form.Item
+                                className="admin-label4"
+                                label="Department"
+                                name={"department"}
+                              >
+                               <Card style={{height:'35px',width:'250px',marginLeft:'65px'}}>
+                                  <Typography style={{float:'left',marginTop:'-18px'}}>
+                                    {users[0]?.department}
+                                  </Typography>
+                                </Card>
+                              </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item
+                                className="admin-joiningdate-label"
+                                label="Joining Date"
+                                name={"date"}
+                              >
+                               <Card style={{height:'35px',width:'250px',marginLeft:'30px'}}>
+                                  <Typography style={{float:'left',marginTop:'-18px'}}>
+                                    {users[0]?.joining_date}
+                                  </Typography>
+                                </Card>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row className="performance-form-row-three">
+                            <Col span={12}>
+                              <Form.Item
+                                label="Review Period"
+                                className="admin-review-period"
+                              >
+                                    <Input 
+                                      defaultValue={"2022-23"}
+                                      readOnly
+                                      className="admin-performance-date"
+                                    /> 
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </div>
+                    </Card>
+                  </div>
+  
+                  <ScoringTable />
+                  <Divider
+                    style={{
+                      marginTop: "60px",
+                      backgroundColor: "green",
+                      height: "5px",
+                    }}
+                  />
+  
+                  {/* Ratings and comment section Starts here */}
+  
                   <Typography
                     style={{
-                      textAlign: "center",
-                      marginTop: "30vh",
+                      marginTop: "80px",
                       fontSize: "24px",
-                      color: "grey",
+                      fontWeight: "bold",
+                      textDecorationLine: "underline",
                     }}
                   >
-                    Appraisal window currently Closed
+                    KRA-Technical Aspects
                   </Typography>
-                </Card>
-              </div>
+                  <div>
+                    {detail !== undefined &&
+                      detail.map((d, index) => {
+                        return (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                marginLeft: "10px",
+                              }}
+                            >
+                              <Row>
+                                <Col style={{ float: "left", fontSize: "16px" }}>
+                                  <h1 key={d.t_id}>{d.kra_id} : </h1>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col
+                                  style={{
+                                    float: "left",
+                                    fontSize: "14px",
+                                    marginTop: "6px",
+                                    marginLeft: "4px",
+                                    fontWeight: "none",
+                                  }}
+                                >
+                                  <h1 key={d.t_id}> {d.kra}</h1>
+                                </Col>
+                              </Row>
+                            </div>
+                            <div>
+                              <Card
+                                style={{
+                                  height: "75px",
+                                  borderColor: "blue",
+                                  textAlign: "left",
+                                  marginTop: "0px",
+                                  marginLeft: "10px",
+                                  marginRight: "20px",
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    fontSize: "17px",
+                                    marginTop: "-10px",
+                                  }}
+                                  key={d.t_id}
+                                >
+                                  {d.measures}
+                                </p>
+                              </Card>
+                            </div>
+                            <div>
+                              {comment !== undefined &&
+                                comment.map((b, index) => {
+                                  if( d.t_id === b.t_id) {
+                                    return (
+                                      <>
+                                        <Row style={{ marginTop: "20px" }}>
+                                          <Col span={12}>
+                                            <Form.Item
+                                              style={{ marginLeft: "120px" }}
+                                              name="selfRating"
+                                              label={
+                                                <>
+                                                  <label className="self-rating">
+                                                    Self Rating
+                                                  </label>
+                                                </>
+                                              }
+                                            >
+                                              <div>
+                                                <Card
+                                                  className="fetchedRating"
+                                                  key={b.t_id}
+                                                >
+                                                  <Typography
+                                                    style={{
+                                                      fontSize: "20px",
+                                                      marginTop: "-25px",
+                                                      marginLeft: "-5px",
+                                                      fontWeight: "light",
+                                                    }}
+                                                  >
+                                                    {b?.self_rating}
+                                                  </Typography>
+                                                </Card>
+                                              </div>
+                                            </Form.Item>
+                                          </Col>
+                                          <Col span={12}>
+                                            <Form.Item
+                                              style={{ marginLeft: "20px" }}
+                                              label={
+                                                <label className="admin-self-comment">
+                                                  Justify Your Comment
+                                                </label>
+                                              }
+                                              name="selfComment"
+                                            >
+                                              <div>
+                                                <Card
+                                                  className="admin-fetchedCard"
+                                                  key={b.t_id}
+                                                >
+                                                  <Typography
+                                                    style={{
+                                                      marginTop: "-15px",
+                                                     float:'left',
+                                                      fontSize: "16px",
+                                                    }}
+                                                  >
+                                                    {b?.self_comment}
+                                                  </Typography>
+                                                </Card>
+                                              </div>
+                                            </Form.Item>
+                                          </Col>
+                                        </Row>
+                                        <Row id="manager_id">
+                                          <Col span={12}>
+                                            <Form.Item
+                                              style={{ marginLeft: "110px" }}
+                                              label={
+                                                <label className="manager-rating">
+                                                  Manager Rating
+                                                </label>
+                                              }
+                                              name="managerRating"
+                                            >
+                                              <div className="manager-rating-input">
+                                                <Select
+                                                  className="performance-input"
+                                                  defaultValue={RankingData[0]}
+                                                  style={{
+                                                    width: 150,
+                                                    marginLeft: "20px",
+                                                  }}
+                                                  value={rank}
+                                                  onChange={(e) => {
+                                                    initialData.questions[
+                                                      index
+                                                    ].manager_rating = e;
+                                                    userData.questions[index][
+                                                      "manager_rating"
+                                                    ] = e;
+                                                    setUserData(userData);
+                                                    
+                                                  }}
+                                                  options={RankingData.map(
+                                                    (selectData) => ({
+                                                      label: selectData,
+                                                      value: selectData,
+                                                    })
+                                                  )}
+                                                />
+                                              </div>
+                                            </Form.Item>
+                                          </Col>
+                                          <Col span={12}>
+                                            <Form.Item
+                                              label={
+                                                <label className="manager-comment">
+                                                  Manager Comment
+                                                </label>
+                                              }
+                                              name="managerComment"
+                                              rules={[
+                                                {
+                                                  required: true,
+                                                  message: "please give comments",
+                                                },
+                                              ]}
+                                              hasFeedback
+                                              required
+                                            >
+                                              <div
+                                                className="manager-comment-input"
+                                                key={d.t_id}
+                                              >
+                                                <TextArea
+                                                  onChange={(e) => {
+                                                    initialData.questions[
+                                                      index
+                                                    ].manager_comment =
+                                                      e.target.value;
+                                                    userData.questions[index][
+                                                      "manager_comment"
+                                                    ] = e.target.value;
+                                                    setUserData(userData);
+                                                  }}
+                                                  rows={4}
+                                                  style={{ width: "400px" }}
+                                                />
+                                              </div>
+                                            </Form.Item>
+                                          </Col>
+                                        </Row>
+                                      </>
+                                    )}
+                                  
+                                })}
+                            </div>
+                          </>
+                        );
+                      })}
+                  </div>
+  
+                  {/* technical aspects ends here */}
+  
+                  <Divider
+                    style={{
+                      marginTop: "60px",
+                      backgroundColor: "violet",
+                      height: "5px",
+                    }}
+                  />
+                  <Row>
+                    <Col span={12}>
+                      <Form.Item
+                        readOnly
+                        label={
+                          <label
+                            style={{ fontSize: "18px", marginLeft: "100px" }}
+                          >
+                            Employee Self Rating
+                          </label>
+                        }
+                      >
+                        <Card
+                          style={{
+                            height: "40px",
+                            width: "120px",
+                            marginTop: "50px",
+                            marginLeft: "-185px",
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              textAlign: "center",
+                              margin: "auto",
+                              marginTop: "-25px",
+                              fontSize: "24px",
+                            }}
+                          >
+                            {parseFloat(avgValue?.employee_self_rating).toFixed(2)}
+                          </Typography>
+                        </Card>
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        style={{ marginLeft: "25px" }}
+                        label={
+                          <label className="self-aspiration">
+                            Self Aspiration
+                          </label>
+                        }
+                        name="selfAspiration"
+                      >
+                        <div key={empData?.t_id}>
+                          <Card
+                            style={{
+                              marginTop: "40px",
+                              marginLeft: "-125px",
+                              width: "400px",
+                              height: "100px",
+                            }}
+                          >
+                            <Typography
+                              style={{
+                                float:'left',
+                                
+                                marginTop: "-20px",
+                                fontSize: "16px",
+                              }}
+                              className="self-aspiration-input"
+                              rows={4}
+                            >
+                              {avgValue?.self_aspirations}
+                            </Typography>
+                          </Card>
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+  
+                  <Row style={{ marginTop: "30px" }}>
+                    <Col span={12}>
+                      <Form.Item
+                        readOnly
+                        label={
+                          <label
+                            style={{ fontSize: "18px", marginLeft: "100px" }}
+                          >
+                            Manager's Consolidated Rating
+                          </label>
+                        }
+                      >
+                        <Card
+                          style={{
+                            height: "40px",
+                            width: "120px",
+                            marginTop: "50px",
+                            marginLeft: "-260px",
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              textAlign: "center",
+                              margin: "auto",
+                              marginTop: "-20px",
+                              fontSize: "24px",
+                            }}
+                          >
+                           
+                          </Typography>
+                        </Card>
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        label={
+                          <label className="teamlead-feedback">
+                            Manager's Feedback
+                          </label>
+                        }
+                        name="managerFeedback"
+                      >
+                        <div>
+                          <TextArea
+                            style={{
+                              marginTop: "40px",
+                              width: "400px",
+                              maxWidth: "130%",
+                              height: "110px",
+                              marginLeft: "-260px",
+                            }}
+                            onChange={(e) => {
+                              userData.manager_feedback = e.target.value;
+                              setUserData(userData);
+                            }}
+                            rows={4}
+                          />
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+  
+                  {/* <------ here ends your code -----> */}
+  
+                  <Divider
+                    style={{
+                      marginTop: "40px",
+                      backgroundColor: "lightBlue",
+                      height: "3px",
+                    }}
+                  />
+                </Form>
+              </Card>
+            </Content>
             )}
           </Layout>
         </Space>
