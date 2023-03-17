@@ -98,8 +98,21 @@ const Home = (props) => {
 
   /*<------Search deatils function Ends here  */
 
+  const [validationErrors, setValidationErrors] = useState([]);
 
 
+  const handleInputChange =(event , index) =>{
+    const value =event.target.value ;
+    const newValidationErrors = [...validationErrors];
+    newValidationErrors[index] = validateInput(value);
+    setValidationErrors(newValidationErrors);
+  }
+  const validateInput=(value) =>{
+    if(value === ""){
+        return "this field is required"
+    }
+    return ""
+  }
   useEffect(() => {
     const loadUsers = async () => {
       const response = await axios.get(
@@ -257,8 +270,10 @@ const Home = (props) => {
     manager_feedback: "",
   };
 
+ 
   const [userData, setUserData] = useState(initialData);
 
+  
   const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
 
   const role_id = localStorage.getItem("role_id");
@@ -280,6 +295,7 @@ const Home = (props) => {
         console.log("e", e);
       });
   }, [text]);
+  
 
   const empDetails = () => {
     axios
@@ -309,24 +325,18 @@ const Home = (props) => {
 // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
   const onFinish = (formData) => {
-    // if (responseData.status === true && commentData.status === true) {
-    //   messageApi.open({
-    //     type: "success",
-    //     content: "Thank you",
-    //   });
-    // } else {
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "please enter all the details",
-    //   });
-    // }
+    if (responseData.status === true && commentData.status === true) {
+      messageApi.open({
+        type: "success",
+        content: "Thank you",
+      });
+    } else {
+      messageApi.open({
+        type: "error",
+        content: "please enter all the details",
+      });
+    }
   };
-  let type = '';
-  if(role_id !== "1"){
-    type = "employee";
-  }else{
-    type = "manager";
-  }
 
   const handleSubmit = () => {
     empDetails();
@@ -346,13 +356,7 @@ const Home = (props) => {
 
      axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?",{
-          params : {
-            email:localEmail,
-            type:'employee',
-            userData
-          }
-        }
+        `http://192.168.0.129:5886/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData
       )
       .then((response) => {
         console.log(response.data);
@@ -361,11 +365,11 @@ const Home = (props) => {
       .catch((e) => {
         console.log("e", e);
       });
-      if(formData.data.status === true){
-        console.log("working guddddd");
-      }else{
-        console.log("not wokringggggggg");
-      }
+      // if(formData.data.status === true){
+      //   console.log("working guddddd");
+      // }else{
+      //   console.log("not wokringggggggg");
+      // }
   };
 
 
@@ -789,13 +793,13 @@ const Home = (props) => {
                                         </label>
                                       }
                                       name="selfComment"
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message: "please give comments",
-                                        },
-                                      ]}
-                                      hasFeedback
+                                      // rules={[
+                                      //   {
+                                      //     required: true,
+                                      //     message: "please give comments",
+                                      //   },
+                                      // ]}
+                                      // hasFeedback
                                     >
                                       <div
                                         className="self-comment-input"
@@ -811,6 +815,7 @@ const Home = (props) => {
                                             ] = e.target.value;
                                             
                                             setUserData(userData);
+                                           
                                           }}
                                           rows={4}
                                           style={{
@@ -818,6 +823,7 @@ const Home = (props) => {
                                             marginTop: "",
                                           }}
                                         />
+                                        {validationErrors[0] && <span>{validationErrors[0]}</span>}
                                       </div>
                                     </Form.Item>
                                   </Col>

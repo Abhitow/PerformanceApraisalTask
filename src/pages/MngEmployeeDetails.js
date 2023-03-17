@@ -253,15 +253,9 @@ const MngEmployeeDetails = (props) => {
  
   const handleAdmin = () => {
     axios
-      .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?",{
-        params : {
-          email:localEmail,
-          type:'manager',
-          userData
-        },
-      }
-      )
+    .post(
+      `http://192.168.0.129:5886/appraisel/users/AddComment?email=${selectMail}&&type=manager`,userData
+    )
       .then((response) => {
         console.log(response.data);
         setCommentData(response.data);
@@ -356,7 +350,7 @@ const MngEmployeeDetails = (props) => {
                             >
                               <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                  {users[0]?.username}
+                                {users !== undefined ? users[0]?.username : ""}
                                 </Typography>
                               </Card>
                              
@@ -370,7 +364,7 @@ const MngEmployeeDetails = (props) => {
                             >
                              <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                  {users[0]?.manager_name}
+                                {users !== undefined ?  users[0]?.manager_name : ""}
                                 </Typography>
                               </Card>
                             </Form.Item>
@@ -385,7 +379,7 @@ const MngEmployeeDetails = (props) => {
                             >
                               <Card style={{height:'35px',width:'250px',marginLeft:'95px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                  {users[0]?.role_id}
+                                {users !== undefined ? users[0]?.role_id :""}
                                 </Typography>
                               </Card>
                             </Form.Item>
@@ -398,7 +392,7 @@ const MngEmployeeDetails = (props) => {
                             >
                              <Card style={{height:'35px',width:'250px',marginLeft:'35px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                  {users[0]?.designation}
+                                {users !== undefined ?  users[0]?.designation :""}
                                 </Typography>
                               </Card>
                             </Form.Item>
@@ -414,7 +408,7 @@ const MngEmployeeDetails = (props) => {
                             >
                              <Card style={{height:'35px',width:'250px',marginLeft:'65px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                  {users[0]?.department}
+                                {users !== undefined ?  users[0]?.department : ""}
                                 </Typography>
                               </Card>
                             </Form.Item>
@@ -427,7 +421,7 @@ const MngEmployeeDetails = (props) => {
                             >
                              <Card style={{height:'35px',width:'250px',marginLeft:'30px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                  {users[0]?.joining_date}
+                                {users !== undefined ?  users[0]?.joining_date : ""}
                                 </Typography>
                               </Card>
                             </Form.Item>
