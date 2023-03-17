@@ -356,7 +356,7 @@ const Home = (props) => {
 
      axios
       .post(
-        `http://192.168.0.129:5886/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData
+        `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData
       )
       .then((response) => {
         console.log(response.data);

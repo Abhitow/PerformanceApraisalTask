@@ -228,16 +228,9 @@ const MngEmployeeDetails = (props) => {
   }, [selectMail]);
   // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
  
-  console.log(commentData?.data[0]?.self_rating,"lllllllll");
+  console.log(commentData ? commentData?.data[0]?.self_rating : "","lllllllll");
   const onFinish = (formData) => {
     if (commentData?.data[0].manager_comment === undefined
-      && commentData?.data[1].manager_comment === undefined
-      && commentData?.data[2].manager_comment === undefined
-      && commentData?.data[3].manager_comment === undefined
-      && commentData?.data[4].manager_comment === undefined
-      && commentData?.data[5].manager_comment === undefined
-      && commentData?.data[6].manager_comment === undefined
-      && commentData?.data[7].manager_comment === undefined
       && commentData?.data[8].manager_comment === undefined && commentData.manager_feedback === undefined) {
       messageApi.open({
         type: "error",
