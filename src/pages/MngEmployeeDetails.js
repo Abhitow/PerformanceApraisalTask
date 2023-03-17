@@ -20,6 +20,7 @@ import TextArea from "antd/es/input/TextArea";
 import Profile from "../components/Profile";
 import download from "../download.png";
 import SearchDetails from "../components/SearchDetails";
+import { useNavigate } from "react-router-dom";
 
 /*<-----Search details components */
 
@@ -59,6 +60,8 @@ const error = {
 };
 
 const MngEmployeeDetails = (props) => {
+  const navigate = useNavigate();
+
   const [form] = Form.useForm();
   const [detail, setDetail] = useState();
   const [messageApi, contextHolder] = message.useMessage();
@@ -84,6 +87,9 @@ const MngEmployeeDetails = (props) => {
   const [text, setText] = useState();
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
+
+  const [validationError , setValidationError] = useState();
+
   const selectMail = localStorage.getItem("selectMail");
 
   /*<------Search deatils function Ends here  */
@@ -162,7 +168,10 @@ const MngEmployeeDetails = (props) => {
   //   }
   // }, []);
 
-  useEffect(() => {}, [userData]);
+  
+
+  useEffect(() => {
+  }, [userData]);
 
   useEffect(() => {
     axios
@@ -198,6 +207,13 @@ const MngEmployeeDetails = (props) => {
     };
     loadUsers();
   }, []);
+  const role_id = localStorage.getItem("role_id");
+
+  useEffect(() => {
+    if (!localStorage.getItem("token") && role_id !== "1") {
+      navigate("/");
+    }
+  }, []);
 
 
   useEffect(() => {
@@ -211,26 +227,40 @@ const MngEmployeeDetails = (props) => {
       .catch((e) => console.log(e, "error Message"));
   }, [selectMail]);
   // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
-
+ 
+  console.log(commentData?.data[0]?.self_rating,"lllllllll");
   const onFinish = (formData) => {
-    if (responseData.status === true && commentData.status === true) {
-      messageApi.open({
-        type: "success",
-        content: "Thank you",
-      });
-    } else {
+    if (commentData?.data[0].manager_comment === undefined
+      && commentData?.data[1].manager_comment === undefined
+      && commentData?.data[2].manager_comment === undefined
+      && commentData?.data[3].manager_comment === undefined
+      && commentData?.data[4].manager_comment === undefined
+      && commentData?.data[5].manager_comment === undefined
+      && commentData?.data[6].manager_comment === undefined
+      && commentData?.data[7].manager_comment === undefined
+      && commentData?.data[8].manager_comment === undefined && commentData.manager_feedback === undefined) {
       messageApi.open({
         type: "error",
         content: "please enter all the details",
       });
+    } else {
+      messageApi.open({
+        type: "success",
+        content: "Thank You Form submitted successfully",
+      });
     }
   };
-
+ 
   const handleAdmin = () => {
     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email=" + selectMail,
-        userData
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?",{
+        params : {
+          email:localEmail,
+          type:'manager',
+          userData
+        },
+      }
       )
       .then((response) => {
         console.log(response.data);
@@ -240,6 +270,7 @@ const MngEmployeeDetails = (props) => {
         console.log("e", e);
       });
   };
+
 
   const onFinishFailed = (errorInfo) => {};
 
@@ -694,7 +725,7 @@ const MngEmployeeDetails = (props) => {
                   </Col>
                   <Col span={12}>
                     <Form.Item
-                      style={{ marginLeft: "25px" }}
+                      style={{ marginLeft: "15px" }}
                       label={
                         <label className="self-aspiration">
                           Self Aspiration
@@ -753,7 +784,7 @@ const MngEmployeeDetails = (props) => {
                           style={{
                             textAlign: "center",
                             margin: "auto",
-                            marginTop: "-20px",
+                            marginTop: "-25px",
                             fontSize: "24px",
                           }}
                         >
@@ -765,10 +796,18 @@ const MngEmployeeDetails = (props) => {
                   <Col span={12}>
                     <Form.Item
                       label={
-                        <label className="teamlead-feedback">
+                        <label className="teamlead-feedback" >
                           Manager's Feedback
                         </label>
                       }
+                      rules={[
+                        {
+                          required: true,
+                          message: "please give comments",
+                        },
+                      ]}
+                      hasFeedback
+                      required
                       name="managerFeedback"
                     >
                       <div>
@@ -778,7 +817,7 @@ const MngEmployeeDetails = (props) => {
                             width: "400px",
                             maxWidth: "130%",
                             height: "110px",
-                            marginLeft: "-260px",
+                            marginLeft: "-280px",
                           }}
                           onChange={(e) => {
                             userData.manager_feedback = e.target.value;

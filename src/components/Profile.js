@@ -31,7 +31,7 @@ const Profile = () => {
                 {
                     role === "1" ? 
                     <Space className='header-profile' style={{color:'grey'}} >{username}<UserOutlined /></Space> :
-                    <Space className='header-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
+                    <Space className='employee-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
                 }
             </Dropdown>
         </div>

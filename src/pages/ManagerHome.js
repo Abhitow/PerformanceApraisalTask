@@ -187,7 +187,6 @@ useEffect(()=>{},[empMail]);
         .catch((e) => {
           console.log("e", e);
         });
-        console.log(selectMail,"working fine");
         navigate("/mngemployeedetails");
     }
     localStorage.setItem("selectMail",selectMail);
@@ -200,16 +199,11 @@ useEffect(()=>{},[empMail]);
           console.log("e", e);
         });
     }, []);
-
-    useEffect(() => {
-       
-          
-      }, []);
-
       const handleSelect = (e) =>{
             setSelectMail(e)
       }
 
+      
     //   console.log(selectMail,"kkkkkkkk");
 
   return (

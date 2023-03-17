@@ -46,14 +46,23 @@ function Login({ isLoggedIn }) {
       }
     });
   };
+  const role_id = localStorage.getItem("role_id");
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("token")) {
-  //     navigate("/home");
-  //   }else{
-  //     navigate("/");
-  //   }
-  // },[]);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/home");
+    }else{
+      navigate("/");
+    }
+  },[]);
+
+  useEffect(() => {
+    if ( role_id === "1") {
+      navigate("/mngemployeedetails");
+    }else{
+      navigate("/");
+    }
+  },[]);
 
   /* Admin login Button Starts Here */
   const handleClick = () => {

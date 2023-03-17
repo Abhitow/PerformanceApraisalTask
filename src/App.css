@@ -135,6 +135,11 @@
   margin-left: 150px;
   color:'white'
 }
+.employee-profile{
+  font-size: 20px;
+  margin-left: 70px;
+  color:'white'
+}
 .required{
   color:'red' !important;
 }
@@ -338,7 +343,7 @@
   display: inline-block;
  }
  .teamlead-feedback{
-  margin-left: 30px;
+  margin-left: 10px;
   display: inline-block;
   font-size: 18px !important;
  }

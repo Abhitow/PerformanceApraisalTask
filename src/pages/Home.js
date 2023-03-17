@@ -97,6 +97,9 @@ const Home = (props) => {
   const selectMail = localStorage.getItem("selectMail");
 
   /*<------Search deatils function Ends here  */
+
+
+
   useEffect(() => {
     const loadUsers = async () => {
       const response = await axios.get(
@@ -104,7 +107,7 @@ const Home = (props) => {
       );
       let a =[]
       setUsers(response.data.data)
-      // console.log(users[0]?.username);
+      console.log(users !== undefined ? users[0]?.username : "");
       // console.log(users);
       let userDetails = response.data.data;
       for (let i = 0; i < userDetails?.length; i++) {
@@ -257,11 +260,13 @@ const Home = (props) => {
   const [userData, setUserData] = useState(initialData);
 
   const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
-  // useEffect(() => {
-  //   if (!localStorage.getItem("token")) {
-  //     navigate("/");
-  //   }
-  // }, []);
+
+  const role_id = localStorage.getItem("role_id");
+  useEffect(() => {
+    if (!localStorage.getItem("token") && role_id !== "1") {
+      navigate("/");
+    }
+  }, []);
 
   useEffect(() => {}, [userData]);
 
@@ -304,26 +309,50 @@ const Home = (props) => {
 // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
   const onFinish = (formData) => {
-    if (responseData.status === true && commentData.status === true) {
-      messageApi.open({
-        type: "success",
-        content: "Thank you",
-      });
-    } else {
-      messageApi.open({
-        type: "error",
-        content: "please enter all the details",
-      });
-    }
+    // if (responseData.status === true && commentData.status === true) {
+    //   messageApi.open({
+    //     type: "success",
+    //     content: "Thank you",
+    //   });
+    // } else {
+    //   messageApi.open({
+    //     type: "error",
+    //     content: "please enter all the details",
+    //   });
+    // }
   };
+  let type = '';
+  if(role_id !== "1"){
+    type = "employee";
+  }else{
+    type = "manager";
+  }
 
   const handleSubmit = () => {
     empDetails();
-    axios
+    // axios
+    //   .post(
+    //     "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
+    //       localEmail,
+    //     userData
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     setCommentData(response.data);
+    //   })
+    //   .catch((e) => {
+    //     console.log("e", e);
+    //   });
+
+     axios
       .post(
-        "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
-          localEmail,
-        userData
+        "https://demo.emeetify.com:81/appraisel/users/AddComment?",{
+          params : {
+            email:localEmail,
+            type:'employee',
+            userData
+          }
+        }
       )
       .then((response) => {
         console.log(response.data);
@@ -332,6 +361,11 @@ const Home = (props) => {
       .catch((e) => {
         console.log("e", e);
       });
+      if(formData.data.status === true){
+        console.log("working guddddd");
+      }else{
+        console.log("not wokringggggggg");
+      }
   };
 
 
@@ -775,6 +809,7 @@ const Home = (props) => {
                                             userData.questions[index][
                                               "self_comment"
                                             ] = e.target.value;
+                                            
                                             setUserData(userData);
                                           }}
                                           rows={4}
@@ -925,7 +960,7 @@ const Home = (props) => {
                               >
                                 <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users[0]?.username}
+                                    {users !== undefined ? users[0]?.username : ""}
                                   </Typography>
                                 </Card>
                                
@@ -939,7 +974,7 @@ const Home = (props) => {
                               >
                                <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users[0]?.manager_name}
+                                    {users !== undefined ?  users[0]?.manager_name : ""}
                                   </Typography>
                                 </Card>
                               </Form.Item>
@@ -954,7 +989,7 @@ const Home = (props) => {
                               >
                                 <Card style={{height:'35px',width:'250px',marginLeft:'95px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users[0]?.role_id}
+                                    {users !== undefined ? users[0]?.role_id :""}
                                   </Typography>
                                 </Card>
                               </Form.Item>
@@ -967,7 +1002,7 @@ const Home = (props) => {
                               >
                                <Card style={{height:'35px',width:'250px',marginLeft:'35px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users[0]?.designation}
+                                    {users !== undefined ?  users[0]?.designation :""}
                                   </Typography>
                                 </Card>
                               </Form.Item>
@@ -983,7 +1018,7 @@ const Home = (props) => {
                               >
                                <Card style={{height:'35px',width:'250px',marginLeft:'65px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users[0]?.department}
+                                    {users !== undefined ?  users[0]?.department : ""}
                                   </Typography>
                                 </Card>
                               </Form.Item>
@@ -996,7 +1031,7 @@ const Home = (props) => {
                               >
                                <Card style={{height:'35px',width:'250px',marginLeft:'30px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users[0]?.joining_date}
+                                    {users !== undefined ?  users[0]?.joining_date : ""}
                                   </Typography>
                                 </Card>
                               </Form.Item>
