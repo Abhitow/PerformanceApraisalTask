@@ -247,7 +247,7 @@ const MngEmployeeDetails = (props) => {
   const handleAdmin = () => {
     axios
     .post(
-      `http://192.168.0.129:5886/appraisel/users/AddComment?email=${selectMail}&&type=manager`,userData
+      `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${selectMail}&&type=manager`,userData
     )
       .then((response) => {
         console.log(response.data);
