@@ -161,7 +161,7 @@ const MngEmployeeDetails = (props) => {
 
   const [userData, setUserData] = useState(initialData);
 
-  const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
+  const RankingData = [ "Select Rating", "1", "2", "3", "4", "5"];
   // useEffect(() => {
   //   if (!localStorage.getItem("token")) {
   //     navigate("/");
@@ -227,6 +227,7 @@ const MngEmployeeDetails = (props) => {
       .catch((e) => console.log(e, "error Message"));
   }, [selectMail]);
   // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
+  console.log(parseFloat(avgValue?.manager_consolidated_rating).toFixed(2),"bbbbbbbb");
  
   console.log(commentData ? commentData?.data[0]?.self_rating : "","lllllllll");
   const onFinish = (formData) => {
@@ -593,7 +594,7 @@ const MngEmployeeDetails = (props) => {
                                             <div className="manager-rating-input">
                                               <Select
                                                 className="performance-input"
-                                                defaultValue={RankingData[0]}
+                                                defaultValue={b?.manager_rating}
                                                 style={{
                                                   width: 150,
                                                   marginLeft: "20px",
@@ -602,7 +603,7 @@ const MngEmployeeDetails = (props) => {
                                                 onChange={(e) => {
                                                   initialData.questions[
                                                     index
-                                                  ].manager_rating = e;
+                                                  ].manager_rating = e ;
                                                   userData.questions[index][
                                                     "manager_rating"
                                                   ] = e;
@@ -616,6 +617,7 @@ const MngEmployeeDetails = (props) => {
                                                   })
                                                 )}
                                               />
+                                              {/* <Typography>{b?.manager_rating}</Typography> */}
                                             </div>
                                           </Form.Item>
                                         </Col>
@@ -641,6 +643,7 @@ const MngEmployeeDetails = (props) => {
                                               key={d.t_id}
                                             >
                                               <TextArea
+                                                defaultValue={b?.manager_comment}
                                                 onChange={(e) => {
                                                   initialData.questions[
                                                     index
@@ -768,6 +771,7 @@ const MngEmployeeDetails = (props) => {
                         }}
                       >
                         <Typography
+                        defaultValue={parseFloat(avgValue?.manager_consolidated_rating).toFixed(2)}
                           style={{
                             textAlign: "center",
                             margin: "auto",
@@ -775,7 +779,7 @@ const MngEmployeeDetails = (props) => {
                             fontSize: "24px",
                           }}
                         >
-                          {managerAvg}
+                          {managerAvg} 
                         </Typography>
                       </Card>
                     </Form.Item>
@@ -799,6 +803,7 @@ const MngEmployeeDetails = (props) => {
                     >
                       <div>
                         <TextArea
+                           defaultValue={avgValue?.manager_feedback}
                           style={{
                             marginTop: "40px",
                             width: "400px",

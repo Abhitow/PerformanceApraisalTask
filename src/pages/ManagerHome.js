@@ -156,7 +156,7 @@ import {
         .catch(e => console.log(e,"error message"));
 
         let a=[];
-        for (let i = 0; i < userMail.length; i++) {
+        for (let i = 0; i < userMail?.length; i++) {
             a.push(userMail[i].email);
           }
           setEmpMail(a);

@@ -116,7 +116,7 @@ const Home = (props) => {
   useEffect(() => {
     const loadUsers = async () => {
       const response = await axios.get(
-        "https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail
+        "https://demo.emeetify.com:81/appraisel/users/userNames?email="+localEmail
       );
       let a =[]
       setUsers(response.data.data)
@@ -321,7 +321,7 @@ const Home = (props) => {
   useEffect(() => {
     axios
       .get(
-        "https://demo.emeetify.com:81/appraisel/users/Consolidate?email=" + text
+        "https://demo.emeetify.com:81/appraisel/users/Consolidate?email=" + localEmail
       )
       .then((response) => {
         setAvgValue(response.data.data);
@@ -341,17 +341,36 @@ const Home = (props) => {
     //     type: "success",
     //     content: "Thank you Form Submitted Successfully",
     //   });
-    console.log( userData?.questions[0].self_rating ,"commnetssssss");
-      if ( userData?.questions[0].self_rating === 0 && userData?.questions[0].self_rating === "Select Rating" && userData?.questions[0].self_comment === "") {
+    // }
+    // console.log( userData?.questions[0].self_rating ,"commnetssssss");
+      if ( userData?.questions[0].self_rating !== 0 && 
+           userData?.questions[0].self_rating !== "Select Rating" &&
+           userData?.questions[1].self_rating !== 0 && 
+           userData?.questions[1].self_rating !== "Select Rating" &&
+           userData?.questions[2].self_rating !== 0 && 
+           userData?.questions[2].self_rating !== "Select Rating" &&
+           userData?.questions[3].self_rating !== 0 && 
+           userData?.questions[3].self_rating !== "Select Rating" && 
+           userData?.questions[4].self_rating !== 0 && 
+           userData?.questions[4].self_rating !== "Select Rating" &&
+           userData?.questions[5].self_rating !== 0 && 
+           userData?.questions[5].self_rating !== "Select Rating" &&
+           userData?.questions[6].self_rating !== 0 && 
+           userData?.questions[6].self_rating !== "Select Rating" &&
+           userData?.questions[7].self_rating !== 0 && 
+           userData?.questions[7].self_rating !== "Select Rating" && 
+           userData?.questions[8].self_rating !== 0 && 
+           userData?.questions[8].self_rating !== "Select Rating") {
         messageApi.open({
-              type: "error",
-              content: "please enter all the details",
-            });
+          type: "success",
+          content: "Thank you Form Submitted Successfully",
+        });
       } else {
         messageApi.open({
-              type: "success",
-              content: "Thank you Form Submitted Successfully",
-            });
+          type: "error",
+          content: "please enter all the details",
+        });
+      
     }
   };
 
@@ -438,7 +457,7 @@ const Home = (props) => {
                       style={{
                         textAlign: "center",
                         marginTop: "0px",
-                        marginLeft: "-30px",
+                        marginLeft: "-100px",
                       }}
                     >
                       Performance Appraisal Form
@@ -483,7 +502,7 @@ const Home = (props) => {
                               hasFeedback
                             >
                               <Input
-                                defaultValue={userName}
+                                defaultValue= {users !== undefined ? users[0]?.username : ""}
                                 className="performance-input"
                                 value={name}
                                 onChange={(e, defaultValue) => {
@@ -506,7 +525,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-manager"
-                                defaultValue={managerData[0]}
+                                defaultValue= {users !== undefined ?  users[0]?.manager_name : ""}
                                 style={{
                                   width: 250,
                                   // marginLeft: "20px",
@@ -536,7 +555,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-roleId"
-                                defaultValue={roleIdData[0].roles}
+                                defaultValue= {users !== undefined ? users[0]?.role_id :""}
                                 style={{
                                   width: 250,
                                   marginLeft: "10px",
@@ -564,7 +583,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-designation"
-                                defaultValue={designationData[0]}
+                                defaultValue= {users !== undefined ?  users[0]?.designation :""}
                                 style={{
                                   width: 250,
                                   marginLeft: 65,
@@ -595,7 +614,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-department"
-                                defaultValue={departmentData[0]}
+                                defaultValue={users !== undefined ?  users[0]?.department : ""}
                                 value={department}
                                 onChange={handleDepartment}
                                 options={departmentData.map((selectData) => ({
@@ -934,6 +953,24 @@ const Home = (props) => {
                 </Card>
               </Content>
             ) : (
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               /*<-----Admin Code Starts Here ---> */
               <Content style={contentStyle} className="homeContent">
               <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
@@ -960,6 +997,7 @@ const Home = (props) => {
                                 <Card style={{height:'35px',width:'250px',marginLeft:'20px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
                                     {users !== undefined ? users[0]?.username : ""}
+
                                   </Typography>
                                 </Card>
                                
@@ -1195,85 +1233,7 @@ const Home = (props) => {
                                             </Form.Item>
                                           </Col>
                                         </Row>
-                                        <Row id="manager_id">
-                                          <Col span={12}>
-                                            <Form.Item
-                                              style={{ marginLeft: "110px" }}
-                                              label={
-                                                <label className="manager-rating">
-                                                  Manager Rating
-                                                </label>
-                                              }
-                                              name="managerRating"
-                                            >
-                                              <div className="manager-rating-input">
-                                                <Select
-                                                  className="performance-input"
-                                                  defaultValue={RankingData[0]}
-                                                  style={{
-                                                    width: 150,
-                                                    marginLeft: "20px",
-                                                  }}
-                                                  value={rank}
-                                                  onChange={(e) => {
-                                                    initialData.questions[
-                                                      index
-                                                    ].manager_rating = e;
-                                                    userData.questions[index][
-                                                      "manager_rating"
-                                                    ] = e;
-                                                    setUserData(userData);
-                                                    
-                                                  }}
-                                                  options={RankingData.map(
-                                                    (selectData) => ({
-                                                      label: selectData,
-                                                      value: selectData,
-                                                    })
-                                                  )}
-                                                />
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                          <Col span={12}>
-                                            <Form.Item
-                                              label={
-                                                <label className="manager-comment">
-                                                  Manager Comment
-                                                </label>
-                                              }
-                                              name="managerComment"
-                                              rules={[
-                                                {
-                                                  required: true,
-                                                  message: "please give comments",
-                                                },
-                                              ]}
-                                              hasFeedback
-                                              required
-                                            >
-                                              <div
-                                                className="manager-comment-input"
-                                                key={d.t_id}
-                                              >
-                                                <TextArea
-                                                  onChange={(e) => {
-                                                    initialData.questions[
-                                                      index
-                                                    ].manager_comment =
-                                                      e.target.value;
-                                                    userData.questions[index][
-                                                      "manager_comment"
-                                                    ] = e.target.value;
-                                                    setUserData(userData);
-                                                  }}
-                                                  rows={4}
-                                                  style={{ width: "400px" }}
-                                                />
-                                              </div>
-                                            </Form.Item>
-                                          </Col>
-                                        </Row>
+                                        
                                       </>
                                     )}
                                   
@@ -1363,68 +1323,7 @@ const Home = (props) => {
                     </Col>
                   </Row>
   
-                  <Row style={{ marginTop: "30px" }}>
-                    <Col span={12}>
-                      <Form.Item
-                        readOnly
-                        label={
-                          <label
-                            style={{ fontSize: "18px", marginLeft: "100px" }}
-                          >
-                            Manager's Consolidated Rating
-                          </label>
-                        }
-                      >
-                        <Card
-                          style={{
-                            height: "40px",
-                            width: "120px",
-                            marginTop: "50px",
-                            marginLeft: "-260px",
-                          }}
-                        >
-                          <Typography
-                            style={{
-                              textAlign: "center",
-                              margin: "auto",
-                              marginTop: "-20px",
-                              fontSize: "24px",
-                            }}
-                          >
-                           
-                          </Typography>
-                        </Card>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label={
-                          <label className="teamlead-feedback">
-                            Manager's Feedback
-                          </label>
-                        }
-                        name="managerFeedback"
-                      >
-                        <div>
-                          <TextArea
-                            style={{
-                              marginTop: "40px",
-                              width: "400px",
-                              maxWidth: "130%",
-                              height: "110px",
-                              marginLeft: "-260px",
-                            }}
-                            onChange={(e) => {
-                              userData.manager_feedback = e.target.value;
-                              setUserData(userData);
-                            }}
-                            rows={4}
-                          />
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-  
+                 
                   {/* <------ here ends your code -----> */}
   
                   <Divider
