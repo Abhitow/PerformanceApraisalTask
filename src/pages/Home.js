@@ -98,21 +98,9 @@ const Home = (props) => {
 
   /*<------Search deatils function Ends here  */
 
-  const [validationErrors, setValidationErrors] = useState([]);
+const [formattedDate , setFormattedDate] = useState();
 
 
-  const handleInputChange =(event , index) =>{
-    const value =event.target.value ;
-    const newValidationErrors = [...validationErrors];
-    newValidationErrors[index] = validateInput(value);
-    setValidationErrors(newValidationErrors);
-  }
-  const validateInput=(value) =>{
-    if(value === ""){
-        return "this field is required"
-    }
-    return ""
-  }
   useEffect(() => {
     const loadUsers = async () => {
       const response = await axios.get(
@@ -120,7 +108,8 @@ const Home = (props) => {
       );
       let a =[]
       setUsers(response.data.data)
-      console.log(users !== undefined ? users[0]?.username : "");
+     
+      // console.log(teee,"????????????");
       // console.log(users);
       let userDetails = response.data.data;
       for (let i = 0; i < userDetails?.length; i++) {
@@ -181,6 +170,24 @@ const Home = (props) => {
     },
   ];
 
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [day, month, year].join('-');
+}
+
+let dd =  users[0]?.joining_date;
+
+let textt = formatDate(dd);
+
   const payload = {
     username: name,
     manager_name: manager,
@@ -201,19 +208,18 @@ const Home = (props) => {
     setDepartment(e);
   };
   const handleJoiningDate = (e,date) => {
-    // const formatDate = date.toLocaleDateString("en-US",{
-    //   year:"numeric",
-    //   month:"2-digit",
-    //   day:"2-digit"
-    // });
+    // console.log((typeof(date)) ,"lllllll")
+   
+    // console.log(typeof(e),"lllllll")
     setDate(e);
-    // console.log(formatDate,"dateeeeeeee");
+
   };
+
+
   const handleRoleChange = (e) => {
     setRoles(e);
   };
   const localEmail = localStorage.getItem("email");
-  // console.log(managerFeedback,">,<<<<<<<<<<<<<<<<<<<<<<");
   const initialData = {
     questions: [
       {
@@ -502,7 +508,7 @@ const Home = (props) => {
                               hasFeedback
                             >
                               <Input
-                                defaultValue= {users !== undefined ? users[0]?.username : ""}
+                                defaultValue= {userName}
                                 className="performance-input"
                                 value={name}
                                 onChange={(e, defaultValue) => {
@@ -525,7 +531,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-manager"
-                                defaultValue= {users !== undefined ?  users[0]?.manager_name : ""}
+                                defaultValue= {managerData[0]}
                                 style={{
                                   width: 250,
                                   // marginLeft: "20px",
@@ -545,17 +551,17 @@ const Home = (props) => {
                             <Form.Item
                               name={"roleId"}
                               className="label5"
-                              label="Role Id"
+                              label="Role"
                               rules={[
                                 {
                                   required: true,
-                                  message: "Please select the role Id",
+                                  message: "Please select the role",
                                 },
                               ]}
                             >
                               <Select
                                 className="performance-input-roleId"
-                                defaultValue= {users !== undefined ? users[0]?.role_id :""}
+                                defaultValue= {roleIdData[0].roles}
                                 style={{
                                   width: 250,
                                   marginLeft: "10px",
@@ -583,7 +589,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-designation"
-                                defaultValue= {users !== undefined ?  users[0]?.designation :""}
+                                defaultValue= {designationData[0]}
                                 style={{
                                   width: 250,
                                   marginLeft: 65,
@@ -614,7 +620,7 @@ const Home = (props) => {
                             >
                               <Select
                                 className="performance-input-department"
-                                defaultValue={users !== undefined ?  users[0]?.department : ""}
+                                defaultValue={departmentData[0]}
                                 value={department}
                                 onChange={handleDepartment}
                                 options={departmentData.map((selectData) => ({
@@ -640,6 +646,7 @@ const Home = (props) => {
                               <DatePicker
                                 className="performance-joiningdate"
                                 value={date}
+                                format={"DD-MM-YYYY"}
                                 onChange={handleJoiningDate}
                               />
                             </Form.Item>
@@ -835,7 +842,6 @@ const Home = (props) => {
                                             marginTop: "",
                                           }}
                                         />
-                                        {validationErrors[0] && <span>{validationErrors[0]}</span>}
                                       </div>
                                     </Form.Item>
                                   </Col>
@@ -1022,7 +1028,7 @@ const Home = (props) => {
                               <Form.Item
                                 name={"roleId"}
                                 className="admin-label5"
-                                label="Role Id"
+                                label="Role"
                               >
                                 <Card style={{height:'35px',width:'250px',marginLeft:'95px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
@@ -1068,7 +1074,7 @@ const Home = (props) => {
                               >
                                <Card style={{height:'35px',width:'250px',marginLeft:'30px'}}>
                                   <Typography style={{float:'left',marginTop:'-18px'}}>
-                                    {users !== undefined ?  users[0]?.joining_date : ""}
+                                    {textt}
                                   </Typography>
                                 </Card>
                               </Form.Item>

@@ -78,7 +78,6 @@ const MngEmployeeDetails = (props) => {
 
   const [avgValue, setAvgValue] = useState();
   // const [search, setSearch] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
 
@@ -88,7 +87,6 @@ const MngEmployeeDetails = (props) => {
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
 
-  const [validationError , setValidationError] = useState();
 
   const selectMail = localStorage.getItem("selectMail");
 
@@ -168,8 +166,25 @@ const MngEmployeeDetails = (props) => {
   //   }
   // }, []);
 
-  
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
 
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [day, month, year].join('-');
+}
+
+let dd =  users[0]?.joining_date;
+
+let textt = formatDate(dd);
+
+console.log(textt,">>>>>>>>");
   useEffect(() => {
   }, [userData]);
 
@@ -369,7 +384,7 @@ const MngEmployeeDetails = (props) => {
                             <Form.Item
                               name={"roleId"}
                               className="admin-label5"
-                              label="Role Id"
+                              label="Role"
                             >
                               <Card style={{height:'35px',width:'250px',marginLeft:'95px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
@@ -415,7 +430,7 @@ const MngEmployeeDetails = (props) => {
                             >
                              <Card style={{height:'35px',width:'250px',marginLeft:'30px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
-                                {users !== undefined ?  users[0]?.joining_date : ""}
+                                {textt}
                                 </Typography>
                               </Card>
                             </Form.Item>
