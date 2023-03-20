@@ -386,7 +386,7 @@ console.log(textt,">>>>>>>>");
                               className="admin-label5"
                               label="Role"
                             >
-                              <Card style={{height:'35px',width:'250px',marginLeft:'95px'}}>
+                              <Card style={{height:'35px',width:'250px',marginLeft:'110px'}}>
                                 <Typography style={{float:'left',marginTop:'-18px'}}>
                                 {users !== undefined ? users[0]?.role_id :""}
                                 </Typography>
@@ -537,7 +537,7 @@ console.log(textt,">>>>>>>>");
                                       <Row style={{ marginTop: "20px" }}>
                                         <Col span={12}>
                                           <Form.Item
-                                            style={{ marginLeft: "120px" }}
+                                            style={{ marginLeft: "115px" }}
                                             name="selfRating"
                                             label={
                                               <>
@@ -583,9 +583,10 @@ console.log(textt,">>>>>>>>");
                                               >
                                                 <Typography
                                                   style={{
-                                                    marginTop: "-15px",
+                                                    marginTop: "-25px",
                                                    float:'left',
                                                     fontSize: "16px",
+                                                    marginLeft:"-10px"
                                                   }}
                                                 >
                                                   {b?.self_comment}
@@ -613,6 +614,7 @@ console.log(textt,">>>>>>>>");
                                                 style={{
                                                   width: 150,
                                                   marginLeft: "20px",
+                                                  
                                                 }}
                                                 value={rank}
                                                 onChange={(e) => {
@@ -670,7 +672,7 @@ console.log(textt,">>>>>>>>");
                                                   setUserData(userData);
                                                 }}
                                                 rows={4}
-                                                style={{ width: "400px" }}
+                                                style={{ width: "400px",fontSize:'16px' }}
                                               />
                                             </div>
                                           </Form.Item>
