@@ -200,8 +200,14 @@ const Home = (props) => {
   const handleDepartment = (e) => {
     setDepartment(e);
   };
-  const handleJoiningDate = (e) => {
+  const handleJoiningDate = (e,date) => {
+    const formatDate = date.toLocaleDateString("en-US",{
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit"
+    });
     setDate(e);
+    console.log(formatDate,"dateeeeeeee");
   };
   const handleRoleChange = (e) => {
     setRoles(e);
@@ -327,33 +333,20 @@ const Home = (props) => {
   const onFinish = (formData) => {
     if (responseData.status === true && commentData.status === true) {
       messageApi.open({
-        type: "success",
-        content: "Thank you",
-      });
-    } else {
-      messageApi.open({
         type: "error",
         content: "please enter all the details",
       });
+    } else {
+      messageApi.open({
+        type: "success",
+        content: "Thank you Form Submitted Successfully",
+      });
+    
     }
   };
 
   const handleSubmit = () => {
     empDetails();
-    // axios
-    //   .post(
-    //     "https://demo.emeetify.com:81/appraisel/users/AddComment?email="+
-    //       localEmail,
-    //     userData
-    //   )
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     setCommentData(response.data);
-    //   })
-    //   .catch((e) => {
-    //     console.log("e", e);
-    //   });
-
      axios
       .post(
         `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData
@@ -403,16 +396,6 @@ const Home = (props) => {
   useEffect(() => {}, [errorData]);
 
   useEffect(() => {}, [indexValue]);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <>
@@ -793,13 +776,13 @@ const Home = (props) => {
                                         </label>
                                       }
                                       name="selfComment"
-                                      // rules={[
-                                      //   {
-                                      //     required: true,
-                                      //     message: "please give comments",
-                                      //   },
-                                      // ]}
-                                      // hasFeedback
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "please give comments",
+                                        },
+                                      ]}
+                                      hasFeedback
                                     >
                                       <div
                                         className="self-comment-input"
