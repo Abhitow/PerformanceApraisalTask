@@ -201,13 +201,13 @@ const Home = (props) => {
     setDepartment(e);
   };
   const handleJoiningDate = (e,date) => {
-    const formatDate = date.toLocaleDateString("en-US",{
-      year:"numeric",
-      month:"2-digit",
-      day:"2-digit"
-    });
+    // const formatDate = date.toLocaleDateString("en-US",{
+    //   year:"numeric",
+    //   month:"2-digit",
+    //   day:"2-digit"
+    // });
     setDate(e);
-    console.log(formatDate,"dateeeeeeee");
+    // console.log(formatDate,"dateeeeeeee");
   };
   const handleRoleChange = (e) => {
     setRoles(e);
@@ -330,18 +330,28 @@ const Home = (props) => {
   }, [text]);
 // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
-  const onFinish = (formData) => {
-    if (responseData.status === true && commentData.status === true) {
-      messageApi.open({
-        type: "error",
-        content: "please enter all the details",
-      });
-    } else {
-      messageApi.open({
-        type: "success",
-        content: "Thank you Form Submitted Successfully",
-      });
-    
+  const onFinish = (formData , index) => {
+    // if (responseData.status === true && commentData.status === true) {
+    //   messageApi.open({
+    //     type: "error",
+    //     content: "please enter all the details",
+    //   });
+    // } else {
+    //   messageApi.open({
+    //     type: "success",
+    //     content: "Thank you Form Submitted Successfully",
+    //   });
+    console.log( userData?.questions[0].self_rating ,"commnetssssss");
+      if ( userData?.questions[0].self_rating === 0 && userData?.questions[0].self_rating === "Select Rating" && userData?.questions[0].self_comment === "") {
+        messageApi.open({
+              type: "error",
+              content: "please enter all the details",
+            });
+      } else {
+        messageApi.open({
+              type: "success",
+              content: "Thank you Form Submitted Successfully",
+            });
     }
   };
 
