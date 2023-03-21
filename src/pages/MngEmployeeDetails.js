@@ -68,6 +68,9 @@ const MngEmployeeDetails = (props) => {
   const [rank, setRank] = useState();
   const [managerAvg, setManagerAvg] = useState();
   /* performance apraisal form  */
+  const [responseData, setResponseData] = useState("");
+  const [formData, setFormData] = useState();
+  const [roles, setRoles] = useState();
   const [windowsOptions, setWindowsOptions] = useState("");
   // const [windowsClose, setWindowsClose] = useState(false)
 
@@ -75,6 +78,7 @@ const MngEmployeeDetails = (props) => {
 
   const [avgValue, setAvgValue] = useState();
   // const [search, setSearch] = useState();
+  const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
 
   /*<----Search Details starts here */
@@ -83,7 +87,6 @@ const MngEmployeeDetails = (props) => {
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
 
-  const [mngConsolidated , setMngConsolidated] = useState();
 
   const selectMail = localStorage.getItem("selectMail");
 
@@ -209,9 +212,11 @@ let textt = formatDate(dd);
         let comments = userDetails[i].comments;
         for (let j = 0; j < comments.length; j++) {
           const element = comments[j];
+          // setComment(element);
           a.push(element)
         }
       }
+    //  console.log(a,"///////");
     setComment(a);
     };
     loadUsers();
@@ -236,12 +241,9 @@ let textt = formatDate(dd);
       .catch((e) => console.log(e, "error Message"));
   }, [selectMail]);
   // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
-
-  const tt =(parseFloat(avgValue?.manager_consolidated_rating).toFixed(2));
-  console.log(tt,"........");
-
-  // console.log(commentData ? commentData?.data[0]?.self_rating : "","lllllllll");
-  
+  console.log(parseFloat(avgValue?.manager_consolidated_rating).toFixed(2),"bbbbbbbb");
+ 
+  console.log(commentData ? commentData?.data[0]?.self_rating : "","lllllllll");
   const onFinish = (formData) => {
     if (commentData?.data[0].manager_comment === undefined
       && commentData?.data[8].manager_comment === undefined && commentData.manager_feedback === undefined) {
@@ -785,13 +787,13 @@ let textt = formatDate(dd);
                         }}
                       >
                         <Typography
+                        defaultValue={parseFloat(avgValue?.manager_consolidated_rating).toFixed(2)}
                           style={{
                             textAlign: "center",
                             margin: "auto",
                             marginTop: "-25px",
                             fontSize: "24px",
                           }}
-                          defaultValue={parseFloat(avgValue?.manager).toFixed(2)}
                         >
                           {managerAvg} 
                         </Typography>
@@ -814,11 +816,10 @@ let textt = formatDate(dd);
                       hasFeedback
                       required
                       name="managerFeedback"
-                      
                     >
                       <div>
                         <TextArea
-                         
+                           defaultValue={avgValue?.manager_feedback}
                           style={{
                             marginTop: "40px",
                             width: "400px",

@@ -20,6 +20,7 @@ import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
 import Profile from "../components/Profile";
 import download from "../download.png";
+import moment from "moment-timezone";
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -194,7 +195,7 @@ let textt = formatDate(dd);
     role_id: 2,
     designation: designation || users[0]?.designation,
     department: department ||  users[0]?.department,
-    joining_date: date ,
+    joining_date: date || users[0]?.joining_date,
     review_period: "2022-23",
   };
   const handleChange = (e) => {
@@ -646,11 +647,10 @@ let textt = formatDate(dd);
                                   message: "Please enter your joining date",
                                 },
                               ]}
-                              hasFeedback
-                              
+                              hasFeedback 
                             >
                               <DatePicker
-                                initialValue={textt}
+                                defaultValue={moment(textt)}
                                 className="performance-joiningdate"
                                 value={date}
                                 format={"DD-MM-YYYY"}
