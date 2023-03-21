@@ -108,7 +108,10 @@ const [formattedDate , setFormattedDate] = useState();
       );
       let a =[]
       setUsers(response.data.data)
-     
+     console.log("$$$--->",response.data.data[0].comments)
+    //  for(let i=0; response.data.data[0].length > 0; i++){
+
+    //  }
       // console.log(teee,"????????????");
       // console.log(users);
       let userDetails = response.data.data;
@@ -140,19 +143,16 @@ const [formattedDate , setFormattedDate] = useState();
   /*<------Employee deatils fetching Ends here  */
 
   const managerData = [
-    "Select Manager",
     "Rajamanickam R",
     "Ramesh Babu E",
     "Santhana Gopal S",
   ];
   const designationData = [
-    "Select Designation",
     "Associate Trainee",
     "Software Engineer",
     "Software Test Engineer",
   ];
   const departmentData = [
-    "Select Department",
     "Development",
     "Marketing",
     "Testing",
@@ -189,12 +189,12 @@ let dd =  users[0]?.joining_date;
 let textt = formatDate(dd);
 
   const payload = {
-    username: name,
-    manager_name: manager,
-    role_id: roles,
-    designation: designation,
-    department: department,
-    joining_date: date,
+    username: name || users[0]?.username,
+    manager_name: manager || users[0]?.manager_name,
+    role_id: 2,
+    designation: designation || users[0]?.designation,
+    department: department ||  users[0]?.department,
+    joining_date: date ,
     review_period: "2022-23",
   };
   const handleChange = (e) => {
@@ -285,8 +285,9 @@ let textt = formatDate(dd);
  
   const [userData, setUserData] = useState(initialData);
 
-  
-  const RankingData = ["Select Rating", "1", "2", "3", "4", "5"];
+  console.log(userData ,"??????");
+
+  const RankingData = [ "1", "2", "3", "4", "5"];
 
   const role_id = localStorage.getItem("role_id");
   useEffect(() => {
@@ -497,7 +498,7 @@ let textt = formatDate(dd);
                           <Col span={12}>
                             <Form.Item
                               label="Name of Employee"
-                              name={"name"}
+                              name={"name" || users !== undefined ? users[0]?.username : "" }
                               className="label1"
                               rules={[
                                 {
@@ -506,13 +507,13 @@ let textt = formatDate(dd);
                                 },
                               ]}
                               hasFeedback
+                              initialValue={users !== undefined ? users[0]?.username : userName}
                             >
                               <Input
-                                defaultValue= {userName}
                                 className="performance-input"
                                 value={name}
-                                onChange={(e, defaultValue) => {
-                                  setName(e.target.value || defaultValue);
+                                onChange={(e) => {
+                                  setName(e.target.value);
                                 }}
                               />
                             </Form.Item>
@@ -528,10 +529,11 @@ let textt = formatDate(dd);
                                   message: "Please select the manager",
                                 },
                               ]}
+                              initialValue= {users !== undefined ?  users[0]?.manager_name : "Select Manager"}
                             >
                               <Select
                                 className="performance-input-manager"
-                                defaultValue= {managerData[0]}
+                                placeholder="Select Manager"
                                 style={{
                                   width: 250,
                                   // marginLeft: "20px",
@@ -549,7 +551,7 @@ let textt = formatDate(dd);
                         <Row className="performance-form-row-two">
                           <Col span={12}>
                             <Form.Item
-                              name={"roleId"}
+                              name={"roleId" }
                               className="label5"
                               label="Role"
                               rules={[
@@ -558,10 +560,11 @@ let textt = formatDate(dd);
                                   message: "Please select the role",
                                 },
                               ]}
+                              initialValue={users !== undefined ? users[0]?.role_id :"Enter Role Id"}
                             >
                               <Select
                                 className="performance-input-roleId"
-                                defaultValue= {roleIdData[0].roles}
+                                placeholder="Select Role"
                                 style={{
                                   width: 250,
                                   marginLeft: "10px",
@@ -586,10 +589,11 @@ let textt = formatDate(dd);
                                   message: "Please enter Your designation",
                                 },
                               ]}
+                              initialValue={users !== undefined ?  users[0]?.designation :"Select Designation"}
                             >
                               <Select
                                 className="performance-input-designation"
-                                defaultValue= {designationData[0]}
+                                placeholder="Select Designation"
                                 style={{
                                   width: 250,
                                   marginLeft: 65,
@@ -617,10 +621,11 @@ let textt = formatDate(dd);
                                   message: "Please enter your department",
                                 },
                               ]}
+                              initialValue={users !== undefined ?  users[0]?.department : "Select Department"}
                             >
                               <Select
                                 className="performance-input-department"
-                                defaultValue={departmentData[0]}
+                                placeholder="Select Department"
                                 value={department}
                                 onChange={handleDepartment}
                                 options={departmentData.map((selectData) => ({
@@ -642,8 +647,10 @@ let textt = formatDate(dd);
                                 },
                               ]}
                               hasFeedback
+                              
                             >
                               <DatePicker
+                                initialValue={textt}
                                 className="performance-joiningdate"
                                 value={date}
                                 format={"DD-MM-YYYY"}
@@ -748,7 +755,12 @@ let textt = formatDate(dd);
                                 </Card>
                               </div>
                               <div>
-                                <Row style={{ marginTop: "20px" }}>
+                                {
+                                  comment !== undefined && 
+                                  comment.map( (b , index) => {
+                                    if( d.t_id === b.t_id){
+                                        return(
+                                            <Row style={{ marginTop: "20px" }}>
                                   <Col span={12}>
                                     <Form.Item
                                       style={{ marginLeft: "100px" }}
@@ -770,23 +782,25 @@ let textt = formatDate(dd);
                                           </label>
                                         </>
                                       }
+                                      
                                     >
                                       <div
                                         className="self-rating-input"
                                         key={d.t_id}
+                                        
                                       >
                                         <Select
+                                        defaultValue={b?.self_rating}
+                                        placeholder="Select Rating"
                                           className="performance-input-rating"
-                                          defaultValue={RankingData[0]}
                                           style={{
                                             width: 150,
                                             marginLeft: "20px",
                                           }}
-                                          onChange={(e) => {
-                                            console.log("heloooooo");
+                                          onChange={(e, defaultValue) => {
                                             initialData.questions[
                                               index
-                                            ].self_rating = e;
+                                            ].self_rating = e ;
                                             userData.questions[index][
                                               "self_rating"
                                             ] = e;
@@ -845,7 +859,12 @@ let textt = formatDate(dd);
                                       </div>
                                     </Form.Item>
                                   </Col>
-                                </Row>
+                                           </Row>
+                                        )
+                                    }
+                                  })
+                                }
+                                
                               </div>
                             </>
                           );
@@ -960,6 +979,22 @@ let textt = formatDate(dd);
               </Content>
             ) : (
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
               /*<-----Admin Code Starts Here ---> */
               <Content style={contentStyle} className="homeContent">
               <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>

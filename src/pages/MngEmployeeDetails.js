@@ -814,10 +814,11 @@ let textt = formatDate(dd);
                       hasFeedback
                       required
                       name="managerFeedback"
+                      
                     >
                       <div>
                         <TextArea
-                           defaultValue={avgValue?.manager_feedback}
+                         
                           style={{
                             marginTop: "40px",
                             width: "400px",
