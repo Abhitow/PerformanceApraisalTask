@@ -138,7 +138,8 @@
 .employee-profile{
   font-size: 20px;
   margin-right: 50px;
-  color:'white'
+  color:'white';
+  margin-left: -80px;
 }
 .required{
   color:'red' !important;

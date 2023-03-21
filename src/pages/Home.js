@@ -960,23 +960,6 @@ let textt = formatDate(dd);
               </Content>
             ) : (
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               /*<-----Admin Code Starts Here ---> */
               <Content style={contentStyle} className="homeContent">
               <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
