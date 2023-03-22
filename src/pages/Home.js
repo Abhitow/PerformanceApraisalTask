@@ -94,6 +94,7 @@ const Home = (props) => {
   const [text, setText] = useState();
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
+  const [selfAspiration , setSelfASpiration] = useState();
   const selectMail = localStorage.getItem("selectMail");
 
   /*<------Search deatils function Ends here  */
@@ -203,17 +204,14 @@ let textt = formatDate(dd);
     setDepartment(e);
   };
   const handleJoiningDate = (e,date) => {
-    // console.log((typeof(date)) ,"lllllll")
-   
-    // console.log(typeof(e),"lllllll")
     setDate(e);
-
   };
 
 
   const handleRoleChange = (e) => {
     setRoles(e);
   };
+
   const localEmail = localStorage.getItem("email");
   const initialData = {
     questions: [
@@ -277,7 +275,7 @@ let textt = formatDate(dd);
  
   const [userData, setUserData] = useState(initialData);
 
-  console.log(userData ,"??????");
+  // console.log(userData ,"??????");
 
   const RankingData = [ "1", "2", "3", "4", "5"];
 
@@ -386,11 +384,19 @@ let textt = formatDate(dd);
       .catch((e) => {
         console.log("e", e);
       });
-      // if(formData.data.status === true){
-      //   console.log("working guddddd");
-      // }else{
-      //   console.log("not wokringggggggg");
-      // }
+      axios
+      .put(
+        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,{
+          self_aspirations: selfAspiration ,
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setCommentData(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
   };
 
 
@@ -934,6 +940,7 @@ let textt = formatDate(dd);
                               }}
                               className="self-aspiration-input"
                               onChange={(e) => {
+
                                 // userData.self_aspirations = e.target.value;
                                 // setUserData(userData);
                               }}
