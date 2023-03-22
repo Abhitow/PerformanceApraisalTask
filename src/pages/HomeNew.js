@@ -254,7 +254,7 @@ const [editForm , setEditForm] = useState(initialState);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // console.log(formData);
+    
     console.log(editForm,"/////");
     console.log(date,".....");
     //form validation with api integration

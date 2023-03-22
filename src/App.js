@@ -15,7 +15,7 @@ function App() {
           <Route path='/home' element={<Home /> }/>
           <Route path='*' element={<Home />}/>
           {/* <Route path='/homenew' element={<HomeNew />}/> */}
-          {/* <Route path='/managerhome' element={ <ManagerHome />} /> */}
+          <Route path='/managerhome' element={ <ManagerHome />} />
           <Route path='/mngemployeedetails' element={ <MngEmployeeDetails />} />
           {/* <Route path="/" exact component={!isLoggedIn ? <Login /> : <Login />} />
           <Route path="/home" exact component={isLoggedIn ? <Home /> : <Login />} /> */}

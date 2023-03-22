@@ -88,6 +88,7 @@ const Home = (props) => {
   const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
 
+  const [asp , setAsp] =useState();
 
   /*<----Search Details starts here */
   const [users, setUsers] = useState([]);
@@ -100,6 +101,7 @@ const Home = (props) => {
   /*<------Search deatils function Ends here  */
 
 const [formattedDate , setFormattedDate] = useState();
+  const localEmail = localStorage.getItem("email");
 
 
   useEffect(() => {
@@ -123,7 +125,7 @@ const [formattedDate , setFormattedDate] = useState();
     setComment(a);
     };
     loadUsers();
-  }, []);
+  }, [localEmail]);
 
   useEffect(() => {
     axios
@@ -193,6 +195,8 @@ let textt = formatDate(dd);
     joining_date: date ,
     review_period: "2022-23",
   };
+
+  // console.log(users[0]?.comments[8]?.self_rating ,"??????");
   const handleChange = (e) => {
     setManager(e);
   };
@@ -212,66 +216,69 @@ let textt = formatDate(dd);
     setRoles(e);
   };
 
-  const localEmail = localStorage.getItem("email");
+
+  // const a = comment?.data[8]?.self_rating ;
+  console.log(comment[8]?.self_rating ,">>>>>");
   const initialData = {
     questions: [
       {
         t_id: 1,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[0]?.self_rating ,
         self_comment: "",
       },
       {
         t_id: 2,
         email: localEmail,
-        self_rating: 0,
+        self_rating:  users[0]?.comments[1]?.self_rating ,
         self_comment: "", 
       },
       {
         t_id: 3,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[2]?.self_rating ,
         self_comment: "",
       },
       {
         t_id: 4,
         email: localEmail,
-        self_rating: 0,
+        self_rating:users[0]?.comments[3]?.self_rating,
         self_comment: "", 
       },
       {
         t_id: 5,
         email: localEmail,
-        self_rating: 0,
+        self_rating:users[0]?.comments[4]?.self_rating,
         self_comment: "",
       },
       {
         t_id: 6,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[5]?.self_rating,
         self_comment: "", 
       },
       {
         t_id: 7,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[6]?.self_rating,
         self_comment: "",
       },
       {
         t_id: 8,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[7]?.self_rating,
         self_comment: "",
       },
       {
         t_id: 9,
         email: localEmail,
-        self_rating: 0,
+        self_rating: comment[8]?.self_rating,
         self_comment: "",
       },
     ],
   };
 
+  
  
   const [userData, setUserData] = useState(initialData);
 
@@ -323,24 +330,23 @@ let textt = formatDate(dd);
       .then((response) => {
         setAvgValue(response.data.data);
       })
+      .catch((e) => console.log(e, "error Message"));  
+      axios
+      .get(
+        "https://demo.emeetify.com:81/appraisel/users/userComments?email=" + localEmail
+      )
+      .then((response) => {
+        setSelfASpiration(response.data.data[0]);
+        console.log(response?.data?.data[0],"nnnnnnnn");
+      })
       .catch((e) => console.log(e, "error Message"));   
-  }, [text]);
+  }, [localEmail]);
 // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
-  const onFinish = (formData , index) => {
-    // if (responseData.status === true && commentData.status === true) {
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "please enter all the details",
-    //   });
-    // } else {
-    //   messageApi.open({
-    //     type: "success",
-    //     content: "Thank you Form Submitted Successfully",
-    //   });
-    // }
-    // console.log( userData?.questions[0].self_rating ,"commnetssssss");
-      if ( userData?.questions[0].self_rating !== 0 && 
+  const onFinish = (values) => {
+        console.log("success" ,values);
+      if ( 
+        userData?.questions[0].self_rating !== 0 && 
            userData?.questions[0].self_rating !== "Select Rating" &&
            userData?.questions[1].self_rating !== 0 && 
            userData?.questions[1].self_rating !== "Select Rating" &&
@@ -378,7 +384,7 @@ let textt = formatDate(dd);
         `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData.questions
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data,">>>>>>>");
         setCommentData(response.data);
       })
       .catch((e) => {
@@ -387,21 +393,22 @@ let textt = formatDate(dd);
       axios
       .put(
         `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,{
-          self_aspirations: selfAspiration ,
+          self_aspirations: asp || selfAspiration?.self_aspirations,
+          
         }
       )
       .then((response) => {
         console.log(response.data);
-        setCommentData(response.data);
+        // setCommentData(response.data);
       })
       .catch((e) => {
         console.log("e", e);
       });
   };
 
-
-
-  const onFinishFailed = (errorInfo) => {};
+  const onFinishFailed = (errorInfo) => {
+    console.log(errorInfo , "unsuccess");
+  };
 
   const userName = localStorage.getItem("displayName");
   useEffect(() => {
@@ -433,7 +440,6 @@ let textt = formatDate(dd);
 
   return (
     <>
-      
         <Space
           direction="vertical"
           style={{
@@ -638,17 +644,17 @@ let textt = formatDate(dd);
                               className="joiningdate-label"
                               label="Joining Date"
                               name={"date"}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Please enter your joining date",
-                                },
-                              ]}
-                              hasFeedback
+                              // rules={[
+                              //   {
+                              //     required: true,
+                              //     message: "Please enter your joining date",
+                              //   },
+                              // ]}
+                              // hasFeedback
                               
                             >
                               <DatePicker
-                                initialValue={textt}
+                                
                                 className="performance-joiningdate"
                                 value={date}
                                 format={"DD-MM-YYYY"}
@@ -760,7 +766,7 @@ let textt = formatDate(dd);
                                         return(
                                             <Row style={{ marginTop: "20px" }}>
                                   <Col span={12}>
-                                    <Form.Item
+                                    <Form.Item 
                                       style={{ marginLeft: "100px" }}
                                       name="selfRating"
                                       label={
@@ -796,12 +802,13 @@ let textt = formatDate(dd);
                                             marginLeft: "20px",
                                           }}
                                           onChange={(e, defaultValue) => {
+                                            console.log(b?.self_rating ,"default value printed");
                                             initialData.questions[
                                               index
-                                            ].self_rating = e ;
+                                            ].self_rating = e || b?.self_rating;
                                             userData.questions[index][
                                               "self_rating"
-                                            ] = e;
+                                            ] = e || b?.self_rating;
 
                                             setUserData(userData);
                                             calAvg();
@@ -817,13 +824,13 @@ let textt = formatDate(dd);
                                     </Form.Item>
                                   </Col>
                                   <Col span={12}>
-                                    <Form.Item
+                                    <Form.Item 
                                       label={
                                         <label className="self-comment">
                                           Justify Your Comment
                                         </label>
                                       }
-                                      name="selfComment"
+                                      name="self_comment"
                                       rules={[
                                         {
                                           required: true,
@@ -837,6 +844,7 @@ let textt = formatDate(dd);
                                         key={d.t_id}
                                       >
                                         <TextArea
+                                         value={userData.questions[indexValue].self_comment}
                                           onChange={(e) => {
                                             initialData.questions[
                                               index
@@ -879,7 +887,7 @@ let textt = formatDate(dd);
                       }}
                     />
                     <Row>
-                      <Col span={12}>
+                      <Col span={12} >
                         <Form.Item
                           readOnly
                           label={
@@ -889,8 +897,9 @@ let textt = formatDate(dd);
                               Employee Self Rating
                             </label>
                           }
+                          initialValue={parseFloat(avgValue?.employee_self_rating).toFixed(2)}
                         >
-                          <Card
+                          <Card 
                             style={{
                               height: "50px",
                               width: "100px",
@@ -898,7 +907,8 @@ let textt = formatDate(dd);
                               marginLeft: "-185px",
                             }}
                           >
-                            <Typography
+                            
+                            <Typography defaultValue={parseFloat(avgValue?.employee_self_rating).toFixed(2)}
                               style={{
                                 textAlign: "center",
                                 margin: "auto",
@@ -911,10 +921,12 @@ let textt = formatDate(dd);
                             >
                               {avg}
                             </Typography>
+                            
+                            
                           </Card>
                         </Form.Item>
                       </Col>
-                      <Col span={12}>
+                      <Col span={12} key={1}>
                         <Form.Item
                           style={{ marginLeft: "15px" }}
                           label={
@@ -931,22 +943,20 @@ let textt = formatDate(dd);
                           ]}
                           hasFeedback
                           required
+                          initialValue={selfAspiration?.self_aspirations}
                         >
-                          <div>
-                            <TextArea
+                            <TextArea  
                               style={{
                                 marginTop: "40px",
                                 marginLeft: "-250px",
                               }}
                               className="self-aspiration-input"
                               onChange={(e) => {
-
-                                // userData.self_aspirations = e.target.value;
-                                // setUserData(userData);
+                                  setAsp(e.target.value)
                               }}
                               rows={4}
                             />
-                          </div>
+                          
                         </Form.Item>
                       </Col>
                     </Row>
@@ -960,8 +970,8 @@ let textt = formatDate(dd);
                         height: "3px",
                       }}
                     />
-
-                    <Button
+                  <Form.Item>
+                  <Button
                       htmlType="submit"
                       type="primary"
                       style={{
@@ -973,6 +983,8 @@ let textt = formatDate(dd);
                     >
                       Submit
                     </Button>
+                  </Form.Item>
+                    
                   </Form>
                 </Card>
               </Content>
@@ -1338,7 +1350,7 @@ let textt = formatDate(dd);
                               className="self-aspiration-input"
                               rows={4}
                             >
-                              {avgValue?.self_aspirations}
+                              {selfAspiration?.self_aspirations}
                             </Typography>
                           </Card>
                         </div>

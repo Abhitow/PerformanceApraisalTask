@@ -87,15 +87,15 @@ const MngEmployeeDetails = (props) => {
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
 
+  const [managerFeedback , setManagerFeedback] =useState();
+  const [mng , setMng] =useState();
 
   const selectMail = localStorage.getItem("selectMail");
 
   /*<------Search deatils function Ends here  */
 
-  // console.log(comment.self_rating,"-----<<<<<<<<<<->");
 
   const localEmail = localStorage.getItem("email");
-  // console.log(managerFeedback,">,<<<<<<<<<<<<<<<<<<<<<<");
   const initialData = {
     questions: [
       {
@@ -153,8 +153,7 @@ const MngEmployeeDetails = (props) => {
         manager_comment: "",
       },
     ],
-    self_aspirations: "",
-    manager_feedback: "",
+    
   };
 
   const [userData, setUserData] = useState(initialData);
@@ -196,7 +195,15 @@ let textt = formatDate(dd);
       .catch((e) => {
         console.log("e", e);
       });
-  }, [text]);
+      axios
+      .get(
+        "https://demo.emeetify.com:81/appraisel/users/userComments?email=" + localEmail
+      )
+      .then((response) => {
+        setMng(response.data.data[0]);
+      })
+      .catch((e) => console.log(e, "error Message"));  
+  }, [localEmail]);
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -220,14 +227,14 @@ let textt = formatDate(dd);
     setComment(a);
     };
     loadUsers();
-  }, []);
+  }, [selectMail]);
   const role_id = localStorage.getItem("role_id");
 
   useEffect(() => {
     if (!localStorage.getItem("token") && role_id !== "1") {
       navigate("/");
     }
-  }, []);
+  }, [role_id ,navigate]);
 
 
   useEffect(() => {
@@ -241,9 +248,9 @@ let textt = formatDate(dd);
       .catch((e) => console.log(e, "error Message"));
   }, [selectMail]);
   // console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
-  console.log(parseFloat(avgValue?.manager_consolidated_rating).toFixed(2),"bbbbbbbb");
+  // console.log(parseFloat(avgValue?.manager_consolidated_rating).toFixed(2),"bbbbbbbb");
  
-  console.log(commentData ? commentData?.data[0]?.self_rating : "","lllllllll");
+  // console.log(commentData ? commentData?.data[0]?.self_rating : "","lllllllll");
   const onFinish = (formData) => {
     if (commentData?.data[0].manager_comment === undefined
       && commentData?.data[8].manager_comment === undefined && commentData.manager_feedback === undefined) {
@@ -262,7 +269,7 @@ let textt = formatDate(dd);
   const handleAdmin = () => {
     axios
     .post(
-      `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${selectMail}&&type=manager`,userData
+      `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${selectMail}&&type=manager`,userData.questions
     )
       .then((response) => {
         console.log(response.data);
@@ -271,9 +278,20 @@ let textt = formatDate(dd);
       .catch((e) => {
         console.log("e", e);
       });
+      axios
+      .put(
+        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,{
+          manager_feedback: managerFeedback || mng?.manager_feedback
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        // setCommentData(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
   };
-
-
   const onFinishFailed = (errorInfo) => {};
 
   useEffect(() => {
@@ -800,7 +818,7 @@ let textt = formatDate(dd);
                       </Card>
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col span={12} key={1}>
                     <Form.Item
                       label={
                         <label className="teamlead-feedback" >
@@ -816,10 +834,10 @@ let textt = formatDate(dd);
                       hasFeedback
                       required
                       name="managerFeedback"
+                      initialValue={mng?.manager_feedback}
                     >
-                      <div>
+                     
                         <TextArea
-                           defaultValue={avgValue?.manager_feedback}
                           style={{
                             marginTop: "40px",
                             width: "400px",
@@ -828,12 +846,11 @@ let textt = formatDate(dd);
                             marginLeft: "-280px",
                           }}
                           onChange={(e) => {
-                            userData.manager_feedback = e.target.value;
-                            setUserData(userData);
+                            setManagerFeedback(e.target.value);
                           }}
                           rows={4}
                         />
-                      </div>
+                      
                     </Form.Item>
                   </Col>
                 </Row>
