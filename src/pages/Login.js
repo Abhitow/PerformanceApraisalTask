@@ -5,7 +5,8 @@ import React from "react";
 import { Card, Form, Input, Button, message, Typography } from "antd";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Home from "./Home";
+// import Home from "./Home";
+import HomeNew from "./Home";
 import ManagerHome from "./ManagerHome";
 
 import { auth, provider } from "../components/GoogleLogin";
@@ -42,6 +43,7 @@ function Login({ isLoggedIn }) {
         .catch((e) => console.log(e, "error message"));
       if (localStorage.getItem("token")) {
         navigate("/home");
+        // navigate("/homenew");
         setGoogle(localStorage.getItem("email"));
       }
     });
@@ -51,6 +53,7 @@ function Login({ isLoggedIn }) {
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/home");
+      // navigate("/homenew");
     }else{
       navigate("/");
     }
@@ -168,7 +171,11 @@ function Login({ isLoggedIn }) {
             </Typography>
             {/* <GoogleLoginn /> */}
             {google ? (
-              <Home />
+              <>
+               {/* // <Home /> */}
+              <HomeNew />
+              </>
+             
             ) : (
               <GoogleButton
                 onClick={handleGoogle}

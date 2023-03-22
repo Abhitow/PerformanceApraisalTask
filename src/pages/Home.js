@@ -20,7 +20,6 @@ import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
 import Profile from "../components/Profile";
 import download from "../download.png";
-import moment from "moment-timezone";
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -109,12 +108,7 @@ const [formattedDate , setFormattedDate] = useState();
       );
       let a =[]
       setUsers(response.data.data)
-     console.log("$$$--->",response.data.data[0].comments)
-    //  for(let i=0; response.data.data[0].length > 0; i++){
-
-    //  }
-      // console.log(teee,"????????????");
-      // console.log(users);
+     console.log("$$$--->",response.data.data[0]?.comments)
       let userDetails = response.data.data;
       for (let i = 0; i < userDetails?.length; i++) {
         let comments = userDetails[i].comments;
@@ -195,7 +189,7 @@ let textt = formatDate(dd);
     role_id: 2,
     designation: designation || users[0]?.designation,
     department: department ||  users[0]?.department,
-    joining_date: date || users[0]?.joining_date,
+    joining_date: date ,
     review_period: "2022-23",
   };
   const handleChange = (e) => {
@@ -278,9 +272,6 @@ let textt = formatDate(dd);
         self_comment: "",
       },
     ],
-
-    self_aspirations: "",
-    manager_feedback: "",
   };
 
  
@@ -386,7 +377,7 @@ let textt = formatDate(dd);
     empDetails();
      axios
       .post(
-        `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData
+        `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData.questions
       )
       .then((response) => {
         console.log(response.data);
@@ -647,10 +638,11 @@ let textt = formatDate(dd);
                                   message: "Please enter your joining date",
                                 },
                               ]}
-                              hasFeedback 
+                              hasFeedback
+                              
                             >
                               <DatePicker
-                                defaultValue={moment(textt)}
+                                initialValue={textt}
                                 className="performance-joiningdate"
                                 value={date}
                                 format={"DD-MM-YYYY"}
@@ -942,8 +934,8 @@ let textt = formatDate(dd);
                               }}
                               className="self-aspiration-input"
                               onChange={(e) => {
-                                userData.self_aspirations = e.target.value;
-                                setUserData(userData);
+                                // userData.self_aspirations = e.target.value;
+                                // setUserData(userData);
                               }}
                               rows={4}
                             />
@@ -1010,7 +1002,7 @@ let textt = formatDate(dd);
                       {contextHolder}
   
                         <div style={{ marginTop: "10px", marginLeft: "100px" }}>
-                          {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
+                          {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0]?.username}</Typography> */}
                           <Row className="performance-form-row-one">
                             <Col span={12}>
                               <Form.Item
