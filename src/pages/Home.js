@@ -15,7 +15,7 @@ import {
 import ScoringTable from "../components/ScoringTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
 import Profile from "../components/Profile";
@@ -83,7 +83,6 @@ const Home = (props) => {
   const [indexValue, setIndexValue] = useState(0);
   const [avgValue, setAvgValue] = useState();
   // const [search, setSearch] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const mailId = localStorage.getItem("email");
   const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
@@ -100,7 +99,6 @@ const Home = (props) => {
 
   /*<------Search deatils function Ends here  */
 
-const [formattedDate , setFormattedDate] = useState();
   const localEmail = localStorage.getItem("email");
 
 
@@ -111,7 +109,7 @@ const [formattedDate , setFormattedDate] = useState();
       );
       let a =[]
       setUsers(response.data.data)
-     console.log("$$$--->",response.data.data[0]?.comments)
+    //  console.log("$$$--->",response.data.data[0]?.comments)
       let userDetails = response.data.data;
       for (let i = 0; i < userDetails?.length; i++) {
         let comments = userDetails[i].comments;
@@ -123,6 +121,7 @@ const [formattedDate , setFormattedDate] = useState();
       }
     //  console.log(a,"///////");
     setComment(a);
+    setUserData(a)
     };
     loadUsers();
   }, [localEmail]);
@@ -210,15 +209,10 @@ let textt = formatDate(dd);
   const handleJoiningDate = (e,date) => {
     setDate(e);
   };
-
-
   const handleRoleChange = (e) => {
     setRoles(e);
   };
 
-
-  // const a = comment?.data[8]?.self_rating ;
-  console.log(comment[8]?.self_rating ,">>>>>");
   const initialData = {
     questions: [
       {
@@ -272,17 +266,13 @@ let textt = formatDate(dd);
       {
         t_id: 9,
         email: localEmail,
-        self_rating: comment[8]?.self_rating,
+        self_rating: users[0]?.comments[8]?.self_rating,
         self_comment: "",
       },
     ],
   };
 
-  
- 
   const [userData, setUserData] = useState(initialData);
-
-  // console.log(userData ,"??????");
 
   const RankingData = [ "1", "2", "3", "4", "5"];
 
@@ -291,7 +281,7 @@ let textt = formatDate(dd);
     if (!localStorage.getItem("token") && role_id !== "1") {
       navigate("/");
     }
-  }, []);
+  }, [navigate , role_id]);
 
   useEffect(() => {}, [userData]);
 
@@ -337,11 +327,9 @@ let textt = formatDate(dd);
       )
       .then((response) => {
         setSelfASpiration(response.data.data[0]);
-        console.log(response?.data?.data[0],"nnnnnnnn");
       })
       .catch((e) => console.log(e, "error Message"));   
   }, [localEmail]);
-// console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
 
   const onFinish = (values) => {
         console.log("success" ,values);
@@ -378,6 +366,7 @@ let textt = formatDate(dd);
   };
 
   const handleSubmit = () => {
+    console.log("++++++>",userData)
     empDetails();
      axios
       .post(
@@ -385,7 +374,7 @@ let textt = formatDate(dd);
       )
       .then((response) => {
         // console.log(response.data,">>>>>>>");
-        setCommentData(response.data);
+        setCommentData(response.data); 
       })
       .catch((e) => {
         console.log("e", e);
@@ -418,6 +407,7 @@ let textt = formatDate(dd);
       .catch((e) => {
         console.log("e", e);
       });
+      
   }, []);
 
   function calAvg() {
@@ -437,6 +427,8 @@ let textt = formatDate(dd);
   useEffect(() => {}, [errorData]);
 
   useEffect(() => {}, [indexValue]);
+
+  useEffect(()=>{console.log("####---->",userData)},[userData])
 
   return (
     <>
@@ -760,8 +752,8 @@ let textt = formatDate(dd);
                               </div>
                               <div>
                                 {
-                                  comment !== undefined && 
-                                  comment.map( (b , index) => {
+                                  userData !== undefined && 
+                                  userData.map( (b , index) => {
                                     if( d.t_id === b.t_id){
                                         return(
                                             <Row style={{ marginTop: "20px" }}>
@@ -782,7 +774,7 @@ let textt = formatDate(dd);
                                             *
                                           </label>
                                           <label className="self-rating">
-                                            Self Rating
+                                            Self Rating 123
                                           </label>
                                         </>
                                       }
@@ -803,14 +795,13 @@ let textt = formatDate(dd);
                                           }}
                                           onChange={(e, defaultValue) => {
                                             console.log(b?.self_rating ,"default value printed");
-                                            initialData.questions[
-                                              index
-                                            ].self_rating = e || b?.self_rating;
-                                            userData.questions[index][
+                                            
+                                            const updateUserData = [...userData.questions]
+                                            updateUserData[index][
                                               "self_rating"
-                                            ] = e || b?.self_rating;
+                                            ] = e;
 
-                                            setUserData(userData);
+                                            setUserData(updateUserData);
                                             calAvg();
                                           }}
                                           options={RankingData.map(
@@ -844,7 +835,7 @@ let textt = formatDate(dd);
                                         key={d.t_id}
                                       >
                                         <TextArea
-                                         value={userData.questions[indexValue].self_comment}
+                                        
                                           onChange={(e) => {
                                             initialData.questions[
                                               index
@@ -1202,8 +1193,8 @@ let textt = formatDate(dd);
                               </Card>
                             </div>
                             <div>
-                              {comment !== undefined &&
-                                comment.map((b, index) => {
+                              {userData !== undefined &&
+                                userData.map((b, index) => {
                                   if( d.t_id === b.t_id) {
                                     return (
                                       <>
