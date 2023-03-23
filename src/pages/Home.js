@@ -109,11 +109,6 @@ const [formattedDate , setFormattedDate] = useState();
       );
       let a =[]
       setUsers(response.data.data)
-    //  for(let i=0; response.data.data[0].length > 0; i++){
-
-    //  }
-      // console.log(teee,"????????????");
-      // console.log(users);
       let userDetails = response.data.data;
       for (let i = 0; i < userDetails?.length; i++) {
         let comments = userDetails[i].comments;

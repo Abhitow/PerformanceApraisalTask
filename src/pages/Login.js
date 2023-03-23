@@ -49,8 +49,8 @@ function Login({ isLoggedIn }) {
         .then((response) => console.log(response, "-------------->"))
         .catch((e) => console.log(e, "error message"));
       if (localStorage.getItem("token")) {
-        navigate("/home");
-        // navigate("/homenew");
+        // navigate("/home");
+        navigate("/homenew");
         setGoogle(localStorage.getItem("email"));
       }
     });
@@ -59,8 +59,8 @@ function Login({ isLoggedIn }) {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/home");
-      // navigate("/homenew");
+      // navigate("/home");
+      navigate("/homenew");
     }else{
       navigate("/");
     }

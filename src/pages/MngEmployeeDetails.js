@@ -280,7 +280,7 @@ let textt = formatDate(dd);
       });
       axios
       .put(
-        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=manager`,{
+        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,{
           manager_feedback: managerFeedback || mng?.manager_feedback
         }
       )
