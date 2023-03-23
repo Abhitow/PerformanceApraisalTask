@@ -24,6 +24,7 @@ function Login({ isLoggedIn }) {
   const [responseData, setResponseData] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
+  const manager = 'admin@gmail.com'
   // const [datas , setDatas] = useState([]);
 
   const [google, setGoogle] = useState("");
@@ -34,6 +35,12 @@ function Login({ isLoggedIn }) {
       localStorage.setItem("displayName", data.user.displayName);
       localStorage.setItem("email", data.user.email);
       localStorage.setItem("token", data._tokenResponse.oauthAccessToken);
+      console.log("ROLE",data.user.email)
+      if(data.user.email === manager){
+        localStorage.setItem("Role","Manager");
+      }else{
+        localStorage.setItem("Role","Employee");
+      }
       axios
         .post("https://demo.emeetify.com:81/appraisel/users/register", {
           email: data.user.email,
@@ -80,8 +87,13 @@ function Login({ isLoggedIn }) {
       .then((data) => {
         console.log(data, "-------------------->");
         setResponseData(data);
-        
+        console.log("ROLE",email)
         if (responseData.status !== false) {
+          if(email === manager){
+            localStorage.setItem("Role","Manager");
+          }else{
+            localStorage.setItem("Role","Employee");
+          }
           message.open({
             type: "success",
             content: "Login Successfull",
