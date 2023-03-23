@@ -15,12 +15,11 @@ import {
 import ScoringTable from "../components/ScoringTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import TextArea from "antd/es/input/TextArea";
 import Profile from "../components/Profile";
 import download from "../download.png";
-import moment from "moment-timezone";
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -84,22 +83,23 @@ const Home = (props) => {
   const [indexValue, setIndexValue] = useState(0);
   const [avgValue, setAvgValue] = useState();
   // const [search, setSearch] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const mailId = localStorage.getItem("email");
   const role = localStorage.getItem("role_id");
   const [commentData, setCommentData] = useState();
 
+  const [asp , setAsp] =useState();
 
   /*<----Search Details starts here */
   const [users, setUsers] = useState([]);
   const [text, setText] = useState();
   const [comment, setComment] = useState([]);
   const [empData, setEmpData] = useState();
+  const [selfAspiration , setSelfASpiration] = useState();
   const selectMail = localStorage.getItem("selectMail");
 
   /*<------Search deatils function Ends here  */
 
-const [formattedDate , setFormattedDate] = useState();
+  const localEmail = localStorage.getItem("email");
 
 
   useEffect(() => {
@@ -109,12 +109,7 @@ const [formattedDate , setFormattedDate] = useState();
       );
       let a =[]
       setUsers(response.data.data)
-     console.log("$$$--->",response.data.data[0].comments)
-    //  for(let i=0; response.data.data[0].length > 0; i++){
-
-    //  }
-      // console.log(teee,"????????????");
-      // console.log(users);
+    //  console.log("$$$--->",response.data.data[0]?.comments)
       let userDetails = response.data.data;
       for (let i = 0; i < userDetails?.length; i++) {
         let comments = userDetails[i].comments;
@@ -126,9 +121,10 @@ const [formattedDate , setFormattedDate] = useState();
       }
     //  console.log(a,"///////");
     setComment(a);
+    setUserData(a)
     };
     loadUsers();
-  }, []);
+  }, [localEmail]);
 
   useEffect(() => {
     axios
@@ -195,9 +191,11 @@ let textt = formatDate(dd);
     role_id: 2,
     designation: designation || users[0]?.designation,
     department: department ||  users[0]?.department,
-    joining_date: date || users[0]?.joining_date,
+    joining_date: date ,
     review_period: "2022-23",
   };
+
+  // console.log(users[0]?.comments[8]?.self_rating ,"??????");
   const handleChange = (e) => {
     setManager(e);
   };
@@ -209,84 +207,72 @@ let textt = formatDate(dd);
     setDepartment(e);
   };
   const handleJoiningDate = (e,date) => {
-    // console.log((typeof(date)) ,"lllllll")
-   
-    // console.log(typeof(e),"lllllll")
     setDate(e);
-
   };
-
-
   const handleRoleChange = (e) => {
     setRoles(e);
   };
-  const localEmail = localStorage.getItem("email");
+
   const initialData = {
     questions: [
       {
         t_id: 1,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[0]?.self_rating ,
         self_comment: "",
       },
       {
         t_id: 2,
         email: localEmail,
-        self_rating: 0,
+        self_rating:  users[0]?.comments[1]?.self_rating ,
         self_comment: "", 
       },
       {
         t_id: 3,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[2]?.self_rating ,
         self_comment: "",
       },
       {
         t_id: 4,
         email: localEmail,
-        self_rating: 0,
+        self_rating:users[0]?.comments[3]?.self_rating,
         self_comment: "", 
       },
       {
         t_id: 5,
         email: localEmail,
-        self_rating: 0,
+        self_rating:users[0]?.comments[4]?.self_rating,
         self_comment: "",
       },
       {
         t_id: 6,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[5]?.self_rating,
         self_comment: "", 
       },
       {
         t_id: 7,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[6]?.self_rating,
         self_comment: "",
       },
       {
         t_id: 8,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[7]?.self_rating,
         self_comment: "",
       },
       {
         t_id: 9,
         email: localEmail,
-        self_rating: 0,
+        self_rating: users[0]?.comments[8]?.self_rating,
         self_comment: "",
       },
     ],
-
-    self_aspirations: "",
-    manager_feedback: "",
   };
 
- 
   const [userData, setUserData] = useState(initialData);
-
-  console.log(userData ,"??????");
 
   const RankingData = [ "1", "2", "3", "4", "5"];
 
@@ -295,7 +281,7 @@ let textt = formatDate(dd);
     if (!localStorage.getItem("token") && role_id !== "1") {
       navigate("/");
     }
-  }, []);
+  }, [navigate , role_id]);
 
   useEffect(() => {}, [userData]);
 
@@ -334,24 +320,21 @@ let textt = formatDate(dd);
       .then((response) => {
         setAvgValue(response.data.data);
       })
+      .catch((e) => console.log(e, "error Message"));  
+      axios
+      .get(
+        "https://demo.emeetify.com:81/appraisel/users/userComments?email=" + localEmail
+      )
+      .then((response) => {
+        setSelfASpiration(response.data.data[0]);
+      })
       .catch((e) => console.log(e, "error Message"));   
-  }, [text]);
-// console.log(parseFloat(avgValue?.employee_self_rating).toFixed(2),"bbbbbbbb");
+  }, [localEmail]);
 
-  const onFinish = (formData , index) => {
-    // if (responseData.status === true && commentData.status === true) {
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "please enter all the details",
-    //   });
-    // } else {
-    //   messageApi.open({
-    //     type: "success",
-    //     content: "Thank you Form Submitted Successfully",
-    //   });
-    // }
-    // console.log( userData?.questions[0].self_rating ,"commnetssssss");
-      if ( userData?.questions[0].self_rating !== 0 && 
+  const onFinish = (values) => {
+        console.log("success" ,values);
+      if ( 
+        userData?.questions[0].self_rating !== 0 && 
            userData?.questions[0].self_rating !== "Select Rating" &&
            userData?.questions[1].self_rating !== 0 && 
            userData?.questions[1].self_rating !== "Select Rating" &&
@@ -383,28 +366,38 @@ let textt = formatDate(dd);
   };
 
   const handleSubmit = () => {
+    console.log("++++++>",userData)
     empDetails();
      axios
       .post(
-        `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData
+        `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,userData.questions
       )
       .then((response) => {
-        console.log(response.data);
-        setCommentData(response.data);
+        // console.log(response.data,">>>>>>>");
+        setCommentData(response.data); 
       })
       .catch((e) => {
         console.log("e", e);
       });
-      // if(formData.data.status === true){
-      //   console.log("working guddddd");
-      // }else{
-      //   console.log("not wokringggggggg");
-      // }
+      axios
+      .put(
+        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,{
+          self_aspirations: asp || selfAspiration?.self_aspirations,
+          
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        // setCommentData(response.data);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
   };
 
-
-
-  const onFinishFailed = (errorInfo) => {};
+  const onFinishFailed = (errorInfo) => {
+    console.log(errorInfo , "unsuccess");
+  };
 
   const userName = localStorage.getItem("displayName");
   useEffect(() => {
@@ -414,6 +407,7 @@ let textt = formatDate(dd);
       .catch((e) => {
         console.log("e", e);
       });
+      
   }, []);
 
   function calAvg() {
@@ -434,9 +428,10 @@ let textt = formatDate(dd);
 
   useEffect(() => {}, [indexValue]);
 
+  useEffect(()=>{console.log("####---->",userData)},[userData])
+
   return (
     <>
-      
         <Space
           direction="vertical"
           style={{
@@ -641,16 +636,17 @@ let textt = formatDate(dd);
                               className="joiningdate-label"
                               label="Joining Date"
                               name={"date"}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Please enter your joining date",
-                                },
-                              ]}
-                              hasFeedback 
+                              // rules={[
+                              //   {
+                              //     required: true,
+                              //     message: "Please enter your joining date",
+                              //   },
+                              // ]}
+                              // hasFeedback
+                              
                             >
                               <DatePicker
-                                defaultValue={moment(textt)}
+                                
                                 className="performance-joiningdate"
                                 value={date}
                                 format={"DD-MM-YYYY"}
@@ -756,13 +752,13 @@ let textt = formatDate(dd);
                               </div>
                               <div>
                                 {
-                                  comment !== undefined && 
-                                  comment.map( (b , index) => {
+                                  userData !== undefined && 
+                                  userData.map( (b , index) => {
                                     if( d.t_id === b.t_id){
                                         return(
                                             <Row style={{ marginTop: "20px" }}>
                                   <Col span={12}>
-                                    <Form.Item
+                                    <Form.Item 
                                       style={{ marginLeft: "100px" }}
                                       name="selfRating"
                                       label={
@@ -778,7 +774,7 @@ let textt = formatDate(dd);
                                             *
                                           </label>
                                           <label className="self-rating">
-                                            Self Rating
+                                            Self Rating 123
                                           </label>
                                         </>
                                       }
@@ -798,14 +794,14 @@ let textt = formatDate(dd);
                                             marginLeft: "20px",
                                           }}
                                           onChange={(e, defaultValue) => {
-                                            initialData.questions[
-                                              index
-                                            ].self_rating = e ;
-                                            userData.questions[index][
+                                            console.log(b?.self_rating ,"default value printed");
+                                            
+                                            const updateUserData = [...userData.questions]
+                                            updateUserData[index][
                                               "self_rating"
                                             ] = e;
 
-                                            setUserData(userData);
+                                            setUserData(updateUserData);
                                             calAvg();
                                           }}
                                           options={RankingData.map(
@@ -819,13 +815,13 @@ let textt = formatDate(dd);
                                     </Form.Item>
                                   </Col>
                                   <Col span={12}>
-                                    <Form.Item
+                                    <Form.Item 
                                       label={
                                         <label className="self-comment">
                                           Justify Your Comment
                                         </label>
                                       }
-                                      name="selfComment"
+                                      name="self_comment"
                                       rules={[
                                         {
                                           required: true,
@@ -839,6 +835,7 @@ let textt = formatDate(dd);
                                         key={d.t_id}
                                       >
                                         <TextArea
+                                        
                                           onChange={(e) => {
                                             initialData.questions[
                                               index
@@ -881,7 +878,7 @@ let textt = formatDate(dd);
                       }}
                     />
                     <Row>
-                      <Col span={12}>
+                      <Col span={12} >
                         <Form.Item
                           readOnly
                           label={
@@ -891,8 +888,9 @@ let textt = formatDate(dd);
                               Employee Self Rating
                             </label>
                           }
+                          initialValue={parseFloat(avgValue?.employee_self_rating).toFixed(2)}
                         >
-                          <Card
+                          <Card 
                             style={{
                               height: "50px",
                               width: "100px",
@@ -900,7 +898,8 @@ let textt = formatDate(dd);
                               marginLeft: "-185px",
                             }}
                           >
-                            <Typography
+                            
+                            <Typography defaultValue={parseFloat(avgValue?.employee_self_rating).toFixed(2)}
                               style={{
                                 textAlign: "center",
                                 margin: "auto",
@@ -913,10 +912,12 @@ let textt = formatDate(dd);
                             >
                               {avg}
                             </Typography>
+                            
+                            
                           </Card>
                         </Form.Item>
                       </Col>
-                      <Col span={12}>
+                      <Col span={12} key={1}>
                         <Form.Item
                           style={{ marginLeft: "15px" }}
                           label={
@@ -933,21 +934,20 @@ let textt = formatDate(dd);
                           ]}
                           hasFeedback
                           required
+                          initialValue={selfAspiration?.self_aspirations}
                         >
-                          <div>
-                            <TextArea
+                            <TextArea  
                               style={{
                                 marginTop: "40px",
                                 marginLeft: "-250px",
                               }}
                               className="self-aspiration-input"
                               onChange={(e) => {
-                                userData.self_aspirations = e.target.value;
-                                setUserData(userData);
+                                  setAsp(e.target.value)
                               }}
                               rows={4}
                             />
-                          </div>
+                          
                         </Form.Item>
                       </Col>
                     </Row>
@@ -961,8 +961,8 @@ let textt = formatDate(dd);
                         height: "3px",
                       }}
                     />
-
-                    <Button
+                  <Form.Item>
+                  <Button
                       htmlType="submit"
                       type="primary"
                       style={{
@@ -974,6 +974,8 @@ let textt = formatDate(dd);
                     >
                       Submit
                     </Button>
+                  </Form.Item>
+                    
                   </Form>
                 </Card>
               </Content>
@@ -1010,7 +1012,7 @@ let textt = formatDate(dd);
                       {contextHolder}
   
                         <div style={{ marginTop: "10px", marginLeft: "100px" }}>
-                          {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0].username}</Typography> */}
+                          {/* <Typography style={{fontSize:'20px',marginLeft:'250px'}}>{searchDetails[0]?.username}</Typography> */}
                           <Row className="performance-form-row-one">
                             <Col span={12}>
                               <Form.Item
@@ -1191,8 +1193,8 @@ let textt = formatDate(dd);
                               </Card>
                             </div>
                             <div>
-                              {comment !== undefined &&
-                                comment.map((b, index) => {
+                              {userData !== undefined &&
+                                userData.map((b, index) => {
                                   if( d.t_id === b.t_id) {
                                     return (
                                       <>
@@ -1339,7 +1341,7 @@ let textt = formatDate(dd);
                               className="self-aspiration-input"
                               rows={4}
                             >
-                              {avgValue?.self_aspirations}
+                              {selfAspiration?.self_aspirations}
                             </Typography>
                           </Card>
                         </div>
