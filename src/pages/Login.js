@@ -85,45 +85,55 @@ function Login({ isLoggedIn }) {
 
   /* Admin login Button Starts Here */
   const handleClick = () => {
-    fetch("https://demo.emeetify.com:81/appraisel/users/adminLogin", {
-      method: "POST",
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data, "-------------------->");
-        setResponseData(data);
-        console.log("ROLE", email);
-        if (responseData.status !== false) {
-          if (email === manager) {
-            localStorage.setItem("Role", "Manager");
-          } else {
-            localStorage.setItem("Role", "Employee");
-          }
-          message.open({
-            type: "success",
-            content: "Login Successfull",
-          });
-          navigate("/managerhome");
-        } else {
-          message.open({
-            type: "error",
-            content: "Please enter email and password correctly",
-          });
-        }
-        localStorage.setItem("username", data.data.username);
-        localStorage.setItem("email", data.data.email);
-        localStorage.setItem("role_id", data.data.role_id);
+
+    if( email !== "" && password !== ""){
+      fetch("https://demo.emeetify.com:81/appraisel/users/adminLogin", {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
       })
-      .catch((err) => {
-        console.log(err.message);
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data, "-------------------->");
+          setResponseData(data);
+          console.log("ROLE", email);
+          if (data.status !== false) {
+            // if (email === manager) {
+            //   localStorage.setItem("Role", "Manager");
+            // } else {
+            //   localStorage.setItem("Role", "Employee");
+            // }
+            // message.open({
+            //   type: "success",
+            //   content: "Login Successfull",
+            // });
+            navigate("/managerhome");
+          } else {
+            message.open({
+              type: "error",
+              content: "Please enter email and password correctly",
+            });
+          }
+          localStorage.setItem("username", data.data.username);
+          localStorage.setItem("email", data.data.email);
+          localStorage.setItem("role_id", data.data.role_id);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }else{
+      message.open({
+        type: "error",
+        content: "Please enter email and password correctly",
       });
+    }
+
+    
   };
   /* Admin Login Buttn Ends Here  */
   return (
