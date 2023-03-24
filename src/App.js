@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import ManagerHome from './pages/ManagerHome';
 import MngEmployeeDetails from './pages/MngEmployeeDetails'
 import HomeNew from './pages/HomeNew';
+import EmployeeDetails
+ from './pages/EmployeeDetails';
 function App() {
   
   return (
@@ -16,7 +18,9 @@ function App() {
           {/* <Route path='*' element={<Home />}/> */}
           <Route path='/homenew' element={<HomeNew />}/>
           <Route path='/managerhome' element={ <ManagerHome />} />
-          <Route path='/mngemployeedetails' element={ <MngEmployeeDetails />} />
+          {/* <Route path='/mngemployeedetails' element={ <MngEmployeeDetails />} /> */}
+          <Route path='/employeedetails' element={ <EmployeeDetails />} />
+
           {/* <Route path="/" exact component={!isLoggedIn ? <Login /> : <Login />} />
           <Route path="/home" exact component={isLoggedIn ? <Home /> : <Login />} /> */}
         </Routes>

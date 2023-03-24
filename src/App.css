@@ -132,7 +132,7 @@
 
 .header-profile{
   font-size: 20px;
-  margin-left: 150px;
+  margin-left: -50px !important;
   color:'white'
 }
 .employee-profile{
@@ -444,4 +444,7 @@
 }
 .name{
   margin-top: 20px;
+}
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
+  height:0.4em !important;
 }

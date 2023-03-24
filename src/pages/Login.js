@@ -14,7 +14,6 @@ import { signInWithPopup } from "firebase/auth";
 import GoogleButton from "react-google-button";
 import axios from "axios";
 
-
 function Login({ isLoggedIn }) {
   const navigate = useNavigate();
   const onFinishFailed = (errorInfo) => {
@@ -25,34 +24,43 @@ function Login({ isLoggedIn }) {
   const [responseData, setResponseData] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
-  const manager = 'admin@gmail.com'
+  const manager = "admin@gmail.com";
   // const [datas , setDatas] = useState([]);
 
   const [google, setGoogle] = useState("");
 
   const handleGoogle = () => {
+    console.log("???? google")
     signInWithPopup(auth, provider).then((data) => {
       setGoogle(data.user.email);
       localStorage.setItem("displayName", data.user.displayName);
       localStorage.setItem("email", data.user.email);
       localStorage.setItem("token", data._tokenResponse.oauthAccessToken);
-      console.log("ROLE",data.user.email)
-      if(data.user.email === manager){
-        localStorage.setItem("Role","Manager");
-      }else{
-        localStorage.setItem("Role","Employee");
+      console.log("ROLE", data.user.email);
+      if (data.user.email === manager) {
+        localStorage.setItem("Role", "Manager");
+      } else {
+        localStorage.setItem("Role", "Employee");
       }
-      axios
-        .post("https://demo.emeetify.com:81/appraisel/users/register", {
-          email: data.user.email,
-        })
-        .then((response) => console.log(response, "-------------->"))
-        .catch((e) => console.log(e, "error message"));
-      if (localStorage.getItem("token")) {
-        // navigate("/home");
-        navigate("/homenew");
-        setGoogle(localStorage.getItem("email"));
-      }
+      // console.log("???", data.user.email);
+      // console.log("???", data.user.email.split("@"));
+      // let getMailId = data?.user?.email?.split("@");
+      // if (getMailId[1] === "skeintech.com") {
+        axios
+          .post("https://demo.emeetify.com:81/appraisel/users/register", {
+            email: data.user.email,
+          })
+          .then((response) => console.log(response, "-------------->"))
+          .catch((e) => console.log(e, "error message"));
+        if (localStorage.getItem("token")) {
+          // navigate("/home");
+          navigate("/homenew");
+          setGoogle(localStorage.getItem("email"));
+        }
+      // } else {
+      //   // alert("Please SignIn with Skein Domain");
+      //   navigate("/homenew");
+      // }
     });
   };
   const role_id = localStorage.getItem("role_id");
@@ -61,18 +69,19 @@ function Login({ isLoggedIn }) {
     if (localStorage.getItem("token")) {
       // navigate("/home");
       navigate("/homenew");
-    }else{
+    } else {
       navigate("/");
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if ( role_id === "1") {
-      navigate("/mngemployeedetails");
-    }else{
+    if (role_id === "1") {
+      // navigate("/mngemployeedetails");
+      navigate("/employeedetails");
+    } else {
       navigate("/");
     }
-  },[]);
+  }, []);
 
   /* Admin login Button Starts Here */
   const handleClick = () => {
@@ -90,18 +99,18 @@ function Login({ isLoggedIn }) {
       .then((data) => {
         console.log(data, "-------------------->");
         setResponseData(data);
-        console.log("ROLE",email)
+        console.log("ROLE", email);
         if (responseData.status !== false) {
-          if(email === manager){
-            localStorage.setItem("Role","Manager");
-          }else{
-            localStorage.setItem("Role","Employee");
+          if (email === manager) {
+            localStorage.setItem("Role", "Manager");
+          } else {
+            localStorage.setItem("Role", "Employee");
           }
           message.open({
             type: "success",
             content: "Login Successfull",
           });
-           navigate("/managerhome");
+          navigate("/managerhome");
         } else {
           message.open({
             type: "error",
@@ -110,20 +119,18 @@ function Login({ isLoggedIn }) {
         }
         localStorage.setItem("username", data.data.username);
         localStorage.setItem("email", data.data.email);
-        localStorage.setItem("role_id" , data.data.role_id)
+        localStorage.setItem("role_id", data.data.role_id);
       })
       .catch((err) => {
         console.log(err.message);
       });
-     
   };
   /* Admin Login Buttn Ends Here  */
   return (
-    
-    <div style={{display:'flex'}}>
+    <div style={{ display: "flex" }}>
       <div className="container">
         <Card className="card">
-        {contextHolder}
+          {contextHolder}
           <Form layout="vertical" onFinishFailed={onFinishFailed}>
             <img src={download} className="login-skein-logo" alt="skeinlogo" />
 
@@ -168,7 +175,6 @@ function Login({ isLoggedIn }) {
               />
             </Form.Item>
             <Form.Item>
-             
               <Button
                 type="primary"
                 htmlType="submit"
@@ -184,10 +190,9 @@ function Login({ isLoggedIn }) {
             {/* <GoogleLoginn /> */}
             {google ? (
               <>
-               {/* // <Home /> */}
-              <HomeNew />
+                {/* // <Home /> */}
+                <HomeNew />
               </>
-             
             ) : (
               <GoogleButton
                 onClick={handleGoogle}
@@ -200,8 +205,17 @@ function Login({ isLoggedIn }) {
         </Card>
       </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ marginLeft: "100px",marginTop:'20px' }}>
-        <Typography style={{textAlign:'center',marginBottom:'-10px',letterSpacing:'1px',wordSpacing:'4px'}}><h1>Apraisal 2022-23</h1></Typography>
+        <div style={{ marginLeft: "100px", marginTop: "20px" }}>
+          <Typography
+            style={{
+              textAlign: "center",
+              marginBottom: "-10px",
+              letterSpacing: "1px",
+              wordSpacing: "4px",
+            }}
+          >
+            <h1>Apraisal 2022-23</h1>
+          </Typography>
           <img
             src={undraw_Team}
             alt="skeinlogo"

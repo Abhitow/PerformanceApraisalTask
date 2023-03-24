@@ -187,7 +187,8 @@ useEffect(()=>{},[empMail]);
         .catch((e) => {
           console.log("e", e);
         });
-        navigate("/mngemployeedetails");
+        // navigate("/mngemployeedetails");
+        navigate("/employeedetails");
     }
     localStorage.setItem("selectMail",selectMail);
 

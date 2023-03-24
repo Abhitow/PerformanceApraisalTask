@@ -1,15 +1,22 @@
-import { Col, Divider, Layout, message, Row, Space } from "antd";
+import { Col, Divider, Layout, message, Row, Space, Spin, notification } from "antd";
 import ScoringTable from "../components/ScoringTable";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Typography from "antd/es/typography/Typography";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import ValidationRules from "../pages/ValidationRules";
 import Profile from "../components/Profile";
 import download from "../download.png";
+import {
+  RadiusBottomleftOutlined,
+  RadiusBottomrightOutlined,
+  RadiusUpleftOutlined,
+  RadiusUprightOutlined,
+} from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -21,10 +28,16 @@ import {
   MenuItem,
   Select,
   TextField,
-  Stack,TextareaAutosize
+  Stack,
+  TextareaAutosize,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import { isObject, isString } from "lodash";
-
+import dayjs from "dayjs";
+const Context = React.createContext({
+  name: 'Default',
+});
 const { Header, Content } = Layout;
 const layoutStyle = {
   height: "100vh",
@@ -58,7 +71,6 @@ const initialState = {
 };
 const HomeNew = (props) => {
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
   /* performance apraisal form  */
   const [date, setDate] = useState();
   const [windowsOptions, setWindowsOptions] = useState("");
@@ -76,6 +88,8 @@ const HomeNew = (props) => {
   /*<------Employee deatils fetching Ends here  */
 
   /*   new Home page  with validation*/
+  const [isLoading, setIsLoading] = useState(false);
+
   const [questions, setQuestions] = useState();
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
@@ -84,6 +98,14 @@ const HomeNew = (props) => {
   const [self_aspirations, setself_aspirations] = useState("");
   const [error_self_aspirations, seterror_self_aspirations] = useState(false);
   const [avg, setAvg] = useState(0);
+const [isSuccess, setIsSuccess]=useState(0)
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (type, messages) => {
+    api[type]({
+      message: `${messages}`,
+      className:"notification-type-success"
+    });
+  };
   // vlidation rules
 
   const rules = {
@@ -134,7 +156,7 @@ const HomeNew = (props) => {
     if (month.length < 2) month = "0" + month;
     if (day.length < 2) day = "0" + day;
 
-    return [day, month, year].join("-");
+    return [month, day, year].join("/");
   }
 
   let dd = users[0]?.joining_date;
@@ -169,6 +191,7 @@ const HomeNew = (props) => {
       )
       .then((res) => {
         setself_aspirations(res?.data?.data[0]?.self_aspirations);
+        setAvg(parseFloat(res?.data?.data[0]?.employee_self_rating).toFixed(2));
       })
       .catch((e) => {
         console.log("e", e);
@@ -255,6 +278,7 @@ const HomeNew = (props) => {
       }
     }
   };
+  useEffect(()=>{},[isSuccess])
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -365,10 +389,13 @@ const HomeNew = (props) => {
           formValues
         )
         .then((response) => {
-          console.log(response.data);
+          openNotification('success',response.data.message)
+          setIsSuccess(isSuccess => isSuccess +1)
+
         })
         .catch((e) => {
           console.log("e", e);
+          openNotification('error',e.data.message)
         });
       // Question form api integration ends here
       // EMployee details form api  starts here
@@ -379,10 +406,14 @@ const HomeNew = (props) => {
           data
         )
         .then((response) => {
-          console.log(response.data);
+          openNotification('success',response.data.message)
+          setIsSuccess(isSuccess => isSuccess +1)
+
         })
         .catch((e) => {
           console.log("e", e);
+          openNotification('error',e.data.message)
+
         });
       // EMployee details form api  ends here
     }
@@ -395,9 +426,14 @@ const HomeNew = (props) => {
       )
       .then((response) => {
         console.log(response);
+        openNotification('success',response.data.message)
+        setIsSuccess(isSuccess => isSuccess +1)
+
+
       })
       .catch((e) => {
         console.log("e", e);
+        openNotification('error',e.data.message)
       });
   };
 
@@ -416,6 +452,8 @@ const HomeNew = (props) => {
   }, [formData]);
 
   useEffect(() => {
+    setIsLoading(true);
+
     axios
       .get(
         "https://demo.emeetify.com:81/appraisel/users/userNames?email=" +
@@ -424,6 +462,7 @@ const HomeNew = (props) => {
       .then((response) => {
         let a = [];
         let userDetails = response.data.data;
+     
         setEditForm({
           username: response.data.data[0]?.username,
           manager_name: response.data.data[0]?.manager_name,
@@ -431,11 +470,11 @@ const HomeNew = (props) => {
           designation: response.data.data[0]?.designation,
           department: response.data.data[0]?.department,
         });
-        // setDate(response?.data?.data[0]?.joining_date);
+        let newSetDate = formatDate(response.data.data[0]?.joining_date);
+        setDate(dayjs(newSetDate));
         const formValues = [];
 
         for (let i = 0; i < userDetails?.length; i++) {
-          // console.log("---->>");
           let comments = userDetails[i].comments;
           for (let j = 0; j < comments?.length; j++) {
             const element = comments[j];
@@ -455,6 +494,10 @@ const HomeNew = (props) => {
             }
           }
         }
+        // setIsLoading(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       })
       .catch((e) => {
         console.log(e, "error message");
@@ -462,656 +505,1171 @@ const HomeNew = (props) => {
   }, [localEmail, questions]);
 
   // console.log("=====>>>",date)
+  // if(isSuccess === 3 ){
+  //   console.log("??????????????????", isSuccess)
+  //   openNotification('success',"Thank You Form Submitted successfully")
+
+  // }
   return (
     <>
-      <Space
-        direction="vertical"
-        style={{
-          width: "100%",
-        }}
-        size={[0, 48]}
-      >
-        {contextHolder}
-        <Layout style={layoutStyle}>
-          <Header style={headerStyle}>
-            <div>
-              <Row>
-                <Col span={3}>
-                  <img src={download} className="skein-logo" alt="skeinlogo" />
-                </Col>
-                <Col span={3}></Col>
-
-                <Col span={14}>
-                  <h1
-                    style={{
-                      textAlign: "center",
-                      marginTop: "0px",
-                      marginLeft: "-100px",
-                    }}
-                  >
-                    Performance Appraisal Form
-                  </h1>
-                </Col>
-
-                <Col span={4}>
-                  <Profile />
-                </Col>
-              </Row>
-            </div>
-          </Header>
-
-          {windowsOptions.is_appraisal_window_open === true &&
-          windowsOptions.is_appraisal_open_for_employee === true ? (
-            <Content style={contentStyle} className="homeContent">
-              <Card style={{ height: "auto", width: "1100px", margin: "auto" }}>
-                <Card style={{ marginTop: "40px" }}>
-                  <div style={{ marginBottom: "40px" }}>
-                    <h1>Employee Details</h1>
-                  </div>
-                  <Divider />
-
+      {isLoading ? (
+        <Spin tip="Loading" size="large" style={{marginTop:'50vh'}}>
+        <div className="content" />
+      </Spin>
+      ) : (
+        <>
+        <RadiusUpleftOutlined />
+          <Space
+            direction="vertical"
+            style={{
+              width: "100%",
+            }}
+            size={[0, 48]}
+          >
+            {contextHolder}
+            <Layout style={layoutStyle}>
+              <Header style={headerStyle}>
+                <div>
                   <Row>
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"} style={{marginLeft:'60px'}}>
-                          <FormLabel style={{marginTop:'20px'}}>
-                            Name of Employee
-                          </FormLabel>
-                          <InputLabel sx={{marginTop:2,color:"red"}}>*</InputLabel>
-                        </Stack>
-                        <Stack>
-                          <TextField size="small" style={{marginLeft:"20px",width:'250px',marginTop:'10px'}}
-                            error={formErrors.username === "Required" ? true : false}
-                            helperText={formErrors.username}
-                            variant="outlined"
-                            name="username"
-                            value={editForm.username}
-                            onChange={handleFormChanges}
-                          />
-                        </Stack>
-                      </Stack> 
-                    </Col>
-
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"}>
-                          <FormLabel style={{marginTop:'20px'}}>Manager Name</FormLabel>
-                          <InputLabel sx={{marginTop:2,color:"red"}}>*</InputLabel>
-                        </Stack>
-                        <Stack>
-                        <Select style={{marginLeft:"20px",width:'250px',marginTop:'10px'}}
-                        size="small"
-                        name="manager_name"
-                        value={editForm.manager_name}
-                        onChange={handleFormChanges}
-                        error={
-                          formErrors.manager_name === "Required" ? true : false
-                        }
-                      >
-                        <MenuItem value="Rajamanickam R">
-                          Rajamanickam R
-                        </MenuItem>
-                        <MenuItem value="Ramesh Babu E">Ramesh Babu E</MenuItem>
-                        <MenuItem value="Santhana Gopal S">
-                          Santhana Gopal S
-                        </MenuItem>
-                      </Select>
-                      <FormHelperText>{formErrors.manager_name}</FormHelperText>
-                        </Stack>
-                      </Stack>
-                    </Col>
-                  </Row>
-
-                  <Row style={{ marginTop: "50px" }}>
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"} style={{marginLeft:'15px',marginTop:'20px'}}>
-                          <FormLabel sx={{ marginLeft: 6 }}>Role</FormLabel>
-                          <InputLabel sx={{marginTop:-0.2,color:"red"}}>*</InputLabel>
-                        </Stack>
-                      <Stack>
-                        <Select style={{marginLeft:"123px",width:'250px',marginTop:'10px'}}
-                         size="small"
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          name="role_id"
-                          value={editForm.role_id}
-                          onChange={handleFormChanges}
-                          error={formErrors.role_id === "Required" ? true : false}
-                        >
-                          <MenuItem value={1}>Manager</MenuItem>
-                          <MenuItem value={2}>Employee</MenuItem>
-                        </Select>
-                      <FormHelperText>{formErrors.role_id}</FormHelperText>
-                      </Stack>
-                      </Stack>
-                      
-                    </Col>
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"} style={{marginLeft:'15px',marginTop:'20px'}}>
-                        <FormLabel style={{marginLeft:'-13px'}}>Designation</FormLabel>
-                        <InputLabel sx={{marginTop:-0.2,color:"red"}}>*</InputLabel>
-                        </Stack>
-                        <Stack>
-                        <Select style={{marginLeft:"47px",width:'250px',marginTop:'10px'}}
-                        size="small"
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name="designation"
-                        value={editForm.designation}
-                        onChange={handleFormChanges}
-                        error={
-                          formErrors.designation === "Required" ? true : false
-                        }
-                      >
-                        <MenuItem value="Associate Trainee">
-                          Associate Trainee
-                        </MenuItem>
-                        <MenuItem value="Software Engineer">
-                          Software Engineer
-                        </MenuItem>
-                        <MenuItem value="Software Test Engineer">
-                          Software Test Engineer
-                        </MenuItem>
-                      </Select>
-                      <FormHelperText>{formErrors.designation}</FormHelperText>
-                        </Stack>
-                      </Stack>
-                    </Col>
-                  </Row>
-
-                  <Row style={{ marginTop: "50px" }}>
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"} style={{marginLeft:'15px',marginTop:'20px'}}>
-                        <FormLabel style={{marginLeft:'50px'}}>Department</FormLabel>
-                        <InputLabel sx={{marginTop:-0.2,color:"red"}}>*</InputLabel>
-                        </Stack>
-                        <Stack>
-                        <Select style={{marginLeft:"70px",width:'250px',marginTop:'10px'}}
-                        size="small"
-                        name="department"
-                        value={editForm.department}
-                        onChange={handleFormChanges}
-                        error={
-                          formErrors.department === "Required" ? true : false
-                        }
-                      >
-                        <MenuItem value="Development">Development</MenuItem>
-                        <MenuItem value="Marketing">Marketing</MenuItem>
-                        <MenuItem value="Testing">Testing</MenuItem>
-                        <MenuItem value="UI/UX Design">UI/UX Design</MenuItem>
-                      </Select>
-                      <FormHelperText>{formErrors.department}</FormHelperText>
-                        </Stack>
-                      </Stack>
-                    </Col>
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"} style={{marginLeft:'3px',marginTop:'20px'}}>
-                        <FormLabel >
-                        Joining Date
-                      </FormLabel>
-                      <InputLabel sx={{marginTop:-0.2,color:"red"}}>*</InputLabel>
-                        </Stack>
-                        <Stack style={{marginLeft:'45px'}}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs} >
-                        <DatePicker InputProps={{
-                          style:{
-                            height: 20
-                          }
-                        }}
-                          style={{marginLeft:"123px",width:'250px',marginTop:'10px'}}
-                          name="joining_date"
-                          value={date}
-                          error={
-                            formErrors.joining_date === "Required"
-                              ? true
-                              : false
-                          }
-                          onChange={(newValue) => {
-                            setDate(newValue);
-                          }}
-                        />
-                        <FormHelperText style={{color:"#d32f2f"}}>
-                          {formErrors.joining_date}
-                        </FormHelperText>
-                      </LocalizationProvider>
-                        </Stack>
-                      </Stack>
-                    </Col>
-                  </Row>
-
-                  <Row style={{ marginTop: "50px", marginBottom: "50px" }}>
-                    <Col span={12}>
-                      <Stack direction={"row"}>
-                        <Stack direction={"row"} style={{marginLeft:'65px',marginTop:'10px'}}>
-                        <FormLabel >
-                        Review Period
-                      </FormLabel>
-                        </Stack>
-                        <Stack>
-                        <TextField style={{marginLeft:"60px",width:'250px',marginTop:'5px'}}
-                        size="small"
-                        variant="outlined"
-                        name="review_period"
-                        value={editForm.review_period}
-                        defaultValue="2022-23"
-                        InputProps={{
-                          readOnly:true
-                        }}
+                    <Col span={3}>
+                      <img
+                        src={download}
+                        className="skein-logo"
+                        alt="skeinlogo"
                       />
-                        </Stack>
-                      </Stack>
+                    </Col>
+                    <Col span={3}></Col>
+
+                    <Col span={14}>
+                      <h1
+                        style={{
+                          textAlign: "center",
+                          marginTop: "0px",
+                          marginLeft: "-100px",
+                        }}
+                      >
+                        Performance Appraisal Form
+                      </h1>
+                    </Col>
+
+                    <Col span={4}>
+                      <Profile />
                     </Col>
                   </Row>
-                </Card>
-                {/* <div>
-                    <Card className="form-card" title="Employee Details">
-                      {contextHolder}
-                      <Row className="performance-form-row-one">
+                </div>
+              </Header>
+
+              {windowsOptions.is_appraisal_window_open === true &&
+              windowsOptions.is_appraisal_open_for_employee === true ? (
+                <Content style={contentStyle} className="homeContent">
+                  <Card
+                    style={{ height: "auto", width: "1100px", margin: "auto" }}
+                  >
+                    <Card style={{ marginTop: "40px" }}>
+                      <div style={{ marginBottom: "40px" }}>
+                        <h1>Employee Details</h1>
+                      </div>
+                      <Divider />
+
+                      <Row>
                         <Col span={12}>
-                          <Form.Item
-                            label="Name of Employee"
-                            name={
-                              "name" || users !== undefined
-                                ? users[0]?.username
-                                : ""
-                            }
-                            className="label1"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter name of employee",
-                              },
-                            ]}
-                            hasFeedback
-                            initialValue={
-                              users !== undefined
-                                ? users[0]?.username
-                                : userName
-                            }
-                          >
-                            <Input
-                              className="performance-input"
-                              value={name}
-                              onChange={(e) => {
-                                setName(e.target.value);
-                              }}
-                            />
-                          </Form.Item>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "60px" }}
+                            >
+                              <FormLabel style={{ marginTop: "20px" }}>
+                                Name of Employee
+                              </FormLabel>
+                              <InputLabel sx={{ marginTop: 2, color: "red" }}>
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <TextField
+                                size="small"
+                                style={{
+                                  marginLeft: "20px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                error={
+                                  formErrors.username === "Required"
+                                    ? true
+                                    : false
+                                }
+                                helperText={formErrors.username}
+                                variant="outlined"
+                                name="username"
+                                value={editForm.username}
+                                onChange={handleFormChanges}
+                              />
+                            </Stack>
+                          </Stack>
                         </Col>
+
                         <Col span={12}>
-                          <Form.Item
-                            className="label2"
-                            label="Manager Name"
-                            name={"manager"}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please select the manager",
-                              },
-                            ]}
-                            initialValue={
-                              users !== undefined
-                                ? users[0]?.manager_name
-                                : "Select Manager"
-                            }
-                          >
-                            <Select
-                              className="performance-input-manager"
-                              placeholder="Select Manager"
-                              style={{
-                                width: 250,
-                                // marginLeft: "20px",
-                              }}
-                              value={manager}
-                              onChange={handleManager}
-                              options={managerData.map((selectData) => ({
-                                label: selectData,
-                                value: selectData,
-                              }))}
-                            />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row className="performance-form-row-two">
-                        <Col span={12}>
-                          <Form.Item
-                            name={"roleId"}
-                            className="label5"
-                            label="Role"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please select the role",
-                              },
-                            ]}
-                            initialValue={
-                              users !== undefined
-                                ? users[0]?.role_id
-                                : "Enter Role Id"
-                            }
-                          >
-                            <Select
-                              className="performance-input-roleId"
-                              placeholder="Select Role"
-                              style={{
-                                width: 250,
-                                marginLeft: "10px",
-                              }}
-                              value={roleIdData.roleId}
-                              onChange={handleRoleChange}
-                              options={roleIdData.map((selectData) => ({
-                                label: selectData.roles,
-                                value: selectData.roleId,
-                              }))}
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                          <Form.Item
-                            className="label3"
-                            label="Designation"
-                            name={"designation"}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter Your designation",
-                              },
-                            ]}
-                            initialValue={
-                              users !== undefined
-                                ? users[0]?.designation
-                                : "Select Designation"
-                            }
-                          >
-                            <Select
-                              className="performance-input-designation"
-                              placeholder="Select Designation"
-                              style={{
-                                width: 250,
-                                marginLeft: 65,
-                              }}
-                              value={designation}
-                              onChange={handleDesignation}
-                              options={designationData.map((selectData) => ({
-                                label: selectData,
-                                value: selectData,
-                              }))}
-                            />
-                          </Form.Item>
+                          <Stack direction={"row"}>
+                            <Stack direction={"row"}>
+                              <FormLabel style={{ marginTop: "20px" }}>
+                                Manager Name
+                              </FormLabel>
+                              <InputLabel sx={{ marginTop: 2, color: "red" }}>
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "20px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                name="manager_name"
+                                value={editForm.manager_name}
+                                onChange={handleFormChanges}
+                                error={
+                                  formErrors.manager_name === "Required"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                <MenuItem value="Rajamanickam R">
+                                  Rajamanickam R
+                                </MenuItem>
+                                <MenuItem value="Ramesh Babu E">
+                                  Ramesh Babu E
+                                </MenuItem>
+                                <MenuItem value="Santhana Gopal S">
+                                  Santhana Gopal S
+                                </MenuItem>
+                              </Select>
+                              <FormHelperText>
+                                {formErrors.manager_name}
+                              </FormHelperText>
+                            </Stack>
+                          </Stack>
                         </Col>
                       </Row>
 
-                      <Row className="performance-form-row-two">
+                      <Row style={{ marginTop: "50px" }}>
                         <Col span={12}>
-                          <Form.Item
-                            className="label4"
-                            label="Department"
-                            name={"department"}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter your department",
-                              },
-                            ]}
-                            initialValue={
-                              users !== undefined
-                                ? users[0]?.department
-                                : "Select Department"
-                            }
-                          >
-                            <Select
-                              className="performance-input-department"
-                              placeholder="Select Department"
-                              value={department}
-                              onChange={handleDepartment}
-                              options={departmentData.map((selectData) => ({
-                                label: selectData,
-                                value: selectData,
-                              }))}
-                            />
-                          </Form.Item>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "15px", marginTop: "20px" }}
+                            >
+                              <FormLabel sx={{ marginLeft: 6 }}>Role</FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "123px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                name="role_id"
+                                value={editForm.role_id}
+                                onChange={handleFormChanges}
+                                error={
+                                  formErrors.role_id === "Required"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                <MenuItem value={1}>Manager</MenuItem>
+                                <MenuItem value={2}>Employee</MenuItem>
+                              </Select>
+                              <FormHelperText>
+                                {formErrors.role_id}
+                              </FormHelperText>
+                            </Stack>
+                          </Stack>
                         </Col>
                         <Col span={12}>
-                          <Form.Item
-                            className="joiningdate-label"
-                            label="Joining Date"
-                            name={"date"}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter your joining date",
-                              },
-                            ]}
-                            hasFeedback
-                          >
-                            <DatePicker
-                              initialValue={textt}
-                              className="performance-joiningdate"
-                              value={date}
-                              format={"DD-MM-YYYY"}
-                              onChange={handleJoiningDate}
-                            />
-                          </Form.Item>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "15px", marginTop: "20px" }}
+                            >
+                              <FormLabel style={{ marginLeft: "-13px" }}>
+                                Designation
+                              </FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "47px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                name="designation"
+                                value={editForm.designation}
+                                onChange={handleFormChanges}
+                                error={
+                                  formErrors.designation === "Required"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                <MenuItem value="Associate Trainee">
+                                  Associate Trainee
+                                </MenuItem>
+                                <MenuItem value="Software Engineer">
+                                  Software Engineer
+                                </MenuItem>
+                                <MenuItem value="Software Test Engineer">
+                                  Software Test Engineer
+                                </MenuItem>
+                              </Select>
+                              <FormHelperText>
+                                {formErrors.designation}
+                              </FormHelperText>
+                            </Stack>
+                          </Stack>
                         </Col>
                       </Row>
-                      <Row className="performance-form-row-three">
+
+                      <Row style={{ marginTop: "50px" }}>
                         <Col span={12}>
-                          <Form.Item
-                            label="Review Period"
-                            className="review-period"
-                          >
-                            <Input
-                              defaultValue={"2022-23"}
-                              readOnly
-                              onChange={(e, defaultValue) => {
-                                setReviewDate(defaultValue("2022-23"));
-                              }}
-                              className="performance-date"
-                            />
-                          </Form.Item>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "15px", marginTop: "20px" }}
+                            >
+                              <FormLabel style={{ marginLeft: "50px" }}>
+                                Department
+                              </FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "70px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                name="department"
+                                value={editForm.department}
+                                onChange={handleFormChanges}
+                                error={
+                                  formErrors.department === "Required"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                <MenuItem value="Development">
+                                  Development
+                                </MenuItem>
+                                <MenuItem value="Marketing">Marketing</MenuItem>
+                                <MenuItem value="Testing">Testing</MenuItem>
+                                <MenuItem value="UI/UX Design">
+                                  UI/UX Design
+                                </MenuItem>
+                              </Select>
+                              <FormHelperText>
+                                {formErrors.department}
+                              </FormHelperText>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "3px", marginTop: "20px" }}
+                            >
+                              <FormLabel>Joining Date</FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack style={{ marginLeft: "40px" }}>
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer
+                                  components={["DatePicker", "DatePicker"]}
+                                >
+                                  <DatePicker
+                                  size="small"
+                                    style={{
+                                      marginLeft: "100px",
+                                      width: "200px",
+                                      marginTop: "10px",
+                                      height:"0.4em !important"
+                                    }}
+                                    name="joining_date"
+                                    // defaultValue={date ?? ""}
+                                    views={["year", "month", "day"]}
+                                    value={date}
+                                    error={
+                                      formErrors.joining_date === "Required"
+                                        ? true
+                                        : false
+                                    }
+                                    onChange={(newValue) => {
+                                      setDate(newValue);
+                                    }}
+                                  />
+                                </DemoContainer>
+                                <FormHelperText style={{ color: "#d32f2f" }}>
+                                  {formErrors.joining_date}
+                                </FormHelperText>
+                              </LocalizationProvider>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                      </Row>
+
+                      <Row style={{ marginTop: "50px", marginBottom: "50px" }}>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "65px", marginTop: "10px" }}
+                            >
+                              <FormLabel>Review Period</FormLabel>
+                            </Stack>
+                            <Stack>
+                              <TextField
+                              disabled
+                                style={{
+                                  marginLeft: "60px",
+                                  width: "250px",
+                                  marginTop: "5px",
+                                }}
+                                size="small"
+                                variant="outlined"
+                                name="review_period"
+                                value={editForm.review_period}
+                                defaultValue="2022-23"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Stack>
+                          </Stack>
                         </Col>
                       </Row>
                     </Card>
-                  </div>
-                  <ScoringTable /> */}
-                <Divider
-                  style={{
-                    marginTop: "60px",
-                    backgroundColor: "green",
-                    height: "5px",
-                  }}
-                />
 
-                {/* Ratings and comment section Starts here */}
+                    <Divider
+                      style={{
+                        marginTop: "60px",
+                        backgroundColor: "green",
+                        height: "5px",
+                      }}
+                    />
 
-                <Typography
-                  style={{
-                    marginTop: "80px",
-                    fontSize: "24px",
-                    fontWeight: "bold",
-                    textDecorationLine: "underline",
-                  }}
-                >
-                  KRA-Technical Aspects
-                </Typography>
+                    {/* Ratings and comment section Starts here */}
 
-                <div>
-                  {/* <form onSubmit={handleSubmit}> */}
-                  {Array.isArray(questions) &&
-                    questions?.map((question) => (
-                      <div key={question.t_id}>
-                        {/* <h2 style={{float:'left'}}>{question.kra}</h2> */}
+                    <Typography
+                      style={{
+                        marginTop: "80px",
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      KRA-Technical Aspects
+                    </Typography>
 
-                        <Row style={{ marginTop: "80px" }}>
-                          <Col>
-                          <Stack style={{marginLeft:'50px'}}>
-                            <h2 style={{ float: "left", marginTop: "-40px" }}>
-                              KRA:{question.kra}
-                            </h2>
-                          </Stack>
-                          </Col>
-                        </Row>
+                    <div>
+                      {/* <form onSubmit={handleSubmit}> */}
+                      {Array.isArray(questions) &&
+                        questions?.map((question) => (
+                          <div key={question.t_id}>
+                            {/* <h2 style={{float:'left'}}>{question.kra}</h2> */}
 
-                        <Row style={{marginTop:'0px'}}>
-                          <Col>
-                            <Typography
+                            <Row style={{ marginTop: "80px" }}>
+                              <Col>
+                                <Stack style={{ marginLeft: "50px" }}>
+                                  <h2
+                                    style={{
+                                      float: "left",
+                                      marginTop: "-40px",
+                                    }}
+                                  >
+                                    KRA:{question.kra}
+                                  </h2>
+                                </Stack>
+                              </Col>
+                            </Row>
+
+                            <Row style={{ marginTop: "0px" }}>
+                              <Col>
+                                <Typography
+                                  style={{
+                                    border: "1px solid blue",
+                                    fontSize: "18px",
+                                    textAlign: "left",
+                                    paddingTop: "10px",
+                                    paddingLeft: "15px",
+                                    color: "black",
+                                    borderRadius: "10px",
+                                    height: "80px",
+                                    marginLeft: "50px",
+                                    width: "1000px",
+                                  }}
+                                >
+                                  {question.measures}
+                                </Typography>
+                              </Col>
+                            </Row>
+
+                            <Row
                               style={{
-                                border: "1px solid blue",
-                                fontSize: "18px",
-                                textAlign:'left',
-                                paddingTop:'10px',
-                                paddingLeft:'15px',
-                                color:'black',
-                                borderRadius:'10px',
-                                height:'80px',
-                                marginLeft:'50px',
-                                width:'1000px',
-                                
+                                marginBottom: "150px",
+                                marginTop: "20px",
                               }}
                             >
-                              {question.measures}
-                            </Typography>
-                          </Col>
-                        </Row>
-
-                        <Row
-                          style={{ marginBottom: "150px", marginTop: "20px" }}
-                        >
+                              <Col span={12}>
+                                <Stack
+                                  direction="row"
+                                  style={{
+                                    marginLeft: "200px",
+                                    marginTop: "20px",
+                                  }}
+                                >
+                                  <InputLabel
+                                    style={{
+                                      color: "black",
+                                      fontSize: "18px",
+                                      wordSpacing: "2px",
+                                    }}
+                                  >
+                                    Self Rating
+                                  </InputLabel>
+                                  <InputLabel style={{ color: "red" }}>
+                                    *
+                                  </InputLabel>
+                                </Stack>
+                                <Select
+                                  size="small"
+                                  style={{ width: "150px", marginTop: "10px" }}
+                                  value={
+                                    formData[`field1${question.t_id}`] || ""
+                                  }
+                                  name={`field1${question.t_id}`}
+                                  onChange={handleChange}
+                                  error={
+                                    formErrors[`field1${question.t_id}`]
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  <MenuItem
+                                    value=""
+                                    disabled
+                                    style={{
+                                      width: "50px",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    Select Rating
+                                  </MenuItem>
+                                  <Divider
+                                    style={{
+                                      marginTop: "5px",
+                                      marginBottom: "-1px",
+                                    }}
+                                  />
+                                  {Array.isArray(option)
+                                    ? option.map((item) => (
+                                        <MenuItem
+                                          value={item?.value}
+                                          style={{
+                                            textAlign: "center",
+                                            paddingLeft: "60px",
+                                          }}
+                                        >
+                                          {item?.value}
+                                        </MenuItem>
+                                      ))
+                                    : null}
+                                </Select>
+                                <FormHelperText
+                                  style={{
+                                    color: "#d32f2f",
+                                    marginLeft: "210px",
+                                  }}
+                                >
+                                  {formErrors[`field1${question.t_id}`]}
+                                </FormHelperText>
+                              </Col>
+                              <Col span={12}>
+                                <Stack
+                                  direction="row"
+                                  style={{
+                                    marginLeft: "20px",
+                                    marginTop: "20px",
+                                  }}
+                                >
+                                  <InputLabel
+                                    style={{
+                                      color: "black",
+                                      fontSize: "18px",
+                                      wordSpacing: "2px",
+                                    }}
+                                  >
+                                    Justify Your Comment
+                                  </InputLabel>
+                                  <InputLabel style={{ color: "red" }}>
+                                    *
+                                  </InputLabel>
+                                </Stack>
+                                <TextField
+                                multiline
+                                rows={4}
+                                  style={{
+                                    width: 400,
+                                    marginLeft: "-125px",
+                                    borderRadius: "5px",
+                                    fontSize: "15px",
+                                    paddingTop: "10px",
+                                    paddingLeft: "10px",
+                                  }}
+                                  name={`field2${question.t_id}`}
+                                  value={
+                                    formData[`field2${question.t_id}`] || ""
+                                  }
+                                  onChange={handleChange}
+                                  error={
+                                    formErrors[`field2${question.t_id}`]
+                                      ? true
+                                      : false
+                                  }
+                                  helperText={
+                                    formErrors[`field2${question.t_id}`] || ""
+                                  }
+                                />
+                              </Col>
+                            </Row>
+                          </div>
+                        ))}
+                      <div>
+                        <Divider
+                          style={{
+                            marginTop: "-80px",
+                            backgroundColor: "pink",
+                            height: "2px",
+                          }}
+                        />
+                        <Row>
                           <Col span={12}>
-                            
-                            <Stack direction="row" style={{marginLeft:'200px',marginTop:'20px'}}>
-                              <InputLabel style={{color:'black',fontSize:'18px',wordSpacing:'2px'}}>Self Rating</InputLabel>
-                              <InputLabel style={{color:'red'}}>*</InputLabel>
+                            <Stack
+                              style={{ marginTop: "30px", marginLeft: "60px" }}
+                            >
+                              <FormLabel
+                                sx={{ color: "black", fontSize: "18px" }}
+                              >
+                                Employee Average Rating
+                              </FormLabel>
                             </Stack>
-                            <Select size="small"
-                              style={{ width: "150px",marginTop:'10px' }}
-                              value={formData[`field1${question.t_id}`] || ""}
-                              name={`field1${question.t_id}`}
-                              onChange={handleChange}
-                              error={
-                                formErrors[`field1${question.t_id}`]
-                                  ? true
-                                  : false
-                              }
-                            >
-                              <MenuItem value="" disabled style={{width:'50px',textAlign:'center'}}>
-                                Select Rating
-                              </MenuItem>
-                              <Divider style={{marginTop:'5px',marginBottom:'-1px'}}/>
-                              {Array.isArray(option)
-                                ? option.map((item) => (
-                                    <MenuItem value={item?.value} style={{textAlign:'center',paddingLeft:'60px'}}>
-                                      {item?.value}
-                                    </MenuItem>
-                                  ))
-                                : null}
-                            </Select>
-                            <FormHelperText
-                              style={{ color: "#d32f2f", marginLeft: "210px" }}
-                            >
-                              {formErrors[`field1${question.t_id}`]}
-                            </FormHelperText>
+                            <Stack style={{ marginTop: "20px" }}>
+                              <TextField
+                                style={{ width: 100, marginLeft: "200px" }}
+                                size={"small"}
+                                variant="outlined"
+                                name="employee_average"
+                                value={avg}
+                                onChange={handleFormChanges}
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Stack>
                           </Col>
                           <Col span={12}>
-                            <Stack direction="row" style={{marginLeft:'20px',marginTop:'20px'}}>
-                              <InputLabel style={{color:'black',fontSize:'18px',wordSpacing:'2px'}}>Justify Your Comment</InputLabel>
-                              <InputLabel style={{color:'red'}}>*</InputLabel>
+                            <Stack
+                              direction="row"
+                              style={{ marginTop: "30px", marginLeft: "25px" }}
+                            >
+                              <FormLabel
+                                sx={{ color: "black", fontSize: "18px" }}
+                              >
+                                Self Aspiration
+                              </FormLabel>
+                              <InputLabel style={{ color: "red" }}>
+                                *
+                              </InputLabel>
                             </Stack>
-                            <TextField
-                              style={{ width: 400,marginLeft:'-125px',borderRadius:'5px',fontSize:'15px',paddingTop:'10px',paddingLeft:'10px' }}
-                              name={`field2${question.t_id}`}
-                              value={formData[`field2${question.t_id}`] || ""}
-                              onChange={handleChange}
-                              error={
-                                formErrors[`field2${question.t_id}`]
-                                  ? true
-                                  : false
-                              }
-                              helperText={
-                                formErrors[`field2${question.t_id}`] || ""
-                              }
-                            />
+                            <Stack>
+                              <TextField
+                              multiline
+                              rows={4}
+                                style={{
+                                  marginLeft: "25px",
+                                  marginTop: "15px",
+                                  width: "400px",
+                                }}
+                                error={error_self_aspirations ? true : false}
+                                helperText={
+                                  error_self_aspirations ? "Required" : ""
+                                }
+                                variant="outlined"
+                                name="self_aspirations"
+                                value={self_aspirations}
+                                onChange={handleFormChanges}
+                                inputProps={{
+                                  style: {
+                                    height: 50,
+                                  },
+                                }}
+                              />
+                            </Stack>
                           </Col>
                         </Row>
                       </div>
-                    ))}
-                  <div>
-                  <Divider
-                  style={{
-                    marginTop: "-80px",
-                    backgroundColor: "pink",
-                    height: "2px",
-                  }}
-                />
-                    <Row>
-                      <Col span={12}>
-                          <Stack style={{marginTop:'30px',marginLeft:'60px'}}>
-                            <FormLabel sx={{ color:'black',fontSize:'18px'}}>
-                              Employee Average Rating
-                            </FormLabel>
-                          </Stack>
-                          <Stack style={{marginTop:'20px'}}>
-                          <TextField style={{width:100,marginLeft:'200px'}}
-                          size={"small"}
-                          variant="outlined"
-                          name="employee_average"
-                          value={avg}
-                          onChange={handleFormChanges}
-                          InputProps={{
-                            readOnly:true
-                          }}
-                        />
-                          </Stack>
-                      </Col>
-                      <Col span={12}>
-                        <Stack direction="row" style={{marginTop:'30px',marginLeft:'25px'}}>
-                        <FormLabel sx={{ color:'black',fontSize:'18px'}}>
-                          Self Aspiration
-                        </FormLabel>
-                        <InputLabel style={{color:'red'}}>*</InputLabel>
-                        </Stack>
-                        <Stack>
-                        <TextField
-                        style={{marginLeft:'25px' ,marginTop:'15px',width:'400px'}}
-                          error={error_self_aspirations ? true : false}
-                          helperText={error_self_aspirations ? "Required" : ""}
-                          variant="outlined"
-                          name="self_aspirations"
-                          value={self_aspirations}
-                          onChange={handleFormChanges}
-                          inputProps={{
-                            style:{
-                              height:50
-                            }
-                          }}
-                        />
-                        </Stack>
-                      </Col>
-                    </Row>
-                  </div>
-                  <Divider
-                  style={{backgroundColor:'lightblue',height:'3px'}}
-                />
-                  <Button style={{marginBottom:'40px',marginTop:'10px'}}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    onClick={handleSubmit}
+                      <Divider
+                        style={{ backgroundColor: "lightblue", height: "3px" }}
+                      />
+                      <Button
+                        style={{ marginBottom: "40px", marginTop: "10px" }}
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        onClick={handleSubmit}
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </Card>
+                </Content>
+              ) : (
+                <Content style={contentStyle} className="homeContent">
+                  <Card
+                    style={{ height: "auto", width: "1100px", margin: "auto" }}
                   >
-                    Submit
-                  </Button>
-                </div>
-              </Card>
-            </Content>
-          ) : (
-            ""
-          )}
-        </Layout>
-      </Space>
+                    <Card style={{ marginTop: "40px" }}>
+                      <div style={{ marginBottom: "40px" }}>
+                        <h1>Employee Details</h1>
+                      </div>
+                      <Divider />
+
+                      <Row>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "60px" }}
+                            >
+                              <FormLabel style={{ marginTop: "20px" }}>
+                                Name of Employee
+                              </FormLabel>
+                              <InputLabel sx={{ marginTop: 2, color: "red" }}>
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <TextField
+                                size="small"
+                                style={{
+                                  marginLeft: "20px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                variant="outlined"
+                                name="username"
+                                value={editForm.username}
+                                disabled
+                              />
+                            </Stack>
+                          </Stack>
+                        </Col>
+
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack direction={"row"}>
+                              <FormLabel style={{ marginTop: "20px" }}>
+                                Manager Name
+                              </FormLabel>
+                              <InputLabel sx={{ marginTop: 2, color: "red" }}>
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "20px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                name="manager_name"
+                                value={editForm.manager_name}
+                                disabled
+                              >
+                                <MenuItem value="Rajamanickam R">
+                                  Rajamanickam R
+                                </MenuItem>
+                                <MenuItem value="Ramesh Babu E">
+                                  Ramesh Babu E
+                                </MenuItem>
+                                <MenuItem value="Santhana Gopal S">
+                                  Santhana Gopal S
+                                </MenuItem>
+                              </Select>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                      </Row>
+
+                      <Row style={{ marginTop: "50px" }}>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "15px", marginTop: "20px" }}
+                            >
+                              <FormLabel sx={{ marginLeft: 6 }}>Role</FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "123px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                name="role_id"
+                                value={editForm.role_id}
+                                disabled
+                              >
+                                <MenuItem value={1}>Manager</MenuItem>
+                                <MenuItem value={2}>Employee</MenuItem>
+                              </Select>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "15px", marginTop: "20px" }}
+                            >
+                              <FormLabel style={{ marginLeft: "-13px" }}>
+                                Designation
+                              </FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "47px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                name="designation"
+                                value={editForm.designation}
+                                disabled
+                              >
+                                <MenuItem value="Associate Trainee">
+                                  Associate Trainee
+                                </MenuItem>
+                                <MenuItem value="Software Engineer">
+                                  Software Engineer
+                                </MenuItem>
+                                <MenuItem value="Software Test Engineer">
+                                  Software Test Engineer
+                                </MenuItem>
+                              </Select>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                      </Row>
+
+                      <Row style={{ marginTop: "50px" }}>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "15px", marginTop: "20px" }}
+                            >
+                              <FormLabel style={{ marginLeft: "50px" }}>
+                                Department
+                              </FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <Select
+                                style={{
+                                  marginLeft: "70px",
+                                  width: "250px",
+                                  marginTop: "10px",
+                                }}
+                                size="small"
+                                name="department"
+                                value={editForm.department}
+                                disabled
+                              >
+                                <MenuItem value="Development">
+                                  Development
+                                </MenuItem>
+                                <MenuItem value="Marketing">Marketing</MenuItem>
+                                <MenuItem value="Testing">Testing</MenuItem>
+                                <MenuItem value="UI/UX Design">
+                                  UI/UX Design
+                                </MenuItem>
+                              </Select>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "3px", marginTop: "20px" }}
+                            >
+                              <FormLabel>Joining Date</FormLabel>
+                              <InputLabel
+                                sx={{ marginTop: -0.2, color: "red" }}
+                              >
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack style={{ marginLeft: "45px",marginTop:'10px' }}>
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                 
+                                  style={{
+                                    marginLeft: "123px",
+                                    width: "250px",
+                                    marginTop:'20px'
+                                  }}
+                                  name="joining_date"
+                                  value={date}
+                                  disabled
+                                />
+                              </LocalizationProvider>
+                            </Stack>
+                          </Stack>
+                        </Col>
+                      </Row>
+
+                      <Row style={{ marginTop: "50px", marginBottom: "50px" }}>
+                        <Col span={12}>
+                          <Stack direction={"row"}>
+                            <Stack
+                              direction={"row"}
+                              style={{ marginLeft: "65px", marginTop: "10px" }}
+                            >
+                              <FormLabel>Review Period</FormLabel>
+                            </Stack>
+                            <Stack>
+                              <TextField
+                                style={{
+                                  marginLeft: "60px",
+                                  width: "250px",
+                                  marginTop: "5px",
+                                }}
+                                size="small"
+                                variant="outlined"
+                                name="review_period"
+                                value={editForm.review_period}
+                                defaultValue="2022-23"
+                                disabled
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Stack>
+                          </Stack>
+                        </Col>
+                      </Row>
+                    </Card>
+
+                    <Divider
+                      style={{
+                        marginTop: "60px",
+                        backgroundColor: "green",
+                        height: "5px",
+                      }}
+                    />
+
+                    {/* Ratings and comment section Starts here */}
+
+                    <Typography
+                      style={{
+                        marginTop: "80px",
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      KRA-Technical Aspects
+                    </Typography>
+
+                    <div>
+                      {/* <form onSubmit={handleSubmit}> */}
+                      {Array.isArray(questions) &&
+                        questions?.map((question) => (
+                          <div key={question.t_id}>
+                            {/* <h2 style={{float:'left'}}>{question.kra}</h2> */}
+
+                            <Row style={{ marginTop: "80px" }}>
+                              <Col>
+                                <Stack style={{ marginLeft: "50px" }}>
+                                  <h2
+                                    style={{
+                                      float: "left",
+                                      marginTop: "-40px",
+                                    }}
+                                  >
+                                    KRA:{question.kra}
+                                  </h2>
+                                </Stack>
+                              </Col>
+                            </Row>
+
+                            <Row style={{ marginTop: "0px" }}>
+                              <Col>
+                                <Typography
+                                  style={{
+                                    border: "1px solid blue",
+                                    fontSize: "18px",
+                                    textAlign: "left",
+                                    paddingTop: "10px",
+                                    paddingLeft: "15px",
+                                    color: "black",
+                                    borderRadius: "10px",
+                                    height: "80px",
+                                    marginLeft: "50px",
+                                    width: "1000px",
+                                  }}
+                                >
+                                  {question.measures}
+                                </Typography>
+                              </Col>
+                            </Row>
+
+                            <Row
+                              style={{
+                                marginBottom: "50px",
+                                marginTop: "20px",
+                              }}
+                            >
+                              <Col span={12}>
+                                <Stack
+                                  direction="row"
+                                  style={{
+                                    marginLeft: "200px",
+                                    marginTop: "20px",
+                                  }}
+                                >
+                                  <InputLabel
+                                    style={{
+                                      color: "black",
+                                      fontSize: "18px",
+                                      wordSpacing: "2px",
+                                    }}
+                                  >
+                                    Self Rating
+                                  </InputLabel>
+                                  <InputLabel style={{ color: "red" }}>
+                                    *
+                                  </InputLabel>
+                                </Stack>
+                                <Select
+                                  size="small"
+                                  style={{ width: "150px", marginTop: "10px" }}
+                                  value={
+                                    formData[`field1${question.t_id}`] || ""
+                                  }
+                                  name={`field1${question.t_id}`}
+                                  onChange={handleChange}
+                                  disabled
+                                  error={
+                                    formErrors[`field1${question.t_id}`]
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  <MenuItem
+                                    value=""
+                                    disabled
+                                    style={{
+                                      width: "50px",
+                                      textAlign: "center",
+                                    }}
+                                  >
+                                    Select Rating
+                                  </MenuItem>
+                                  <Divider
+                                    style={{
+                                      marginTop: "5px",
+                                      marginBottom: "-1px",
+                                    }}
+                                  />
+                                  {Array.isArray(option)
+                                    ? option.map((item) => (
+                                        <MenuItem
+                                          value={item?.value}
+                                          style={{
+                                            textAlign: "center",
+                                            paddingLeft: "60px",
+                                          }}
+                                        >
+                                          {item?.value}
+                                        </MenuItem>
+                                      ))
+                                    : null}
+                                </Select>
+                              </Col>
+                              <Col span={12}>
+                                <Stack
+                                  direction="row"
+                                  style={{
+                                    marginLeft: "20px",
+                                    marginTop: "20px",
+                                  }}
+                                >
+                                  <InputLabel
+                                    style={{
+                                      color: "black",
+                                      fontSize: "18px",
+                                      wordSpacing: "2px",
+                                    }}
+                                  >
+                                    Employee's Comment
+                                  </InputLabel>
+                                  <InputLabel style={{ color: "red" }}>
+                                    *
+                                  </InputLabel>
+                                </Stack>
+                                <TextField
+                                  multiline
+                                  rows={4}
+                                  style={{
+                                    width: 400,
+                                    marginLeft: "-125px",
+                                    borderRadius: "5px",
+                                    fontSize: "15px",
+                                    paddingTop: "10px",
+                                    paddingLeft: "10px",
+                                  }}
+                                  name={`field2${question.t_id}`}
+                                  value={
+                                    formData[`field2${question.t_id}`] || ""
+                                  }
+                                  disabled
+                                />
+                              </Col>
+                            </Row>
+                           
+                          </div>
+                        ))}
+                      <div>
+                        <Divider
+                          style={{
+                            marginTop: "80px",
+                            backgroundColor: "pink",
+                            height: "2px",
+                          }}
+                        />
+                        <Row style={{marginBottom:'50px'}}>
+                          <Col span={12}>
+                            <Stack
+                              style={{ marginTop: "30px", marginLeft: "40px" }}
+                            >
+                              <FormLabel
+                                sx={{ color: "black", fontSize: "18px" }}
+                              >
+                                Employee Average Rating
+                              </FormLabel>
+                            </Stack>
+                            <Stack style={{ marginTop: "20px" }}>
+                              <TextField
+                              disabled
+                                style={{ width: 100, marginLeft: "200px" }}
+                                size={"small"}
+                                variant="outlined"
+                                name="employee_average"
+                                value={avg}
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Stack>
+                          </Col>
+                          <Col span={12}>
+                            <Stack
+                              direction="row"
+                              style={{ marginTop: "30px", marginLeft: "25px" }}
+                            >
+                              <FormLabel
+                                sx={{ color: "black", fontSize: "18px" }}
+                              >
+                                Self Aspiration
+                              </FormLabel>
+                              <InputLabel style={{ color: "red" }}>
+                                *
+                              </InputLabel>
+                            </Stack>
+                            <Stack>
+                              <TextField
+                                multiline
+                                disabled
+                                rows={4}
+                                style={{
+                                  marginLeft: "25px",
+                                  marginTop: "15px",
+                                  width: "400px",
+                                }}
+                                variant="outlined"
+                                name="self_aspirations"
+                                value={self_aspirations}
+                                
+                              />
+                            </Stack>
+                          </Col>
+                        </Row>
+                      </div>
+                    </div>
+                  </Card>
+                </Content>
+              )}
+            </Layout>
+          </Space>
+        </>
+      )}
     </>
   );
 };
