@@ -1044,6 +1044,7 @@ const EmployeeDetails = (props) => {
                             </Stack>
                             <Stack>
                               <TextField
+                              disabled
                                 multiline
                                 rows={4}
                                 style={{
