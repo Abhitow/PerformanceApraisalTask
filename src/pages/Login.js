@@ -108,10 +108,10 @@ function Login({ isLoggedIn }) {
             // } else {
             //   localStorage.setItem("Role", "Employee");
             // }
-            // message.open({
-            //   type: "success",
-            //   content: "Login Successfull",
-            // });
+            message.open({
+              type: "success",
+              content: "Login Successfull",
+            });
             navigate("/managerhome");
           } else {
             message.open({
