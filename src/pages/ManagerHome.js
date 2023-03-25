@@ -115,82 +115,43 @@ import {
 
     const [fetched , setFetched] = useState();
     const [selectMail , setSelectMail] =useState();
+    localStorage.setItem("selectMail",selectMail);
 
-
-    // console.log(role, "----->>>>>");
-    const onChangeHandler = (text) => {
-      let matches = [];
-      if (text.length > 0) {
-        matches = users.filter((users) => {
-          const regex = new RegExp(`${text}`, "gi");
-          return users.email.match(regex);
-        });
-      }
-      setSuggestions(matches);
-      setText(text);
-      setSearch(matches);
-    };
-  
-    const onSearch = () => {
-      if (search.length === 1 && text != null) {
-        console.log(search[0].email, "searched -------->");
-  
-        if (text === search[0].email) {
-          console.log(search[0].comments);
-          setEmpData(search[0].comments);
-        } else {
-          console.log("not matched");
-        }
-  
-        setSearchDetails(search);
-      } else {
-        console.log("please enter name");
-      }
-    };
-    
 
   useEffect(() =>{
     axios.get(
         "https://demo.emeetify.com:81/appraisel/users/userList")
         .then(response => setUserMail(response.data.data) )
         .catch(e => console.log(e,"error message"));
-
-        let a=[];
-        for (let i = 0; i < userMail?.length; i++) {
-            a.push(userMail[i].email);
-          }
-          setEmpMail(a);
-       
-  },[empMail]);
+  },[]);
     
-useEffect(()=>{},[empMail]);
- 
-    const onFinish = (formData) => {
-      if (responseData.status === true && commentData.status === true) {
-        messageApi.open({
-          type: "success",
-          content: "Thank you",
-        });
-      } else {
-        messageApi.open({
-          type: "error",
-          content: "please enter all the details",
-        });
-      }
-    };
+// useEffect(()=>{},[empMail]);
   
-   
+   useEffect(()=>{
+    if(navigate === "/"){
+      localStorage.clear();
+    }
+    else{
+      navigate("/managerhome");
+    }
+   })
     const handleSubmit = () => {
         axios
         .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
-        .then((response) => setFetched(response.data.data))
+        .then((response) => {
+          setFetched(response.data.data)
+          if(selectMail === undefined){
+            navigate("/managerhome");
+        }else{
+          navigate("/employeedetails");
+        }
+        })
         .catch((e) => {
           console.log("e", e);
         });
-        // navigate("/mngemployeedetails");
-        navigate("/employeedetails");
+       
     }
-    localStorage.setItem("selectMail",selectMail);
+   
 
     useEffect(() => {
       axios
@@ -203,9 +164,6 @@ useEffect(()=>{},[empMail]);
       const handleSelect = (e) =>{
             setSelectMail(e)
       }
-
-      
-    //   console.log(selectMail,"kkkkkkkk");
 
   return (
     <div>
@@ -259,9 +217,9 @@ useEffect(()=>{},[empMail]);
                                   marginLeft: "20px",
                                 }}
                                onChange={handleSelect}
-                                options={empMail.map((selectData) => ({
-                                  label: selectData,
-                                  value: selectData,
+                                options={userMail.map((selectData) => ({
+                                  label: selectData.email,
+                                  value: selectData.email,
                                 }))}
                               />
                         </Form.Item>
@@ -276,31 +234,6 @@ useEffect(()=>{},[empMail]);
                 </Card>
             
             </Content>
-             {/* (
-            <div>
-              <Card
-                style={{
-                  marginTop: "80px",
-                  width: "1000px",
-                  margin: "auto",
-                  height: "80vh",
-                  position: "fixed",
-                  marginLeft: "260px",
-                }}
-              >
-                <Typography
-                  style={{
-                    textAlign: "center",
-                    marginTop: "30vh",
-                    fontSize: "24px",
-                    color: "grey",
-                  }}
-                >
-                  Appraisal window currently Closed
-                </Typography>
-              </Card>
-            </div>
-            ) */}
           </Layout>
         </Space>
     </div>

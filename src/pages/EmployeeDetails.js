@@ -2,20 +2,15 @@ import {
   Col,
   Divider,
   Layout,
-  message,
   Row,
   Space,
   Spin,
   notification,
 } from "antd";
-import ScoringTable from "../components/ScoringTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
-  RadiusBottomleftOutlined,
-  RadiusBottomrightOutlined,
-  RadiusUpleftOutlined,
   RadiusUprightOutlined,
 } from "@ant-design/icons";
 import Typography from "antd/es/typography/Typography";
@@ -28,21 +23,16 @@ import download from "../download.png";
 import {
   Button,
   Card,
-  FormControl,
   FormHelperText,
   FormLabel,
-  Input,
   InputLabel,
   MenuItem,
   Select,
   TextField,
   Stack,
-  TextareaAutosize,
 } from "@mui/material";
 import { isObject, isString } from "lodash";
-import MngEmployeeDetails from "./MngEmployeeDetails";
 import dayjs from "dayjs";
-import TextArea from "antd/es/input/TextArea";
 
 const { Header, Content } = Layout;
 const layoutStyle = {
@@ -111,7 +101,6 @@ const EmployeeDetails = (props) => {
   const openNotification = (placement) => {
     api.success({
       message: `${placement}`,
-      // description: <Context.Consumer>{({ name }) => `Hello, ${name}!`}</Context.Consumer>,
       placement,
       className: "notification-type-success"
     });
@@ -119,6 +108,8 @@ const EmployeeDetails = (props) => {
   // vlidation rules
 
   const selectedMail = localStorage.getItem("selectMail");
+
+  
   console.log(selectedMail, "??????");
   const rules = {
     username: [ValidationRules.required],
@@ -177,7 +168,7 @@ const EmployeeDetails = (props) => {
 
   const role_id = localStorage.getItem("role_id");
   useEffect(() => {
-    if (!localStorage.getItem("token") && role_id !== "1") {
+    if (!localStorage.getItem("token") && role_id !== "1" || localStorage.getItem("selectMail") === undefined) {
       navigate("/");
     }
   }, []);
@@ -313,7 +304,7 @@ const EmployeeDetails = (props) => {
         )
         .then((response) => {
           console.log(response);
-          openNotification(response.data.message);
+          // openNotification(response.data.message);
         })
         .catch((e) => {
           console.log("e", e);

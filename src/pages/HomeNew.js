@@ -173,7 +173,7 @@ const [isSuccess, setIsSuccess]=useState(0)
   }, []);
 
   const userName = localStorage.getItem("displayName");
-
+const role=localStorage.getItem("Role")
   useEffect(() => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/appraisalWindow")
@@ -426,7 +426,7 @@ const [isSuccess, setIsSuccess]=useState(0)
       )
       .then((response) => {
         console.log(response);
-        openNotification('success',response.data.message)
+        openNotification('success',"Employee FeedBack Submitted Successfully")
         setIsSuccess(isSuccess => isSuccess +1)
 
 
@@ -645,7 +645,7 @@ const [isSuccess, setIsSuccess]=useState(0)
                                   Santhana Gopal S
                                 </MenuItem>
                               </Select>
-                              <FormHelperText>
+                              <FormHelperText style={{ color: "#d32f2f",marginLeft:'40px' }}>
                                 {formErrors.manager_name}
                               </FormHelperText>
                             </Stack>
@@ -685,11 +685,13 @@ const [isSuccess, setIsSuccess]=useState(0)
                                     ? true
                                     : false
                                 }
+                                displayEmpty
                               >
-                                <MenuItem value={1}>Manager</MenuItem>
-                                <MenuItem value={2}>Employee</MenuItem>
+                                 <MenuItem value={2}>Employee</MenuItem>
+                                <MenuItem value="" disabled>Manager</MenuItem>
+                               
                               </Select>
-                              <FormHelperText>
+                              <FormHelperText style={{ color: "#d32f2f" ,marginLeft:'40px'}}>
                                 {formErrors.role_id}
                               </FormHelperText>
                             </Stack>
@@ -739,7 +741,7 @@ const [isSuccess, setIsSuccess]=useState(0)
                                   Software Test Engineer
                                 </MenuItem>
                               </Select>
-                              <FormHelperText>
+                              <FormHelperText style={{ color: "#d32f2f",marginLeft:'70px' }}>
                                 {formErrors.designation}
                               </FormHelperText>
                             </Stack>
@@ -789,7 +791,7 @@ const [isSuccess, setIsSuccess]=useState(0)
                                   UI/UX Design
                                 </MenuItem>
                               </Select>
-                              <FormHelperText>
+                              <FormHelperText style={{ color: "#d32f2f" ,marginLeft:'90px'}}>
                                 {formErrors.department}
                               </FormHelperText>
                             </Stack>
@@ -814,17 +816,15 @@ const [isSuccess, setIsSuccess]=useState(0)
                                   components={["DatePicker", "DatePicker"]}
                                 >
                                   <DatePicker
-                                  size="small"
                                     style={{
                                       marginLeft: "100px",
                                       width: "200px",
                                       marginTop: "10px",
-                                      height:"0.4em !important"
+                                      height:"0.4em !important",
                                     }}
                                     name="joining_date"
-                                    // defaultValue={date ?? ""}
                                     views={["year", "month", "day"]}
-                                    value={date}
+                                    value={date ?? ""}
                                     error={
                                       formErrors.joining_date === "Required"
                                         ? true

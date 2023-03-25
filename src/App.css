@@ -439,12 +439,13 @@
   width: 120px;
   height: 35px; 
 }
-.manager-home-form{
- 
-}
+
 .name{
   margin-top: 20px;
 }
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
   height:0.4em !important;
+}
+.css-1xhypcz-MuiStack-root {
+  overflow: hidden !important;
 }

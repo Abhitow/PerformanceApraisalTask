@@ -74,14 +74,15 @@ function Login({ isLoggedIn }) {
     }
   }, []);
 
-  useEffect(() => {
-    if (role_id === "1") {
-      // navigate("/mngemployeedetails");
-      navigate("/employeedetails");
-    } else {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   let getMail=localStorage.getItem("selectMail")
+  //   if (role_id === "1" && getMail !== undefined) {
+  //     // navigate("/mngemployeedetails");
+  //     navigate("/employeedetails");
+  //   } else {
+  //     navigate("/");
+  //   }
+  // }, []);
 
   /* Admin login Button Starts Here */
   const handleClick = () => {
