@@ -140,10 +140,11 @@ import {
         .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
         .then((response) => {
           setFetched(response.data.data)
-          if(selectMail === undefined){
-            navigate("/managerhome");
+          if(selectMail !== undefined){
+            navigate("/employeedetails");
         }else{
-          navigate("/employeedetails");
+          navigate("/managerhome");
+          
         }
         })
         .catch((e) => {
@@ -151,7 +152,7 @@ import {
         });
        
     }
-   
+ 
 
     useEffect(() => {
       axios
@@ -210,7 +211,7 @@ import {
                 <Row>
                     <Col>
                         <Form.Item>
-                        <Select
+                        <Select autoFocus
                         
                                 style={{
                                   width: 280,
@@ -226,7 +227,7 @@ import {
                     </Col>
                     <Col>
                         <Form.Item style={{marginLeft:'20px'}}>
-                            <Button htmlType="submit" onClick={handleSubmit} >Submit</Button>
+                            <Button style={{opacity:1 ,transition: "opacity 1s"}} htmlType="submit" onClick={handleSubmit} >Submit</Button>
                         </Form.Item>
                     </Col>
                 </Row>

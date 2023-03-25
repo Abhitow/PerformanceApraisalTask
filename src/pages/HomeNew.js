@@ -225,10 +225,11 @@ const role=localStorage.getItem("Role")
     setFormData({ ...formData, [fieldName]: fieldValue });
     setFormErrors(errors);
   };
+  const alpha = /^[a-zA-Z-]+$/;
   const handleFormChanges = (e) => {
     let { name, value } = e.target;
     if (name === "username") {
-      if (!value && value === "") {
+      if (!value || value === "" ||  !alpha.test(value)) {
         formErrors.username = "Required";
       } else {
         formErrors.username = "";
