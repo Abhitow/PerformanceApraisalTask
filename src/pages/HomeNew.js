@@ -305,6 +305,7 @@ const role=localStorage.getItem("Role")
     };
     const self =  {
       self_aspirations: self_aspirations,
+      manager_feedback:""
     }
     const result = validate(undefined, data);
     if (Object.keys(result).length) {
@@ -626,7 +627,7 @@ const role=localStorage.getItem("Role")
                             </Stack>
                             <Stack>
                               <TextField
-                             onKeyDown={new RegExp('^[0-9.]*$')}
+                            
                                 size="small"
                                 style={{
                                   marginLeft: "20px",
