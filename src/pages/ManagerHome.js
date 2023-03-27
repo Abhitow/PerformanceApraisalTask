@@ -140,16 +140,16 @@ import {
         .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
         .then((response) => {
           setFetched(response.data.data)
-          if(selectMail !== undefined){
-            navigate("/employeedetails");
-        }else{
-          navigate("/managerhome");
           
-        }
         })
         .catch((e) => {
           console.log("e", e);
         });
+        if(selectMail !== undefined ){
+          navigate("/employeedetails");
+      }else{
+        navigate("/managerhome");
+      }
        
     }
  
