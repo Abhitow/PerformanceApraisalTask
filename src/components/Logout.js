@@ -10,14 +10,13 @@ const Logout = () => {
 
   const roleid = localStorage.getItem("role_id");
   // console.log(roleid,"lllllllll");
-  function handleLogout() {
 
-    navigate("/");
+  const navi = () => {
+    navigate("/",{ replace: true });
+  }
+  const handleLogout=() =>{   
     localStorage.clear();
-    messageApi.open({
-      type: "success",
-      content: "Logout Successfull",
-    });
+    navi() 
   }
 
   const mail = localStorage.getItem("email");

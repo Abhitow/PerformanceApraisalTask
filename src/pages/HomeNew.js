@@ -175,7 +175,7 @@ const HomeNew = (props) => {
       navigate("/");
     }
   }, []);
-
+useEffect(()=>{},[three])
   const userName = localStorage.getItem("displayName");
 const role=localStorage.getItem("Role")
   useEffect(() => {
@@ -289,6 +289,53 @@ const role=localStorage.getItem("Role")
   };
   useEffect(()=>{},[isSuccess])
 
+  const functionThree = (data) =>{
+    if(data === true){
+      const self =  {
+        self_aspirations: self_aspirations,
+      }
+
+    axios
+    .put(
+      `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,
+     self
+    )
+    .then((response) => {
+      console.log(response);
+      setThree(response.data.status);
+      console.log(response.data.status,"three");
+      if(response.data.status === true){
+        if(response.data.status === true){
+          openNotification('success',"Form submitted Successfully")
+        }
+    }
+    })
+    .catch((e) => {
+      console.log("e", e);
+      openNotification('error',e.data.message)
+    });
+  }
+  }
+  const functionTwo =(data)=>{
+    if(data === true){
+    axios
+        .put(
+          "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
+            localEmail,
+          data
+        )
+        .then((response) => {
+          setTwo(response.data.status);
+          console.log(response.data.status,"two");
+          functionThree(response.data.status)
+       
+        })
+        .catch((e) => {
+          console.log("e", e);
+          openNotification('error',e.data.message)
+        });
+      }
+  }
   const handleSubmit = (event) => {
     event.preventDefault();
     let errors = {};
@@ -305,8 +352,8 @@ const role=localStorage.getItem("Role")
     };
     const self =  {
       self_aspirations: self_aspirations,
-      manager_feedback:""
     }
+    console.log("$--->2",event)
     const result = validate(undefined, data);
     if (Object.keys(result).length) {
       setFormErrors(result);
@@ -360,7 +407,6 @@ const role=localStorage.getItem("Role")
         setFormErrors({ ...formErrors, joining_date: "" });
       }
     }
-
     //questions validation with api integration
     // var total = 0;
     // var count = 0;
@@ -387,7 +433,7 @@ const role=localStorage.getItem("Role")
         });
       }
     }
-
+    console.log("$--->4",event)
     setFormErrors(errors);
     if (self_aspirations === "" || self_aspirations === undefined) {
       if (!self_aspirations && self_aspirations === "") {
@@ -396,10 +442,10 @@ const role=localStorage.getItem("Role")
         seterror_self_aspirations(false);
       }
     }
-
+    console.log("$--->5",event)
     if (Object.keys(errors).length === 0) {
       console.log(JSON.stringify(formValues));
-
+      console.log("$--->6",event)
       // Question form api integration starts here
       axios
         .post(
@@ -407,66 +453,19 @@ const role=localStorage.getItem("Role")
           formValues
         )
         .then((response) => {
-          // openNotification('success',response.data.message)
-          // setIsSuccess(isSuccess => isSuccess +1)
+          console.log("$--->7",event)
           setOne(response.data.status);
           console.log(response.data.status,"one");
-
+          functionTwo(response.data.status)
 
         })
         .catch((e) => {
           console.log("e", e);
           openNotification('error',e.data.message)
         });
-      // Question form api integration ends here
-      // EMployee details form api  starts here
-      axios
-        .put(
-          "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
-            localEmail,
-          data
-        )
-        .then((response) => {
-          // openNotification('success',response.data.message)
-          // setIsSuccess(isSuccess => isSuccess +1)
-          setTwo(response.data.status);
-          console.log(response.data.status,"two");
-          if(response.data.status === true){
-            if((three) === true){
-              openNotification('success',"Form submitted Successfully")
-            }
-        }
-        
-       
-        })
-        .catch((e) => {
-          console.log("e", e);
-          openNotification('error',e.data.message)
-        });
-      // EMployee details form api  ends here
-    }
-    axios
-      .put(
-        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,
-       self
-      )
-      .then((response) => {
-        console.log(response);
-        // openNotification('success',"Employee FeedBack Submitted Successfully")
-        // setIsSuccess(isSuccess => isSuccess +1)
-        setThree(response.data.status);
-        console.log(response.data.status,"three");
-      })
-      .catch((e) => {
-        console.log("e", e);
-        openNotification('error',e.data.message)
-      });
-      // if(three !== true){
-      //   console.log("working");
-      // }else{
-      //   console.log("not working");
-      // }
       
+      // EMployee details form api  ends here
+    } 
   };
 
   useEffect(() => {

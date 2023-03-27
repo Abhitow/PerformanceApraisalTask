@@ -140,17 +140,20 @@ import {
    });
 
 const sel = localStorage.getItem("selectMail",selectMail);
+const naviGate = () => {
+   navigate("/employeedetails");
+}
     const handleSubmit = () => {
 //  navigate("/employeedetails");
-      
+console.log("&&&1");
       
         axios
         .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
         .then((response) => {
           setFetched(response.data.data)
+          console.log("&&&2");
           if(selectMail !== undefined && selectMail === sel){
-        navigate("/employeedetails");
-        console.log("workingggggg");
+            naviGate()
     }else{
       navigate("/managerhome");
     }
@@ -218,7 +221,7 @@ const sel = localStorage.getItem("selectMail",selectMail);
                 <Row>
                     <Col>
                         <Form.Item>
-                        <Select autoFocus
+                        <Select
                         
                                 style={{
                                   width: 280,
