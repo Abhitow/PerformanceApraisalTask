@@ -98,7 +98,11 @@ const HomeNew = (props) => {
   const [self_aspirations, setself_aspirations] = useState("");
   const [error_self_aspirations, seterror_self_aspirations] = useState(false);
   const [avg, setAvg] = useState(0);
-const [isSuccess, setIsSuccess]=useState(0)
+  const [isSuccess, setIsSuccess]=useState(0)
+
+  const [one,setOne] = useState();
+  const [two,setTwo] = useState();
+  const [three,setThree] = useState();
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, messages) => {
     api[type]({
@@ -202,7 +206,7 @@ const role=localStorage.getItem("Role")
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
       .then((response) => {
-        console.log(response, "??????");
+        // console.log(response, "??????");
         setQuestions(response?.data?.data);
       })
       .catch((e) => {
@@ -225,16 +229,20 @@ const role=localStorage.getItem("Role")
     setFormData({ ...formData, [fieldName]: fieldValue });
     setFormErrors(errors);
   };
-  const alpha = /^[a-zA-Z-]+$/;
+  const alpha = /^[a-zA-Z-\s]+$/;
   const handleFormChanges = (e) => {
     let { name, value } = e.target;
     if (name === "username") {
-      if (!value || value === "" ||  !alpha.test(value)) {
+      if (!value || value === "") {
         formErrors.username = "Required";
-      } else {
-        formErrors.username = "";
-      }
-    } else if (name === "manager_name") {
+      }else if (!alpha.test(value)) {
+          formErrors.username = "Invalid Format";
+        }else {
+          formErrors.username = "";
+        }
+    } 
+    
+    else if (name === "manager_name") {
       if (!value && value === "") {
         formErrors.manager_name = "Required";
       } else {
@@ -295,6 +303,9 @@ const role=localStorage.getItem("Role")
       joining_date: date,
       review_period: "2022-23",
     };
+    const self =  {
+      self_aspirations: self_aspirations,
+    }
     const result = validate(undefined, data);
     if (Object.keys(result).length) {
       setFormErrors(result);
@@ -390,8 +401,11 @@ const role=localStorage.getItem("Role")
           formValues
         )
         .then((response) => {
-          openNotification('success',response.data.message)
-          setIsSuccess(isSuccess => isSuccess +1)
+          // openNotification('success',response.data.message)
+          // setIsSuccess(isSuccess => isSuccess +1)
+          setOne(response.data.status);
+          console.log(response.data.status,"one");
+
 
         })
         .catch((e) => {
@@ -402,40 +416,51 @@ const role=localStorage.getItem("Role")
       // EMployee details form api  starts here
       axios
         .put(
-          "https://demo.emeetify.com:81/appraisel/users/FormDetails?email=" +
+          "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
             localEmail,
           data
         )
         .then((response) => {
-          openNotification('success',response.data.message)
-          setIsSuccess(isSuccess => isSuccess +1)
-
+          // openNotification('success',response.data.message)
+          // setIsSuccess(isSuccess => isSuccess +1)
+          setTwo(response.data.status);
+          console.log(response.data.status,"two");
+          if(response.data.status === true){
+            if((three) === true){
+              openNotification('success',"Form submitted Successfully")
+            }
+        }
+        
+       
         })
         .catch((e) => {
           console.log("e", e);
           openNotification('error',e.data.message)
-
         });
       // EMployee details form api  ends here
     }
     axios
       .put(
         `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,
-        {
-          self_aspirations: self_aspirations,
-        }
+       self
       )
       .then((response) => {
         console.log(response);
-        openNotification('success',"Employee FeedBack Submitted Successfully")
-        setIsSuccess(isSuccess => isSuccess +1)
-
-
+        // openNotification('success',"Employee FeedBack Submitted Successfully")
+        // setIsSuccess(isSuccess => isSuccess +1)
+        setThree(response.data.status);
+        console.log(response.data.status,"three");
       })
       .catch((e) => {
         console.log("e", e);
         openNotification('error',e.data.message)
       });
+      // if(three !== true){
+      //   console.log("working");
+      // }else{
+      //   console.log("not working");
+      // }
+      
   };
 
   useEffect(() => {
@@ -511,6 +536,13 @@ const role=localStorage.getItem("Role")
   //   openNotification('success',"Thank You Form Submitted successfully")
 
   // }
+  function disablePrevDates(startDate) {
+    const startSeconds = Date.parse(startDate);
+    return (date) => {
+      return Date.parse(date) < startSeconds;
+    }
+  }
+  const startDate = new Date('Janaury 01, 2014');
   return (
     <>
       {isLoading ? (
@@ -519,7 +551,7 @@ const role=localStorage.getItem("Role")
       </Spin>
       ) : (
         <>
-        <RadiusUpleftOutlined />
+        <RadiusUpleftOutlined  style={{ top:'0px !important' ,position:'fixed'  }} />
           <Space
             direction="vertical"
             style={{
@@ -595,16 +627,21 @@ const role=localStorage.getItem("Role")
                                   marginTop: "10px",
                                 }}
                                 error={
+
                                   formErrors.username === "Required"
                                     ? true
                                     : false
+                                    
                                 }
-                                helperText={formErrors.username}
+                               
                                 variant="outlined"
                                 name="username"
                                 value={editForm.username}
                                 onChange={handleFormChanges}
                               />
+                               <FormHelperText style={{ color: "#d32f2f",marginLeft:'40px' }}>
+                                {formErrors.username}
+                              </FormHelperText>
                             </Stack>
                           </Stack>
                         </Col>
@@ -817,6 +854,7 @@ const role=localStorage.getItem("Role")
                                   components={["DatePicker", "DatePicker"]}
                                 >
                                   <DatePicker
+                                  shouldDisableDate={disablePrevDates(startDate)}
                                     style={{
                                       marginLeft: "100px",
                                       width: "200px",

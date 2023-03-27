@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
+  RadiusUpleftOutlined,
   RadiusUprightOutlined,
 } from "@ant-design/icons";
 import Typography from "antd/es/typography/Typography";
@@ -98,11 +99,10 @@ const EmployeeDetails = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
 
-  const openNotification = (placement) => {
-    api.success({
-      message: `${placement}`,
-      placement,
-      className: "notification-type-success"
+  const openNotification = (type, messages) => {
+    api[type]({
+      message: `${messages}`,
+      className:"notification-type-success"
     });
   };
   // vlidation rules
@@ -288,7 +288,9 @@ const EmployeeDetails = (props) => {
           formValues
         )
         .then((response) => {
-          openNotification(response.data.message);
+          console.log(response.data.message);
+          openNotification('success',"Form submitted Successfully")
+
         })
         .catch((e) => {
           console.log("e", e);
@@ -383,7 +385,7 @@ const EmployeeDetails = (props) => {
         </Spin>
       ) : (
         <>
-          <RadiusUprightOutlined style={{ top:'0px !impotant' ,position:'fixed'  }} />
+        <RadiusUpleftOutlined  style={{ top:'0px !important',marginRight:'100px' ,position:'fixed'  }} />
           <Space
             direction="vertical"
             style={{
