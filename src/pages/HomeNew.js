@@ -160,7 +160,7 @@ const HomeNew = (props) => {
     if (month.length < 2) month = "0" + month;
     if (day.length < 2) day = "0" + day;
 
-    return [month, day, year].join("/");
+    return [day, month, year].join("/");
   }
 
   let dd = users[0]?.joining_date;
@@ -312,11 +312,16 @@ const role=localStorage.getItem("Role")
       setFormErrors(result);
       return;
     }
-    if (data.username === "" || data.username === undefined) {
-      if (!data.username && data.username === "") {
+    if (data.username) {
+      // console.log("??? 1")
+      if (!alpha.test(data.username) || data.username === "") {
+      // console.log("??? 2")
+
         setFormErrors({ ...formErrors, username: "Required" });
         return false;
       } else {
+      // console.log("??? 3")
+
         setFormErrors({ ...formErrors, username: "" });
       }
     } else if (data.manager_name === "" || data.manager_name === undefined) {
@@ -497,8 +502,14 @@ const role=localStorage.getItem("Role")
           designation: response.data.data[0]?.designation,
           department: response.data.data[0]?.department,
         });
+        // console.log("DATEEE",response.data.data[0]?.joining_date)
+
+        if(response.data.data[0]?.joining_date !== null && response.data.data[0]?.joining_date !== undefined){
         let newSetDate = formatDate(response.data.data[0]?.joining_date);
         setDate(dayjs(newSetDate));
+        }else{
+          setDate(dayjs(Date()));
+        }
         const formValues = [];
 
         for (let i = 0; i < userDetails?.length; i++) {
@@ -867,7 +878,7 @@ const role=localStorage.getItem("Role")
                                     }}
                                     name="joining_date"
                                     views={["year", "month", "day"]}
-                                    value={date ?? ""}
+                                    value={date !== undefined ? date : dayjs(formatDate(Date()))}
                                     error={
                                       formErrors.joining_date === "Required"
                                         ? true
