@@ -135,7 +135,15 @@ import {
       navigate("/managerhome");
     }
    })
+   useEffect( () => {
+    handleSubmit();
+   },[]);
     const handleSubmit = () => {
+      if(selectMail !== undefined ){
+        navigate("/employeedetails");
+    }else{
+      navigate("/managerhome");
+    }
         axios
         .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
         .then((response) => {
@@ -145,11 +153,7 @@ import {
         .catch((e) => {
           console.log("e", e);
         });
-        if(selectMail !== undefined ){
-          navigate("/employeedetails");
-      }else{
-        navigate("/managerhome");
-      }
+        
        
     }
  
