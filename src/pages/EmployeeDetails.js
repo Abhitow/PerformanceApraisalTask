@@ -375,12 +375,12 @@ const EmployeeDetails = (props) => {
         console.log(e, "error message");
       });
   }, [selectedMail, questions]);
-
+ 
   // console.log("=====>>>",date)
   return (
     <>
       {isLoading ? (
-        <Spin tip="Loading" size="large" style={{ marginTop: "50vh" }}>
+        <Spin tip="Loading" size="large" style={{ marginTop: "50vh" }}> 
           <div className="content" />
         </Spin>
       ) : (

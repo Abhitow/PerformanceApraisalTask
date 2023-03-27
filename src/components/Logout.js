@@ -14,8 +14,6 @@ const Logout = () => {
 
     navigate("/");
     localStorage.clear();
-    // window.location.reload();
-
     messageApi.open({
       type: "success",
       content: "Logout Successfull",

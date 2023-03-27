@@ -165,7 +165,7 @@ const HomeNew = (props) => {
 
   let dd = users[0]?.joining_date;
 
-  let textt = formatDate(dd);
+  // let textt = formatDate(dd);
 
   const localEmail = localStorage.getItem("email");
 
@@ -854,6 +854,7 @@ const role=localStorage.getItem("Role")
                                   components={["DatePicker", "DatePicker"]}
                                 >
                                   <DatePicker
+                                 
                                   disableFuture={true}
                                   shouldDisableDate={disablePrevDates(startDate)}
                                     style={{
