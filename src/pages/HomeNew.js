@@ -854,6 +854,7 @@ const role=localStorage.getItem("Role")
                                   components={["DatePicker", "DatePicker"]}
                                 >
                                   <DatePicker
+                                  disableFuture={true}
                                   shouldDisableDate={disablePrevDates(startDate)}
                                     style={{
                                       marginLeft: "100px",
