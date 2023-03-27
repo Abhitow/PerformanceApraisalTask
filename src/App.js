@@ -14,15 +14,10 @@ function App() {
       <BrowserRouter>
       <Routes>
           <Route index path='/' element={ <Login />  } ></Route>
-          {/* <Route path='/home' element={<Home /> }/> */}
-          {/* <Route path='*' element={<Home />}/> */}
           <Route path='/homenew' element={<HomeNew />}/>
           <Route path='/managerhome' element={ <ManagerHome />} />
-          {/* <Route path='/mngemployeedetails' element={ <MngEmployeeDetails />} /> */}
           <Route path='/employeedetails' element={ <EmployeeDetails />} />
 
-          {/* <Route path="/" exact component={!isLoggedIn ? <Login /> : <Login />} />
-          <Route path="/home" exact component={isLoggedIn ? <Home /> : <Login />} /> */}
         </Routes>
       </BrowserRouter>
      
