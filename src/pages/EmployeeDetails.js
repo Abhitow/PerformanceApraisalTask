@@ -380,7 +380,7 @@ const EmployeeDetails = (props) => {
   return (
     <>
       {isLoading ? (
-        <Spin tip="Loading" size="large" style={{ marginTop: "50vh" }}> 
+        <Spin tip="Loading" size="large" style={{ marginTop: "50vh" }}>
           <div className="content" />
         </Spin>
       ) : (

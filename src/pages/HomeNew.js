@@ -236,7 +236,7 @@ const role=localStorage.getItem("Role")
       if (!value || value === "") {
         formErrors.username = "Required";
       }else if (!alpha.test(value)) {
-          formErrors.username = "Invalid Format";
+          formErrors.username = "InvalidFormat";
         }else {
           formErrors.username = "";
         }
@@ -543,6 +543,12 @@ const role=localStorage.getItem("Role")
     }
   }
   const startDate = new Date('Janaury 01, 2014');
+
+   const handleKeyDown = e => {
+    if (e.key === " ") {
+      e.preventDefault();
+    }
+  };
   return (
     <>
       {isLoading ? (
@@ -620,6 +626,7 @@ const role=localStorage.getItem("Role")
                             </Stack>
                             <Stack>
                               <TextField
+                             onKeyDown={new RegExp('^[0-9.]*$')}
                                 size="small"
                                 style={{
                                   marginLeft: "20px",
@@ -627,11 +634,9 @@ const role=localStorage.getItem("Role")
                                   marginTop: "10px",
                                 }}
                                 error={
-
-                                  formErrors.username === "Required"
+                                  formErrors.username === "Required" && formErrors.username ==="InvalidFormat"
                                     ? true
-                                    : false
-                                    
+                                    : false  
                                 }
                                
                                 variant="outlined"
@@ -713,8 +718,6 @@ const role=localStorage.getItem("Role")
                                   marginTop: "10px",
                                 }}
                                 size="small"
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
                                 name="role_id"
                                 value={editForm.role_id}
                                 onChange={handleFormChanges}
@@ -758,8 +761,6 @@ const role=localStorage.getItem("Role")
                                   marginTop: "10px",
                                 }}
                                 size="small"
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
                                 name="designation"
                                 value={editForm.designation}
                                 onChange={handleFormChanges}

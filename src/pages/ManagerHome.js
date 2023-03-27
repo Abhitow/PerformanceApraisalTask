@@ -136,25 +136,28 @@ import {
     }
    })
    useEffect( () => {
-    handleSubmit();
-   },[]);
+  
+   });
+
+const sel = localStorage.getItem("selectMail",selectMail);
     const handleSubmit = () => {
-      if(selectMail !== undefined ){
-        navigate("/employeedetails");
-    }else{
-      navigate("/managerhome");
-    }
-        axios
-        .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
-        .then((response) => {
-          setFetched(response.data.data)
-          
-        })
-        .catch((e) => {
-          console.log("e", e);
-        });
-        
-       
+//  navigate("/employeedetails");
+      
+      
+    //     axios
+    //     .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
+    //     .then((response) => {
+    //       setFetched(response.data.data)
+    //       if(selectMail !== undefined && selectMail === sel){
+    //     navigate("/employeedetails");
+    //     console.log("workingggggg");
+    // }else{
+    //   navigate("/managerhome");
+    // }
+    //     })
+    //     .catch((e) => {
+    //       console.log("e", e);
+    //     });
     }
  
 
@@ -211,7 +214,7 @@ import {
             </Header>
             <Content style={contentStyle} className="homeContent">
                 <Card style={{margin:'auto' , height:'100px', width:'500px',marginTop:'50px'}}>
-                <Form className="manager-home-form">
+                {/* <Form className="manager-home-form">
                 <Row>
                     <Col>
                         <Form.Item>
@@ -235,7 +238,11 @@ import {
                         </Form.Item>
                     </Col>
                 </Row>
-             </Form>
+             </Form> */}
+
+
+
+             
                 </Card>
             
             </Content>
