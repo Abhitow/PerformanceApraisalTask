@@ -11,6 +11,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import ValidationRules from "../pages/ValidationRules";
 import Profile from "../components/Profile";
 import download from "../download.png";
+
 import {
   RadiusBottomleftOutlined,
   RadiusBottomrightOutlined,
@@ -229,13 +230,16 @@ const role=localStorage.getItem("Role")
     setFormData({ ...formData, [fieldName]: fieldValue });
     setFormErrors(errors);
   };
+
   const alpha = /^[a-zA-Z-\s]+$/;
+  // const re = (/^[A-Za-z-\s]+$/)
   const handleFormChanges = (e) => {
     let { name, value } = e.target;
     if (name === "username") {
-      if (!value || value === "") {
+      if (!value || value === "" ) {
         formErrors.username = "Required";
       }else if (!alpha.test(value)) {
+        formErrors.username = e.target.value
           formErrors.username = "InvalidFormat";
         }else {
           formErrors.username = "";
@@ -606,6 +610,12 @@ const role=localStorage.getItem("Role")
     var key = event.keyCode;
     return ((key >= 65 && key <= 90) || key === 8);
   };
+
+// const scrollToError = () =>{
+//   const errorField = 
+// }
+
+
   return (
     <>
       {isLoading ? (
@@ -661,11 +671,14 @@ const role=localStorage.getItem("Role")
                   <Card
                     style={{ height: "auto", width: "1100px", margin: "auto" }}
                   >
+                    
                     <Card style={{ marginTop: "40px" }}>
                       <div style={{ marginBottom: "40px" }}>
                         <h1>Employee Details</h1>
                       </div>
                       <Divider />
+
+                    
 
                       <Row>
                         <Col span={12}>
@@ -783,7 +796,7 @@ const role=localStorage.getItem("Role")
                                     ? true
                                     : false
                                 }
-                                displayEmpty
+                               
                               >
                                  <MenuItem value={2}>Employee</MenuItem>
                                 <MenuItem value="" disabled>Manager</MenuItem>

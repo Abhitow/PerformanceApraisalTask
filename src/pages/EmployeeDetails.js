@@ -194,9 +194,8 @@ const EmployeeDetails = (props) => {
         setself_aspirations(res?.data?.data[0]?.self_aspirations);
         setAvg(parseFloat(res?.data?.data[0]?.employee_self_rating).toFixed(2));
         setmanagerCmt(res?.data?.data[0]?.manager_feedback);
-        setMangerAvg(
-          parseFloat(res?.data?.data[0]?.manager_consolidated_rating).toFixed(2)
-        );
+        setMangerAvg(parseFloat(res?.data?.data[0]?.manager_consolidated_rating).toFixed(2));
+        console.log(res?.data?.data[0]?.manager_consolidated_rating,">>>>>>>=========");
       })
       .catch((e) => {
         console.log("e", e);
@@ -215,6 +214,7 @@ const EmployeeDetails = (props) => {
       });
   }, []);
   useEffect(() => {}, [avg]);
+  useEffect(() => {}, [Mangeravg]);
 
   const handleChange = (event) => {
     const fieldName = event.target.name;
@@ -323,9 +323,11 @@ const EmployeeDetails = (props) => {
         // count++;
         let getAvg = total / questions?.length;
         Average = getAvg.toFixed(2);
+        console.log(typeof(Average),"LLLLLLL");
       }
     }
     setMangerAvg(Average);
+    console.log(typeof(Mangeravg) ,"======>");
   }, [formData]);
 
   useEffect(() => {
@@ -1075,7 +1077,7 @@ const EmployeeDetails = (props) => {
                                 size={"small"}
                                 variant="outlined"
                                 name="manager_consolidated_rating"
-                                value={Mangeravg}
+                                value={ Mangeravg }
                                 InputProps={{
                                   readOnly: true,
                                 }}
