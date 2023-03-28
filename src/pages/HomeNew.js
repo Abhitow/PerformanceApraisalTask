@@ -289,6 +289,57 @@ const role=localStorage.getItem("Role")
   };
   useEffect(()=>{},[isSuccess])
 
+  // Function Three
+
+  const functionThree = (data) =>{
+    if(data === true){
+      const self =  {
+        self_aspirations: self_aspirations,
+      }
+
+    axios
+    .put(
+      `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,
+     self
+    )
+    .then((response) => {
+      console.log(response);
+      setThree(response.data.status);
+      console.log(response.data.status,"three");
+      if(response.data.status === true){
+        if(response.data.status === true){
+          openNotification('success',"Form submitted Successfully")
+        }
+    }
+    })
+    .catch((e) => {
+      console.log("e", e);
+      openNotification('error',e.data.message)
+    });
+  }
+  }
+  
+  // Function Two
+
+  const functionTwo =(data)=>{
+    axios
+        .put(
+          "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
+            localEmail,
+          data
+        )
+        .then((response) => {
+          setTwo(response.data.status);
+          console.log(response.data.status,"two");
+          functionThree(response.data.status)
+
+        })
+        .catch((e) => {
+          console.log("e", e);
+          openNotification('error',e.data.message)
+        });   
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     let errors = {};
@@ -405,10 +456,8 @@ const role=localStorage.getItem("Role")
           // setIsSuccess(isSuccess => isSuccess +1)
           setOne(response.data.status);
           console.log(response.data.status,"one");
-          if(two === true){
-            if((response.data.status) === true){
-              openNotification('success',"Form submitted Successfully")
-            }
+          if(response.data.status === true){
+            functionTwo(data)
         }
 
         })
@@ -496,8 +545,12 @@ const role=localStorage.getItem("Role")
           designation: response.data.data[0]?.designation,
           department: response.data.data[0]?.department,
         });
-        let newSetDate = formatDate(response.data.data[0]?.joining_date);
-        setDate(dayjs(newSetDate));
+        if(response.data.data[0]?.joining_date !== null && response.data.data[0]?.joining_date !== undefined){
+          let newSetDate = formatDate(response.data.data[0]?.joining_date);
+          setDate(dayjs(newSetDate));
+          }else{
+            setDate(dayjs(Date()));
+          }
         const formValues = [];
 
         for (let i = 0; i < userDetails?.length; i++) {
@@ -870,7 +923,7 @@ const role=localStorage.getItem("Role")
                                     }}
                                     name="joining_date"
                                     views={["year", "month", "day"]}
-                                    value={date ?? ""}
+                                    value={date !== undefined ? date : dayjs(formatDate(Date()))}
                                     error={
                                       formErrors.joining_date === "Required"
                                         ? true
