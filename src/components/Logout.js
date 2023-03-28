@@ -1,11 +1,10 @@
-import { Button, message } from "antd";
+import { Button } from "antd";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
 
 
   const roleid = localStorage.getItem("role_id");
@@ -25,7 +24,6 @@ async function handleLogout() {
 
   return (
     <>
-      {contextHolder}
       {
         role === "1" ?
         <Button type="default" onClick={handleLogout} style={{ marginLeft:'20px' }} >
@@ -35,7 +33,6 @@ async function handleLogout() {
         Logout
       </Button>
       }
-      
     </>
   );
 };

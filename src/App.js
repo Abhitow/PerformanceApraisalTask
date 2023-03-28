@@ -13,10 +13,11 @@ function App() {
     <div className="App">
       <BrowserRouter>
       <Routes>
-          <Route index exact path='/' element={ <Login />  } ></Route>
-          <Route exact path='/homenew' element={<HomeNew />}/>
-          <Route exact path='/managerhome' element={ <ManagerHome />} />
-          <Route exact path='/employeedetails' element={ <EmployeeDetails />} />
+          <Route index path='/' element={ <Login />  } ></Route>
+          <Route path='/homenew' element={<HomeNew />}/>
+          <Route path='/managerhome' element={ <ManagerHome />} />
+          <Route path='/employeedetails' element={ <EmployeeDetails />} />
+
         </Routes>
       </BrowserRouter>
      

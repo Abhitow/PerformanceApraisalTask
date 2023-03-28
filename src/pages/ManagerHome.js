@@ -16,8 +16,7 @@ import {
   import download from "../download.png";
   
   /*<-----Search details components */
-  
-  
+    
   const { Header, Content } = Layout;
   const layoutStyle = {
     height: "100vh",
@@ -42,12 +41,9 @@ import {
     minHeight: "auto",
   };
   
-
-  
   const ManagerHome = (props) => {
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
-    const [windowsOptions, setWindowsOptions] = useState("");
     const [userMail , setUserMail] = useState([]);
     const [fetched , setFetched] = useState();
     const [selectMail , setSelectMail] =useState();
@@ -63,18 +59,7 @@ import {
     
 // useEffect(()=>{},[empMail]);
   
-  //  useEffect(()=>{
-  //   if(navigate === "/"){
-  //     localStorage.clear();
-  //   }
-  //   else{
-  //     navigate("/managerhome");
-  //   }
-  //  })
-  //  useEffect( () => {
   
-  //  });
-
   useEffect( () =>{
     if(localStorage.getItem("email") !== undefined && localStorage.getItem("role_id") === "1"){
       console.log("working gggg");
@@ -85,6 +70,9 @@ import {
   },[navigate]);
 
 const sel = localStorage.getItem("selectMail",selectMail);
+const naviGate = () => {
+   navigate("/employeedetails");
+}
     const handleSubmit = () => {
 //  navigate("/employeedetails");
       
@@ -105,15 +93,6 @@ const sel = localStorage.getItem("selectMail",selectMail);
         });
     }
  
-
-    useEffect(() => {
-      axios
-        .get("https://demo.emeetify.com:81/appraisel/users/appraisalWindow")
-        .then((response) => setWindowsOptions(response.data.data))
-        .catch((e) => {
-          console.log("e", e);
-        });
-    }, []);
       const handleSelect = (e) =>{
             setSelectMail(e)
       }
@@ -163,7 +142,8 @@ const sel = localStorage.getItem("selectMail",selectMail);
                 <Row>
                     <Col>
                         <Form.Item>
-                        <Select placeholder="Select Employee"
+                        <Select
+                        placeholder="Select Employee Email"
                         
                                 style={{
                                   width: 280,

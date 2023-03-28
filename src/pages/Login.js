@@ -30,13 +30,13 @@ function Login() {
   const [google, setGoogle] = useState("");
 
   const handleGoogle = () => {
-    console.log("???? google")
+    // console.log("???? google")
     signInWithPopup(auth, provider).then((data) => {
       setGoogle(data.user.email);
       localStorage.setItem("displayName", data.user.displayName);
       localStorage.setItem("email", data.user.email);
       localStorage.setItem("token", data._tokenResponse.oauthAccessToken);
-      console.log("ROLE", data.user.email);
+      // console.log("ROLE", data.user.email);
       if (data.user.email === manager) {
         localStorage.setItem("Role", "Manager");
       } else {
@@ -102,7 +102,7 @@ function Login() {
         .then((data) => {
           console.log(data, "-------------------->");
           setResponseData(data);
-          console.log("ROLE", email);
+          // console.log("ROLE", email);
           if (data.status !== false) {
             // if (email === manager) {
             //   localStorage.setItem("Role", "Manager");
