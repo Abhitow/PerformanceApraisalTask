@@ -10,17 +10,17 @@ const Logout = () => {
 
   const roleid = localStorage.getItem("role_id");
   // console.log(roleid,"lllllllll");
-  function handleLogout() {
-
-    navigate("/");
+const navi = () =>{
+  navigate("/");
+ 
+}
+async function handleLogout() {
+  console.log("12345")
     localStorage.clear();
-    messageApi.open({
-      type: "success",
-      content: "Logout Successfull",
-    });
+    await navi()
   }
 
-  const mail = localStorage.getItem("email");
+  // const mail = localStorage.getItem("email");
   const role = localStorage.getItem("role_id");
 
   return (
@@ -28,7 +28,7 @@ const Logout = () => {
       {contextHolder}
       {
         role === "1" ?
-        <Button type="default" onClick={handleLogout} style={{ marginLeft:'20px' }}>
+        <Button type="default" onClick={handleLogout} style={{ marginLeft:'20px' }} >
         Logout
       </Button>:
         <Button type="default" onClick={handleLogout} style={{ marginLeft:'40px' }}>

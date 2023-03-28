@@ -1010,6 +1010,7 @@ const EmployeeDetails = (props) => {
                             </Stack>
                             <Stack style={{ marginTop: "20px" }}>
                               <TextField
+                              disabled
                                 style={{ width: 100, marginLeft: "200px" }}
                                 size={"small"}
                                 variant="outlined"

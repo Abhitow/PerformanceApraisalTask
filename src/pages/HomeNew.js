@@ -305,7 +305,6 @@ const role=localStorage.getItem("Role")
     };
     const self =  {
       self_aspirations: self_aspirations,
-      manager_feedback:""
     }
     const result = validate(undefined, data);
     if (Object.keys(result).length) {
@@ -406,7 +405,11 @@ const role=localStorage.getItem("Role")
           // setIsSuccess(isSuccess => isSuccess +1)
           setOne(response.data.status);
           console.log(response.data.status,"one");
-
+          if(two === true){
+            if((response.data.status) === true){
+              openNotification('success',"Form submitted Successfully")
+            }
+        }
 
         })
         .catch((e) => {
@@ -426,11 +429,7 @@ const role=localStorage.getItem("Role")
           // setIsSuccess(isSuccess => isSuccess +1)
           setTwo(response.data.status);
           console.log(response.data.status,"two");
-          if(response.data.status === true){
-            if((three) === true){
-              openNotification('success',"Form submitted Successfully")
-            }
-        }
+          
         
        
         })
@@ -550,6 +549,10 @@ const role=localStorage.getItem("Role")
       e.preventDefault();
     }
   };
+  function alphaOnly(event) {
+    var key = event.keyCode;
+    return ((key >= 65 && key <= 90) || key === 8);
+  };
   return (
     <>
       {isLoading ? (
@@ -627,7 +630,7 @@ const role=localStorage.getItem("Role")
                             </Stack>
                             <Stack>
                               <TextField
-                            
+                                onkeydown={"return alphaOnly(event  )"}
                                 size="small"
                                 style={{
                                   marginLeft: "20px",

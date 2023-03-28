@@ -14,15 +14,9 @@ function App() {
       <BrowserRouter>
       <Routes>
           <Route index exact path='/' element={ <Login />  } ></Route>
-          {/* <Route path='/home' element={<Home /> }/> */}
-          {/* <Route path='*' element={<Home />}/> */}
           <Route exact path='/homenew' element={<HomeNew />}/>
           <Route exact path='/managerhome' element={ <ManagerHome />} />
-          {/* <Route path='/mngemployeedetails' element={ <MngEmployeeDetails />} /> */}
           <Route exact path='/employeedetails' element={ <EmployeeDetails />} />
-
-          {/* <Route path="/" exact component={!isLoggedIn ? <Login /> : <Login />} />
-          <Route path="/home" exact component={isLoggedIn ? <Home /> : <Login />} /> */}
         </Routes>
       </BrowserRouter>
      

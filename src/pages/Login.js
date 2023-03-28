@@ -14,7 +14,7 @@ import { signInWithPopup } from "firebase/auth";
 import GoogleButton from "react-google-button";
 import axios from "axios";
 
-function Login({ isLoggedIn }) {
+function Login() {
   const navigate = useNavigate();
   const onFinishFailed = (errorInfo) => {
     console.log("unsuccess", errorInfo);

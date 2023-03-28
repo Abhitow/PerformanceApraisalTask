@@ -2,32 +2,21 @@ import {
     Button,
     Card,
     Col,
-    DatePicker,
-    Divider,
     Form,
-    Input,
     Layout,
     message,
-    Modal,
     Row,
     Select,
     Space,
-    Switch,
   } from "antd";
-  import ScoringTable from "../components/ScoringTable";
   import { useEffect, useState } from "react";
   import axios from "axios";
   import { useNavigate } from "react-router-dom";
-  import Typography from "antd/es/typography/Typography";
-  import TextArea from "antd/es/input/TextArea";
-  import { ContactsOutlined } from "@ant-design/icons";
   import Profile from "../components/Profile";
   import download from "../download.png";
-  import SearchDetails from "../components/SearchDetails";
   
   /*<-----Search details components */
   
-  const { Search } = Input;
   
   const { Header, Content } = Layout;
   const layoutStyle = {
@@ -53,66 +42,13 @@ import {
     minHeight: "auto",
   };
   
-  const error = {
-    self_rating: {
-      self_rating_error: true,
-      valid: "please select ratings",
-    },
-    justify_comment: {
-      justify_comment_error: true,
-      valid: "please select ratings",
-    },
-  };
+
   
   const ManagerHome = (props) => {
     const navigate = useNavigate();
-    const [form] = Form.useForm();
-    const [detail, setDetail] = useState();
     const [messageApi, contextHolder] = message.useMessage();
-    const [rank, setRank] = useState();
-    const [empSelfRating, setEmpSelfRating] = useState();
-    const [managerAvg, setManagerAvg] = useState();
-    /* performance apraisal form  */
-    const [name, setName] = useState();
-    const [manager, setManager] = useState();
-    const [designation, setDesignation] = useState();
-    const [department, setDepartment] = useState();
-    const [date, setDate] = useState();
-    const [review_date, setReviewDate] = useState();
-    const [responseData, setResponseData] = useState("");
-    const [avg, setAvg] = useState(0);
-    const [formData, setFormData] = useState();
-    const [roles, setRoles] = useState();
     const [windowsOptions, setWindowsOptions] = useState("");
-    /* performance apraisal form ends here */
-  
-    const [errorData, setErrorData] = useState();
-    const [indexValue, setIndexValue] = useState(0);
-    const [avgValue, setAvgValue] = useState();
-    // const [search, setSearch] = useState();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const mailId = localStorage.getItem("email");
-    const role = localStorage.getItem("role_id");
-    const [commentData, setCommentData] = useState();
-  
-    /*<----Search Details starts here */
-    const [users, setUsers] = useState([]);
-    const [text, setText] = useState();
-    const [suggestions, setSuggestions] = useState([]);
-    const [search, setSearch] = useState();
-    const [searchDetails, setSearchDetails] = useState();
-    const [comment, setComment] = useState();
-    const [empData, setEmpData] = useState();
-  
-    /*<----Search Details starts here */
-  
-    /*<------Search deatils function starts here  */
-  
-
-
     const [userMail , setUserMail] = useState([]);
-    const [empMail , setEmpMail] = useState([]);
-
     const [fetched , setFetched] = useState();
     const [selectMail , setSelectMail] =useState();
     localStorage.setItem("selectMail",selectMail);
@@ -127,33 +63,42 @@ import {
     
 // useEffect(()=>{},[empMail]);
   
-   useEffect(()=>{
-    if(navigate === "/"){
-      localStorage.clear();
-    }
-    else{
-      navigate("/managerhome");
-    }
-   })
-   useEffect( () => {
+  //  useEffect(()=>{
+  //   if(navigate === "/"){
+  //     localStorage.clear();
+  //   }
+  //   else{
+  //     navigate("/managerhome");
+  //   }
+  //  })
+  //  useEffect( () => {
   
-   });
+  //  });
+
+  useEffect( () =>{
+    if(localStorage.getItem("email") !== undefined && localStorage.getItem("role_id") === "1"){
+      console.log("working gggg");
+      navigate("/managerhome");
+    }else{
+     console.log('');
+    }
+  },[navigate]);
 
 const sel = localStorage.getItem("selectMail",selectMail);
     const handleSubmit = () => {
 //  navigate("/employeedetails");
       
-      
-        axios
-        .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
-        .then((response) => {
-          setFetched(response.data.data)
-          if(selectMail !== undefined && selectMail === sel){
+      if(selectMail !== undefined && selectMail === sel){
         navigate("/employeedetails");
         console.log("workingggggg");
     }else{
       navigate("/managerhome");
     }
+        axios
+        .get("https://demo.emeetify.com:81/appraisel/users/userNames?email="+selectMail)
+        .then((response) => {
+          setFetched(response.data.data)
+          
         })
         .catch((e) => {
           console.log("e", e);
@@ -218,14 +163,14 @@ const sel = localStorage.getItem("selectMail",selectMail);
                 <Row>
                     <Col>
                         <Form.Item>
-                        <Select autoFocus
+                        <Select placeholder="Select Employee"
                         
                                 style={{
                                   width: 280,
                                   marginLeft: "20px",
                                 }}
                                onChange={handleSelect}
-                                options={userMail.map((selectData) => ({
+                                options={userMail!== undefined && userMail.map((selectData) => ({
                                   label: selectData.email,
                                   value: selectData.email,
                                 }))}
