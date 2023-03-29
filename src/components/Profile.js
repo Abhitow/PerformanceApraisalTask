@@ -13,7 +13,7 @@ const Profile = () => {
   
       const items =[
         {
-            key:'1' ,
+            key:'1' , 
             label: user || email    
         },
         {

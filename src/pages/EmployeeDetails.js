@@ -528,10 +528,9 @@ const EmployeeDetails = (props) => {
                                 }}
                                 size="small"
                                 name="role_id"
-                                value={editForm.role_id}
+                                value={2}
                                 disabled
                               >
-                                <MenuItem value={1}>Manager</MenuItem>
                                 <MenuItem value={2}>Employee</MenuItem>
                               </Select>
                             </Stack>
