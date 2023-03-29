@@ -195,7 +195,7 @@ const EmployeeDetails = (props) => {
         setAvg(parseFloat(res?.data?.data[0]?.employee_self_rating).toFixed(2));
         setmanagerCmt(res?.data?.data[0]?.manager_feedback);
         setMangerAvg(parseFloat(res?.data?.data[0]?.manager_consolidated_rating).toFixed(2));
-        console.log(res?.data?.data[0]?.manager_consolidated_rating,">>>>>>>=========");
+        // console.log(res?.data?.data[0],">>>>>>>=========");
       })
       .catch((e) => {
         console.log("e", e);
@@ -206,7 +206,6 @@ const EmployeeDetails = (props) => {
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
       .then((response) => {
-        console.log(response, "??????");
         setQuestions(response?.data?.data);
       })
       .catch((e) => {
@@ -219,16 +218,19 @@ const EmployeeDetails = (props) => {
   const handleChange = (event) => {
     const fieldName = event.target.name;
     const fieldValue = event.target.value;
+    console.log(fieldValue,">>><<<<<");
     const errors = { ...formErrors };
-
+  
     if (!fieldValue) {
       errors[fieldName] = "This field is required.";
     } else {
       errors[fieldName] = null;
     }
 
-    setFormData({ ...formData, [fieldName]: fieldValue });
+    setFormData({...formData, [fieldName]: fieldValue });
     setFormErrors(errors);
+
+    console.log("<<<<<<<<",fieldValue);
   };
   const handleFormChanges = (e) => {
     let { name, value } = e.target;
@@ -251,6 +253,7 @@ const EmployeeDetails = (props) => {
       const question = questions[i];
       const field3Value = formData[`field3${question.t_id}`];
       const field4Value = formData[`field4${question.t_id}`];
+
 
       // Validate field 1
       if (!field3Value) {
@@ -297,6 +300,8 @@ const EmployeeDetails = (props) => {
         });
 
       // manager cmt
+
+      // console.log(formValues,".........");
       axios
         .put(
           `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${selectedMail}&&type=manager`,
@@ -306,7 +311,7 @@ const EmployeeDetails = (props) => {
         )
         .then((response) => {
           console.log(response);
-          // openNotification(response.data.message);
+          openNotification(response.data.message);
         })
         .catch((e) => {
           console.log("e", e);
@@ -315,15 +320,24 @@ const EmployeeDetails = (props) => {
   };
 
   useEffect(() => {
-    let total = 0;
+    let total= 0 ;
     let Average;
+    console.log(formData,">>>>>>");
     for (const property in formData) {
-      if (typeof formData[property] === "number") {
-        total = total + parseInt(formData[property]);
+      // console.log("??", typeof property)
+      let getFields3Value=property.slice(0, 6) === "field3"
+      // console.log("?????????", getFields3Value)
+      if (getFields3Value) {
+        //  console.log(total,",,,,,,");
+        // console.log("??? property", property)
+        total = total + (formData[property]);
+        // console.log(property,"property");
+       
         // count++;
         let getAvg = total / questions?.length;
+        console.log(questions?.length,"total length");
         Average = getAvg.toFixed(2);
-        console.log(typeof(Average),"LLLLLLL");
+        console.log(Average,"average");
       }
     }
     setMangerAvg(Average);
@@ -365,10 +379,13 @@ const EmployeeDetails = (props) => {
                 formData[`field3${question.t_id}`] = element?.manager_rating;
                 formData[`field4${question.t_id}`] = element?.manager_comment;
                 setFormData(formData);
+                console.log(formData[`field3${question.t_id}`],";;;;;;;;;");
+                
               }
             }
           }
         }
+       
         setTimeout(() => {
           setIsLoading(false);
         }, 1000);
@@ -632,6 +649,7 @@ const EmployeeDetails = (props) => {
                               </InputLabel>
                             </Stack>
                             <Stack style={{ marginLeft: "45px",marginTop:'10px' }}>
+                              
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                  
@@ -777,7 +795,7 @@ const EmployeeDetails = (props) => {
                                   size="small"
                                   style={{ width: "150px", marginTop: "10px" }}
                                   value={
-                                    formData[`field1${question.t_id}`] || ""
+                                    formData[`field1${question.t_id}`]
                                   }
                                   name={`field1${question.t_id}`}
                                   onChange={handleChange}
@@ -1016,7 +1034,7 @@ const EmployeeDetails = (props) => {
                                 size={"small"}
                                 variant="outlined"
                                 name="employee_average"
-                                value={avg}
+                                value={avg === "NaN" || avg === NaN ? 0 : avg}
                                 InputProps={{
                                   readOnly: true,
                                 }}
@@ -1091,7 +1109,7 @@ const EmployeeDetails = (props) => {
                               <FormLabel
                                 sx={{ color: "black", fontSize: "18px" }}
                               >
-                                Manager's Comment
+                                Manager's Feedback
                               </FormLabel>
                               <InputLabel style={{ color: "red" }}>
                                 *
@@ -1110,7 +1128,7 @@ const EmployeeDetails = (props) => {
                                 name="managerCmt"
                                 error={errorManagerCmt ? true : false}
                                 helperText={errorManagerCmt ? "Required" : ""}
-                                value={managerCmt}
+                                value={managerCmt === "null" ? "" : managerCmt}
                                 onChange={handleFormChanges}
                               />
                             </Stack>
