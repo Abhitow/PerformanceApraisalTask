@@ -25,14 +25,11 @@ const Profile = () => {
         }
     ]
     const role = localStorage.getItem("role_id");
+    console.log(typeof(role,"aaaaaaaa"));
     return(
         <div>
             <Dropdown menu={{items}}>
-                {
-                    role === "1" ? 
-                    <Space className='header-profile' style={{color:'grey'}} >{username}<UserOutlined /></Space> :
-                    <Space className='employee-profile' style={{color:'grey'}} >{displayName}<UserOutlined /></Space>
-                }
+                    <Space className='header-profile' style={{color:'grey'}} >{role === "1" ? username : displayName}<UserOutlined /></Space> 
             </Dropdown>
         </div>
     )

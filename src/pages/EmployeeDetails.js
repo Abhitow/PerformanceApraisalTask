@@ -273,17 +273,32 @@ const EmployeeDetails = (props) => {
         });
       }
     }
-
-    setFormErrors(errors);
-    if (managerCmt === "" || managerCmt === undefined) {
+    if (managerCmt || managerCmt === "") {
       if (!managerCmt && managerCmt === "") {
         return setErrorManagerCmt(true);
       } else {
         setErrorManagerCmt(false);
       }
     }
+    setFormErrors(errors);
+   
     if (Object.keys(errors).length === 0) {
       console.log(JSON.stringify(formValues));
+
+      axios
+      .put(
+        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${selectedMail}&&type=manager`,
+        {
+          manager_feedback: managerCmt,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        openNotification(response.data.message);
+      })
+      .catch((e) => {
+        console.log("e", e);
+      });
 
       axios
         .post(
@@ -302,20 +317,7 @@ const EmployeeDetails = (props) => {
       // manager cmt
 
       // console.log(formValues,".........");
-      axios
-        .put(
-          `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${selectedMail}&&type=manager`,
-          {
-            manager_feedback: managerCmt,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          openNotification(response.data.message);
-        })
-        .catch((e) => {
-          console.log("e", e);
-        });
+      
     }
   };
 
@@ -1128,7 +1130,7 @@ const EmployeeDetails = (props) => {
                                 name="managerCmt"
                                 error={errorManagerCmt ? true : false}
                                 helperText={errorManagerCmt ? "Required" : ""}
-                                value={managerCmt === "null" ? "" : managerCmt}
+                                value={managerCmt === "null" || managerCmt === undefined? "" : managerCmt}
                                 onChange={handleFormChanges}
                               />
                             </Stack>
