@@ -1162,7 +1162,7 @@ console.log("TRIGGERED")
                                 size={"small"}
                                 variant="outlined"
                                 name="employee_average"
-                                value={avg}
+                                value={avg === "NaN" || avg === NaN ? 0 : avg}
                                 onChange={handleFormChanges}
                                 InputProps={{
                                   readOnly: true,
