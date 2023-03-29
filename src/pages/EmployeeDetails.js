@@ -1075,7 +1075,7 @@ const EmployeeDetails = (props) => {
                                 size={"small"}
                                 variant="outlined"
                                 name="manager_consolidated_rating"
-                                value={Mangeravg}
+                                value={Mangeravg === "NaN" || Mangeravg === NaN ? 0 : Mangeravg}
                                 InputProps={{
                                   readOnly: true,
                                 }}

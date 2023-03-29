@@ -67,12 +67,13 @@ const initialState = {
   role_id: "",
   designation: "",
   department: "",
+  joining_date: dayjs(Date()),
   review_period: "2022-23",
 };
 const HomeNew = (props) => {
   const navigate = useNavigate();
   /* performance apraisal form  */
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(dayjs(Date()));
   const [windowsOptions, setWindowsOptions] = useState("");
   // const [windowsClose, setWindowsClose] = useState(false)
 
@@ -103,6 +104,7 @@ const HomeNew = (props) => {
   const [one,setOne] = useState();
   const [two,setTwo] = useState();
   const [three,setThree] = useState();
+  const [isSubmit, setIsSubmit] = useState(false)
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (type, messages) => {
     api[type]({
@@ -112,6 +114,41 @@ const HomeNew = (props) => {
   };
   // vlidation rules
 
+  const empErrors = {
+    'username':{
+      'isValid': false,
+      'errorMessage': "Please Enter Employee Name"
+    },
+    'manager_name':{
+      'isValid': false,
+      'errorMessage': "Please select Manager"
+    },
+    'role_id':{
+      'isValid': false,
+      'errorMessage': "Please Select Role"
+    },
+    'designation':{
+      'isValid': false,
+      'errorMessage': "Please Select Designation"
+    },
+    'department':{
+      'isValid': false,
+      'errorMessage': "Please Select Department"
+    },
+    'joining_date':{
+      'isValid': false,
+      'errorMessage': "Please Enter Joining Date"
+    },
+    'review_period':{
+      'isValid': false,
+      'errorMessage': "Please Enter Review Period"
+    },
+    
+  }
+
+
+  
+  const [employeeErrors, setEmployeeErrors] = useState(empErrors)
   const rules = {
     username: [ValidationRules.required],
     manager_name: [ValidationRules.required],
@@ -174,6 +211,7 @@ const HomeNew = (props) => {
     if (!localStorage.getItem("token") && role_id !== "1") {
       navigate("/");
     }
+    console.log("INIT",initialState);
   }, []);
 
   const userName = localStorage.getItem("displayName");
@@ -229,54 +267,28 @@ const role=localStorage.getItem("Role")
     setFormData({ ...formData, [fieldName]: fieldValue });
     setFormErrors(errors);
   };
-  const alpha = /^[a-zA-Z-\s]+$/;
+
+
   const handleFormChanges = (e) => {
     let { name, value } = e.target;
-    if (name === "username") {
-      if (!value || value === "") {
-        formErrors.username = "Required";
-      }else if (!alpha.test(value)) {
-          formErrors.username = "InvalidFormat";
-        }else {
-          formErrors.username = "";
-        }
-    } 
     
-    else if (name === "manager_name") {
-      if (!value && value === "") {
-        formErrors.manager_name = "Required";
-      } else {
-        formErrors.manager_name = "";
-      }
-    } else if (name === "role_id") {
-      if (!value && value === "") {
-        formErrors.role_id = "Required";
-      } else {
-        formErrors.role_id = "";
-      }
-    } else if (name === "department") {
-      if (!value && value === "") {
-        formErrors.department = "Required";
-      } else {
-        formErrors.department = "";
-      }
-    } else if (name === "designation") {
-      if (!value && value === "") {
-        formErrors.designation = "Required";
-      } else {
-        formErrors.designation = "";
-      }
-    } else if (name === "joining_date") {
-      if (!value && value === "") {
-        formErrors.joining_date = "Required";
-      } else {
-        formErrors.joining_date = "";
-      }
-    }
     const updateValue = { ...editForm };
     updateValue[name] = value;
     setEditForm(updateValue);
+    if(name === "username"){
+      const newName = e.target.value.replace(
+        /[^a-zA-Z\s]/g,
+        ""
+      );
+      const updateValue = { ...editForm };
+      updateValue['username'] = newName;
+      setEditForm(updateValue);
+    }
 
+    if(isSubmit){
+    ValidateEmployee(e)
+    }
+    
     if (name === "self_aspirations") {
       setself_aspirations(value);
 
@@ -286,6 +298,7 @@ const role=localStorage.getItem("Role")
         seterror_self_aspirations(false);
       }
     }
+    
   };
   useEffect(()=>{},[isSuccess])
 
@@ -340,15 +353,12 @@ const role=localStorage.getItem("Role")
         });   
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    let errors = {};
-    const formValues = [];
-    //form validation with api integration
+  const ValidateEmployee = (e) =>{
+console.log("TRIGGERED")
     const data = {
       username: editForm.username,
       manager_name: editForm.manager_name,
-      role_id: editForm.role_id,
+      role_id: 2,
       designation: editForm.designation,
       department: editForm.department,
       joining_date: date,
@@ -356,59 +366,68 @@ const role=localStorage.getItem("Role")
     };
     const self =  {
       self_aspirations: self_aspirations,
+    }  
+
+    if (data.username === "" || data.username === undefined || data.username === null) {
+      employeeErrors['username'].isValid = true
+    }else{
+      employeeErrors['username'].isValid = false
     }
-    const result = validate(undefined, data);
-    if (Object.keys(result).length) {
-      setFormErrors(result);
-      return;
+    
+    if (data.manager_name === "" || data.manager_name === undefined || data.manager_name === null) {
+      employeeErrors['manager_name'].isValid = true    
+    }else{
+      employeeErrors['manager_name'].isValid = false
     }
-    if (data.username === "" || data.username === undefined) {
-      if (!data.username && data.username === "") {
-        setFormErrors({ ...formErrors, username: "Required" });
-        return false;
-      } else {
-        setFormErrors({ ...formErrors, username: "" });
+
+    if (data.role_id === "" || data.role_id === undefined || data.role_id === null) {
+      employeeErrors['role_id'].isValid = true
+    }else{
+      employeeErrors['role_id'].isValid = false
+    }
+
+    if (data.designation === "" || data.designation === undefined || data.designation === null) {
+      if(e?.target?.name === 'designation'){
+        employeeErrors['designation'].isValid = false
+      }else{
+      employeeErrors['designation'].isValid = true
       }
-    } else if (data.manager_name === "" || data.manager_name === undefined) {
-      if (!data.manager_name && data.manager_name === "") {
-        setFormErrors({ ...formErrors, manager_name: "Required" });
-        return false;
-      } else {
-        setFormErrors({ ...formErrors, manager_name: "" });
+    }
+    else{
+      employeeErrors['designation'].isValid = false
+    }
+
+    if (data.department === "" || data.department === undefined || data.department === null) {
+      if(e?.target?.name === 'department'){
+        employeeErrors['department'].isValid = false
+      }else{
+      employeeErrors['department'].isValid = true
       }
-    } else if (data.role_id === "" || data.role_id === undefined) {
-      if (!data.role_id && data.role_id === "") {
-        setFormErrors({ ...formErrors, role_id: "Required" });
-        return false;
-      } else {
-        setFormErrors({ ...formErrors, role_id: "" });
-      }
-    } else if (data.designation === "" || data.designation === undefined) {
-      if (!data.designation && data.designation === "") {
-        setFormErrors({ ...formErrors, designation: "Required" });
-        return false;
-      } else {
-        setFormErrors({ ...formErrors, designation: "" });
-      }
-    } else if (data.department === "" || data.department === undefined) {
-      if (!data.department && data.department === "") {
-        setFormErrors({ ...formErrors, department: "Required" });
-        return false;
-      } else {
-        setFormErrors({ ...formErrors, department: "" });
-      }
-    } else if (data.joining_date === "" || data.joining_date === undefined) {
-      if (!data.joining_date && data.joining_date === "") {
-        setFormErrors({ ...formErrors, joining_date: "Required" });
-        return false;
-      } else {
-        setFormErrors({ ...formErrors, joining_date: "" });
+    }else{
+      employeeErrors['department'].isValid = false
+    }
+
+    var valid = true
+    for (const property in employeeErrors) {
+      if (employeeErrors[property].isValid === true) {
+        valid = false
       }
     }
 
+    return valid
+  }
+
+  const handleSubmit = (event) => {
+    setIsSubmit(true)
+    event.preventDefault();
+    
+    ValidateEmployee()
+    
+    let errors = {};
+    const formValues = [];
     //questions validation with api integration
-    // var total = 0;
-    // var count = 0;
+    var total = 0;
+    var count = 0;
     for (let i = 0; i < questions.length; i++) {
       const question = questions[i];
       const field1Value = formData[`field1${question.t_id}`];
@@ -441,11 +460,11 @@ const role=localStorage.getItem("Role")
         seterror_self_aspirations(false);
       }
     }
-
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(errors).length === 0 && ValidateEmployee()) {
       console.log(JSON.stringify(formValues));
-
-      // Question form api integration starts here
+      // console.log("PAASS",editForm)
+      // console.log("PAASS",date)
+      // DOMS
       axios
         .post(
           `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${localEmail}&&type=employee`,
@@ -457,7 +476,7 @@ const role=localStorage.getItem("Role")
           setOne(response.data.status);
           console.log(response.data.status,"one");
           if(response.data.status === true){
-            functionTwo(data)
+            functionTwo(editForm)
         }
 
         })
@@ -465,51 +484,7 @@ const role=localStorage.getItem("Role")
           console.log("e", e);
           openNotification('error',e.data.message)
         });
-      // Question form api integration ends here
-      // EMployee details form api  starts here
-      axios
-        .put(
-          "https://demo.emeetify.com:81/appraisel/users/FormDetails?email="+
-            localEmail,
-          data
-        )
-        .then((response) => {
-          // openNotification('success',response.data.message)
-          // setIsSuccess(isSuccess => isSuccess +1)
-          setTwo(response.data.status);
-          console.log(response.data.status,"two");
-          
-        
-       
-        })
-        .catch((e) => {
-          console.log("e", e);
-          openNotification('error',e.data.message)
-        });
-      // EMployee details form api  ends here
-    }
-    axios
-      .put(
-        `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${localEmail}&&type=employee`,
-       self
-      )
-      .then((response) => {
-        console.log(response);
-        // openNotification('success',"Employee FeedBack Submitted Successfully")
-        // setIsSuccess(isSuccess => isSuccess +1)
-        setThree(response.data.status);
-        console.log(response.data.status,"three");
-      })
-      .catch((e) => {
-        console.log("e", e);
-        openNotification('error',e.data.message)
-      });
-      // if(three !== true){
-      //   console.log("working");
-      // }else{
-      //   console.log("not working");
-      // }
-      
+  }
   };
 
   useEffect(() => {
@@ -536,21 +511,26 @@ const role=localStorage.getItem("Role")
       )
       .then((response) => {
         let a = [];
+
         let userDetails = response.data.data;
-     
+        console.log("DATA",response?.data?.data[0]?.joining_date)
+        
+        console.log("DATA SET",date)
+        if(response?.data?.data[0]?.joining_date !== null && response?.data?.data[0]?.joining_date !== undefined && response?.data?.data[0]?.joining_date !== "undefined"){
+          let newSetDate = formatDate(response.data.data[0]?.joining_date);
+          setDate(dayjs(newSetDate));
+          }
+
         setEditForm({
           username: response.data.data[0]?.username,
           manager_name: response.data.data[0]?.manager_name,
           role_id: response.data.data[0]?.role_id,
           designation: response.data.data[0]?.designation,
           department: response.data.data[0]?.department,
+          joining_date: date,
+          review_period: "2022-23"
         });
-        if(response.data.data[0]?.joining_date !== null && response.data.data[0]?.joining_date !== undefined){
-          let newSetDate = formatDate(response.data.data[0]?.joining_date);
-          setDate(dayjs(newSetDate));
-          }else{
-            setDate(dayjs(Date()));
-          }
+       
         const formValues = [];
 
         for (let i = 0; i < userDetails?.length; i++) {
@@ -582,6 +562,8 @@ const role=localStorage.getItem("Role")
         console.log(e, "error message");
       });
   }, [localEmail, questions]);
+
+  useEffect(()=>{console.log("EDIT FORM",editForm);},[editForm])
 
   // console.log("=====>>>",date)
   // if(isSuccess === 3 ){
@@ -654,7 +636,6 @@ const role=localStorage.getItem("Role")
                   </Row>
                 </div>
               </Header>
-
               {windowsOptions.is_appraisal_window_open === true &&
               windowsOptions.is_appraisal_open_for_employee === true ? (
                 <Content style={contentStyle} className="homeContent">
@@ -682,6 +663,7 @@ const role=localStorage.getItem("Role")
                               </InputLabel>
                             </Stack>
                             <Stack>
+                            
                               <TextField
                                 onkeydown={"return alphaOnly(event  )"}
                                 size="small"
@@ -690,19 +672,15 @@ const role=localStorage.getItem("Role")
                                   width: "250px",
                                   marginTop: "10px",
                                 }}
-                                error={
-                                  formErrors.username === "Required" && formErrors.username ==="InvalidFormat"
-                                    ? true
-                                    : false  
-                                }
-                               
+                                error={employeeErrors.username.isValid}
                                 variant="outlined"
                                 name="username"
                                 value={editForm.username}
+                                
                                 onChange={handleFormChanges}
                               />
                                <FormHelperText style={{ color: "#d32f2f",marginLeft:'40px' }}>
-                                {formErrors.username}
+                                {employeeErrors.username.isValid ? employeeErrors.username.errorMessage : ''}
                               </FormHelperText>
                             </Stack>
                           </Stack>
@@ -729,11 +707,7 @@ const role=localStorage.getItem("Role")
                                 name="manager_name"
                                 value={editForm.manager_name}
                                 onChange={handleFormChanges}
-                                error={
-                                  formErrors.manager_name === "Required"
-                                    ? true
-                                    : false
-                                }
+                                error={employeeErrors.manager_name.isValid}
                               >
                                 <MenuItem value="Rajamanickam R">
                                   Rajamanickam R
@@ -746,7 +720,8 @@ const role=localStorage.getItem("Role")
                                 </MenuItem>
                               </Select>
                               <FormHelperText style={{ color: "#d32f2f",marginLeft:'40px' }}>
-                                {formErrors.manager_name}
+                              {employeeErrors.manager_name.isValid ? employeeErrors.manager_name.errorMessage : ''}
+
                               </FormHelperText>
                             </Stack>
                           </Stack>
@@ -776,22 +751,13 @@ const role=localStorage.getItem("Role")
                                 }}
                                 size="small"
                                 name="role_id"
-                                value={editForm.role_id}
+                                value={2}
                                 onChange={handleFormChanges}
-                                error={
-                                  formErrors.role_id === "Required"
-                                    ? true
-                                    : false
-                                }
                                 displayEmpty
                               >
                                  <MenuItem value={2}>Employee</MenuItem>
                                 <MenuItem value="" disabled>Manager</MenuItem>
-                               
                               </Select>
-                              <FormHelperText style={{ color: "#d32f2f" ,marginLeft:'40px'}}>
-                                {formErrors.role_id}
-                              </FormHelperText>
                             </Stack>
                           </Stack>
                         </Col>
@@ -821,11 +787,7 @@ const role=localStorage.getItem("Role")
                                 name="designation"
                                 value={editForm.designation}
                                 onChange={handleFormChanges}
-                                error={
-                                  formErrors.designation === "Required"
-                                    ? true
-                                    : false
-                                }
+                                error={employeeErrors.designation.isValid}
                               >
                                 <MenuItem value="Associate Trainee">
                                   Associate Trainee
@@ -838,7 +800,7 @@ const role=localStorage.getItem("Role")
                                 </MenuItem>
                               </Select>
                               <FormHelperText style={{ color: "#d32f2f",marginLeft:'70px' }}>
-                                {formErrors.designation}
+                                {employeeErrors.designation.isValid ? employeeErrors.designation.errorMessage : ''}
                               </FormHelperText>
                             </Stack>
                           </Stack>
@@ -872,11 +834,7 @@ const role=localStorage.getItem("Role")
                                 name="department"
                                 value={editForm.department}
                                 onChange={handleFormChanges}
-                                error={
-                                  formErrors.department === "Required"
-                                    ? true
-                                    : false
-                                }
+                                error={employeeErrors.department.isValid}
                               >
                                 <MenuItem value="Development">
                                   Development
@@ -888,7 +846,7 @@ const role=localStorage.getItem("Role")
                                 </MenuItem>
                               </Select>
                               <FormHelperText style={{ color: "#d32f2f" ,marginLeft:'90px'}}>
-                                {formErrors.department}
+                                {employeeErrors.department.isValid ? employeeErrors.department.errorMessage : ''}
                               </FormHelperText>
                             </Stack>
                           </Stack>
@@ -923,19 +881,15 @@ const role=localStorage.getItem("Role")
                                     }}
                                     name="joining_date"
                                     views={["year", "month", "day"]}
-                                    value={date !== undefined ? date : dayjs(formatDate(Date()))}
-                                    error={
-                                      formErrors.joining_date === "Required"
-                                        ? true
-                                        : false
-                                    }
+                                    value={editForm.joining_date} 
                                     onChange={(newValue) => {
-                                      setDate(newValue);
+                                      const updateValue = { ...editForm };
+                                      updateValue['joining_date'] = newValue;
+                                      setEditForm(updateValue);
                                     }}
                                   />
                                 </DemoContainer>
                                 <FormHelperText style={{ color: "#d32f2f" }}>
-                                  {formErrors.joining_date}
                                 </FormHelperText>
                               </LocalizationProvider>
                             </Stack>
@@ -1336,7 +1290,7 @@ const role=localStorage.getItem("Role")
                           </Stack>
                         </Col>
                       </Row>
-
+                              {console.log("$$$",editForm)}
                       <Row style={{ marginTop: "50px" }}>
                         <Col span={12}>
                           <Stack direction={"row"}>
