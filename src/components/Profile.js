@@ -29,7 +29,11 @@ const Profile = () => {
     return(
         <div>
             <Dropdown menu={{items}}>
-                    <Space className='header-profile' style={{color:'grey'}} >{role === "1" ? username : displayName}<UserOutlined /></Space> 
+                {
+                    role === "1" ? 
+                    <Space className='header-profile' style={{color:'grey'}} >{role === "1" ? username : ""}<UserOutlined /></Space> :
+                    <Space className='employee-profile' style={{color:'grey'}} >{role !== "1" ? displayName : ""}<UserOutlined /></Space>
+                }
             </Dropdown>
         </div>
     )
