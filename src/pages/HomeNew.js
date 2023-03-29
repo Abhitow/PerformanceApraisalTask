@@ -11,6 +11,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import ValidationRules from "../pages/ValidationRules";
 import Profile from "../components/Profile";
 import download from "../download.png";
+
 import {
   RadiusBottomleftOutlined,
   RadiusBottomrightOutlined,
@@ -588,6 +589,12 @@ console.log("TRIGGERED")
     var key = event.keyCode;
     return ((key >= 65 && key <= 90) || key === 8);
   };
+
+// const scrollToError = () =>{
+//   const errorField = 
+// }
+
+
   return (
     <>
       {isLoading ? (
@@ -642,11 +649,14 @@ console.log("TRIGGERED")
                   <Card
                     style={{ height: "auto", width: "1100px", margin: "auto" }}
                   >
+                    
                     <Card style={{ marginTop: "40px" }}>
                       <div style={{ marginBottom: "40px" }}>
                         <h1>Employee Details</h1>
                       </div>
                       <Divider />
+
+                    
 
                       <Row>
                         <Col span={12}>

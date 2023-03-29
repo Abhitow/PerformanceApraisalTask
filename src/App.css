@@ -1,6 +1,13 @@
 *{
   font-family: 'Roboto', sans-serif;;
 }
+* { 
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
 .container{
   height: 100vh;position: fixed !important;
@@ -139,7 +146,7 @@
   font-size: 20px;
   margin-right: 50px;
   color:'white';
-  margin-left: -80px;
+  margin-left: -140px;
 }
 .required{
   color:'red' !important;
