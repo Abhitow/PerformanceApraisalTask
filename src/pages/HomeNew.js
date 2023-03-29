@@ -376,7 +376,11 @@ console.log("TRIGGERED")
     }
     
     if (data.manager_name === "" || data.manager_name === undefined || data.manager_name === null) {
-      employeeErrors['manager_name'].isValid = true    
+      if(e?.target?.name === 'manager_name'){
+        employeeErrors['manager_name'].isValid = false
+      }else{
+      employeeErrors['manager_name'].isValid = true
+      }
     }else{
       employeeErrors['manager_name'].isValid = false
     }
