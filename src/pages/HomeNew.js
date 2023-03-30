@@ -427,8 +427,7 @@ const role=localStorage.getItem("Role")
     let errors = {};
     const formValues = [];
     //questions validation with api integration
-    var total = 0;
-    var count = 0;
+
     for (let i = 0; i < questions.length; i++) {
       const question = questions[i];
       const field1Value = formData[`field1${question.t_id}`];
@@ -506,7 +505,6 @@ const role=localStorage.getItem("Role")
           localEmail
       )
       .then((response) => {
-        let a = [];
         let userDetails = response.data.data;
         if(response?.data?.data[0]?.joining_date !== null && response?.data?.data[0]?.joining_date !== undefined && response?.data?.data[0]?.joining_date !== "undefined"){
           let newSetDate = formatDate(response?.data?.data[0]?.joining_date);
@@ -514,6 +512,7 @@ const role=localStorage.getItem("Role")
           setDate(dayjs(newSetDate));
           console.log(formatDate(response?.data?.data[0]?.joining_date),"date");
           }
+        
 
         setEditForm({
           username: response.data.data[0]?.username,
@@ -522,6 +521,7 @@ const role=localStorage.getItem("Role")
           designation: response.data.data[0]?.designation,
           department: response.data.data[0]?.department,
           joining_date: date,
+         
           review_period: "2022-23"
         });
        
@@ -555,11 +555,8 @@ const role=localStorage.getItem("Role")
   }, [localEmail, questions]);
 
   useEffect(()=>{console.log("EDIT FORM",editForm);},[editForm])
+ useEffect(()=>{},[date])
 
-  // if(isSuccess === 3 ){
-  //   openNotification('success',"Thank You Form Submitted successfully")
-
-  // }
   function disablePrevDates(startDate) {
     const startSeconds = Date.parse(startDate);
     return (date) => {
@@ -567,20 +564,6 @@ const role=localStorage.getItem("Role")
     }
   }
   const startDate = new Date('Janaury 01, 2014');
-
-   const handleKeyDown = e => {
-    if (e.key === " ") {
-      e.preventDefault();
-    }
-  };
-  function alphaOnly(event) {
-    var key = event.keyCode;
-    return ((key >= 65 && key <= 90) || key === 8);
-  };
-
-// const scrollToError = () =>{
-//   const errorField = 
-// }
 
 
   return (
