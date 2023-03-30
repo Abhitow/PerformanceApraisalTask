@@ -520,7 +520,7 @@ const role=localStorage.getItem("Role")
           role_id: response.data.data[0]?.role_id,
           designation: response.data.data[0]?.designation,
           department: response.data.data[0]?.department,
-          joining_date: date,
+          joining_date: response.data.data[0]?.joining_date,
          
           review_period: "2022-23"
         });
@@ -862,7 +862,7 @@ const role=localStorage.getItem("Role")
                                     }}
                                     name="joining_date"
                                     views={["year", "month", "day"]}
-                                    value={editForm.joining_date} 
+                                    value={dayjs(editForm.joining_date)} 
                                     onChange={(newValue) => {
                                       const updateValue = { ...editForm };
                                       updateValue['joining_date'] = newValue;
