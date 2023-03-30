@@ -74,7 +74,7 @@ const initialState = {
 const HomeNew = (props) => {
   const navigate = useNavigate();
   /* performance apraisal form  */
-  const [date, setDate] = useState(dayjs(Date()));
+  const [date, setDate] = useState(dayjs());
   const [windowsOptions, setWindowsOptions] = useState("");
   // const [windowsClose, setWindowsClose] = useState(false)
 
