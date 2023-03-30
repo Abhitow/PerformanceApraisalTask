@@ -212,7 +212,6 @@ const HomeNew = (props) => {
     if (!localStorage.getItem("token") && role_id !== "1") {
       navigate("/");
     }
-    console.log("INIT",initialState);
   }, []);
 
   const userName = localStorage.getItem("displayName");
@@ -245,7 +244,6 @@ const role=localStorage.getItem("Role")
     axios
       .get("https://demo.emeetify.com:81/appraisel/users/getDetails")
       .then((response) => {
-        // console.log(response, "??????");
         setQuestions(response?.data?.data);
       })
       .catch((e) => {
@@ -319,7 +317,6 @@ const role=localStorage.getItem("Role")
     .then((response) => {
       console.log(response);
       setThree(response.data.status);
-      console.log(response.data.status,"three");
       if(response.data.status === true){
         if(response.data.status === true){
           openNotification('success',"Form submitted Successfully")
@@ -355,7 +352,6 @@ const role=localStorage.getItem("Role")
   }
 
   const ValidateEmployee = (e) =>{
-console.log("TRIGGERED")
     const data = {
       username: editForm.username,
       manager_name: editForm.manager_name,
@@ -467,8 +463,6 @@ console.log("TRIGGERED")
     }
     if (Object.keys(errors).length === 0 && ValidateEmployee()) {
       console.log(JSON.stringify(formValues));
-      // console.log("PAASS",editForm)
-      // console.log("PAASS",date)
       // DOMS
       axios
         .post(
@@ -476,10 +470,7 @@ console.log("TRIGGERED")
           formValues
         )
         .then((response) => {
-          // openNotification('success',response.data.message)
-          // setIsSuccess(isSuccess => isSuccess +1)
           setOne(response.data.status);
-          console.log(response.data.status,"one");
           if(response.data.status === true){
             functionTwo(editForm)
         }
@@ -518,9 +509,6 @@ console.log("TRIGGERED")
         let a = [];
 
         let userDetails = response.data.data;
-        console.log("DATA",response?.data?.data[0]?.joining_date)
-        
-        console.log("DATA SET",date)
         if(response?.data?.data[0]?.joining_date !== null && response?.data?.data[0]?.joining_date !== undefined && response?.data?.data[0]?.joining_date !== "undefined"){
           let newSetDate = formatDate(response.data.data[0]?.joining_date);
           setDate(dayjs(newSetDate));
@@ -544,12 +532,9 @@ console.log("TRIGGERED")
             const element = comments[j];
             // setComment(element);
             // a.push(element)
-            // console.log("---->>>", element);
-            // console.log("?????", questions);
             // setFormData(formData)
             for (let i = 0; i < questions?.length; i++) {
               const question = questions[i];
-              // console.log("???", question);
               if (question?.t_id === element?.t_id) {
                 formData[`field1${question.t_id}`] = element?.self_rating;
                 formData[`field2${question.t_id}`] = element?.self_comment;
@@ -570,9 +555,7 @@ console.log("TRIGGERED")
 
   useEffect(()=>{console.log("EDIT FORM",editForm);},[editForm])
 
-  // console.log("=====>>>",date)
   // if(isSuccess === 3 ){
-  //   console.log("??????????????????", isSuccess)
   //   openNotification('success',"Thank You Form Submitted successfully")
 
   // }
@@ -1304,7 +1287,6 @@ console.log("TRIGGERED")
                           </Stack>
                         </Col>
                       </Row>
-                              {console.log("$$$",editForm)}
                       <Row style={{ marginTop: "50px" }}>
                         <Col span={12}>
                           <Stack direction={"row"}>

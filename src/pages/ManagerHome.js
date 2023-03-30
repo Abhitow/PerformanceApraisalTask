@@ -62,7 +62,6 @@ import {
   
   useEffect( () =>{
     if(localStorage.getItem("email") !== undefined && localStorage.getItem("role_id") === "1"){
-      console.log("working gggg");
       navigate("/managerhome");
     }else{
      console.log('');
@@ -78,7 +77,6 @@ const naviGate = () => {
       
       if(selectMail !== undefined && selectMail === sel){
         navigate("/employeedetails");
-        console.log("workingggggg");
     }else{
       navigate("/managerhome");
     }

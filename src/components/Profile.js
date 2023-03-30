@@ -25,7 +25,6 @@ const Profile = () => {
         }
     ]
     const role = localStorage.getItem("role_id");
-    console.log(typeof(role,"aaaaaaaa"));
     return(
         <div>
             <Dropdown menu={{items}}>

@@ -110,7 +110,6 @@ const EmployeeDetails = (props) => {
   const selectedMail = localStorage.getItem("selectMail");
 
   
-  console.log(selectedMail, "??????");
   const rules = {
     username: [ValidationRules.required],
     manager_name: [ValidationRules.required],
@@ -195,7 +194,6 @@ const EmployeeDetails = (props) => {
         setAvg(parseFloat(res?.data?.data[0]?.employee_self_rating).toFixed(2));
         setmanagerCmt(res?.data?.data[0]?.manager_feedback);
         setMangerAvg(parseFloat(res?.data?.data[0]?.manager_consolidated_rating).toFixed(2));
-        // console.log(res?.data?.data[0],">>>>>>>=========");
       })
       .catch((e) => {
         console.log("e", e);
@@ -218,7 +216,6 @@ const EmployeeDetails = (props) => {
   const handleChange = (event) => {
     const fieldName = event.target.name;
     const fieldValue = event.target.value;
-    console.log(fieldValue,">>><<<<<");
     const errors = { ...formErrors };
   
     if (!fieldValue) {
@@ -230,7 +227,6 @@ const EmployeeDetails = (props) => {
     setFormData({...formData, [fieldName]: fieldValue });
     setFormErrors(errors);
 
-    console.log("<<<<<<<<",fieldValue);
   };
   const handleFormChanges = (e) => {
     let { name, value } = e.target;
@@ -273,18 +269,15 @@ const EmployeeDetails = (props) => {
         });
       }
     }
-    if (managerCmt || managerCmt === "") {
-      if (!managerCmt && managerCmt === "") {
-        return setErrorManagerCmt(true);
-      } else {
-        setErrorManagerCmt(false);
-      }
-    }
+    
     setFormErrors(errors);
    
     if (Object.keys(errors).length === 0) {
-      console.log(JSON.stringify(formValues));
-
+      if (!managerCmt || managerCmt === "" || managerCmt === "null" || managerCmt === null) {
+          return setErrorManagerCmt(true);
+      }else {
+        setErrorManagerCmt(false);
+      }
       axios
       .put(
         `https://demo.emeetify.com:81/appraisel/users/userFeedback?email=${selectedMail}&&type=manager`,
@@ -294,7 +287,6 @@ const EmployeeDetails = (props) => {
       )
       .then((response) => {
         console.log(response);
-        openNotification(response.data.message);
       })
       .catch((e) => {
         console.log("e", e);
@@ -314,36 +306,22 @@ const EmployeeDetails = (props) => {
           console.log("e", e);
         });
 
-      // manager cmt
-
-      // console.log(formValues,".........");
-      
+      // manager cmt      
     }
   };
 
   useEffect(() => {
     let total= 0 ;
     let Average;
-    console.log(formData,">>>>>>");
     for (const property in formData) {
-      // console.log("??", typeof property)
       let getFields3Value=property.slice(0, 6) === "field3"
-      // console.log("?????????", getFields3Value)
       if (getFields3Value) {
-        //  console.log(total,",,,,,,");
-        // console.log("??? property", property)
-        total = total + (formData[property]);
-        // console.log(property,"property");
-       
-        // count++;
+        total = total + (formData[property]);       
         let getAvg = total / questions?.length;
-        console.log(questions?.length,"total length");
         Average = getAvg.toFixed(2);
-        console.log(Average,"average");
       }
     }
     setMangerAvg(Average);
-    console.log(typeof(Mangeravg) ,"======>");
   }, [formData]);
 
   useEffect(() => {
@@ -364,12 +342,10 @@ const EmployeeDetails = (props) => {
           department: response.data.data[0]?.department,
         });
         let newSetDate = formatDate(response.data.data[0]?.joining_date);
-        console.log("???", newSetDate);
         setDate(dayjs(newSetDate));
         const formValues = [];
 
         for (let i = 0; i < userDetails?.length; i++) {
-          // console.log("---->>");
           let comments = userDetails[i].comments;
           for (let j = 0; j < comments?.length; j++) {
             const element = comments[j];
@@ -380,9 +356,7 @@ const EmployeeDetails = (props) => {
                 formData[`field2${question.t_id}`] = element?.self_comment;
                 formData[`field3${question.t_id}`] = element?.manager_rating;
                 formData[`field4${question.t_id}`] = element?.manager_comment;
-                setFormData(formData);
-                console.log(formData[`field3${question.t_id}`],";;;;;;;;;");
-                
+                setFormData(formData);                
               }
             }
           }
@@ -397,7 +371,6 @@ const EmployeeDetails = (props) => {
       });
   }, [selectedMail, questions]);
  
-  // console.log("=====>>>",date)
   return (
     <>
       {isLoading ? (

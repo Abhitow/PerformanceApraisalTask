@@ -11,18 +11,15 @@ const Logout = () => {
 
 
   const roleid = localStorage.getItem("role_id");
-  // console.log(roleid,"lllllllll");
 const navi = () =>{
   navigate("/");
  
 }
 async function handleLogout() {
-  console.log("12345")
     localStorage.clear();
     await navi()
   }
 
-  // const mail = localStorage.getItem("email");
   const role = localStorage.getItem("role_id");
 
   const handleGoogleLogout =() =>{
@@ -30,7 +27,6 @@ async function handleLogout() {
       () =>{
         navigate("/");
         localStorage.clear();
-        console.log("google logout");
       }
     ).catch(error => {console.log("error message" ,error)});
   }

@@ -17,7 +17,6 @@ import axios from "axios";
 function Login() {
   const navigate = useNavigate();
   const onFinishFailed = (errorInfo) => {
-    console.log("unsuccess", errorInfo);
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -100,7 +99,6 @@ function Login() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data, "-------------------->");
           setResponseData(data);
           // console.log("ROLE", email);
           if (data.status !== false) {

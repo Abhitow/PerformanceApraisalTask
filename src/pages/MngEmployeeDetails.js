@@ -272,7 +272,6 @@ let textt = formatDate(dd);
       `https://demo.emeetify.com:81/appraisel/users/AddComment?email=${selectMail}&&type=manager`,userData.questions
     )
       .then((response) => {
-        console.log(response.data);
         setCommentData(response.data);
       })
       .catch((e) => {
