@@ -507,11 +507,12 @@ const role=localStorage.getItem("Role")
       )
       .then((response) => {
         let a = [];
-
         let userDetails = response.data.data;
         if(response?.data?.data[0]?.joining_date !== null && response?.data?.data[0]?.joining_date !== undefined && response?.data?.data[0]?.joining_date !== "undefined"){
-          let newSetDate = formatDate(response.data.data[0]?.joining_date);
+          let newSetDate = formatDate(response?.data?.data[0]?.joining_date);
+          console.log(formatDate(response?.data?.data[0]?.joining_date),"date");
           setDate(dayjs(newSetDate));
+          console.log(formatDate(response?.data?.data[0]?.joining_date),"date");
           }
 
         setEditForm({
